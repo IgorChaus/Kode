@@ -10,16 +10,34 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
+    var items = ArrayList<Person.Items>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-         var items = ArrayList<Person.Items>()
+
+        val departments = arrayListOf<String>("Все", "android", "ios", "design", "management",
+            "qa", "back_office", "frontend", "hr", "pr", "backend", "support", "analytics")
+
+        val viewPager: ViewPager2 = findViewById(R.id.viewPager)
+        val tabLayout: TabLayout = findViewById(R.id.tabLayout)
+
+
+
+        viewPager.adapter = ViewPagerAdapter(departments)
+
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = departments[position].toString()
+        }.attach()
 
         //Skeleton
         var view :View
@@ -41,6 +59,28 @@ class MainActivity : AppCompatActivity() {
         val adapter: RVAdapter = RVAdapter(items)
         rv.setAdapter(adapter)
 
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                viewPager.currentItem = tabLayout.selectedTabPosition
+                var tabPosition: Int = tab?.position ?:0
+                if (tabPosition > 0 ){
+                    val itemsFilter = items.filter { it.department == departments[tabPosition]}
+                    adapter.setMovieList(itemsFilter)
+                } else {
+                    adapter.setMovieList(items)
+                }
+
+            }
+
+        })
+
         val apiService = ApiClient.getClient().create(ApiInterface::class.java)
         val call: Call<Person> = apiService.getPersons()
 
@@ -54,6 +94,7 @@ class MainActivity : AppCompatActivity() {
                 Log.d("MyTag","Response = "+ t);
             }
         })
+
 
     }
 

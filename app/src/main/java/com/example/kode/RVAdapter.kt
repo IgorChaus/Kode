@@ -21,7 +21,7 @@ class RVAdapter(_persons: List<Person.Items>) : RecyclerView.Adapter<RVAdapter.P
         notifyDataSetChanged();
     }
 
-    override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): PersonViewHolder {
+    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): PersonViewHolder {
         val v: View = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item, viewGroup,
             false)
         return PersonViewHolder(v)

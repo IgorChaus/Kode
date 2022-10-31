@@ -8,15 +8,15 @@ data class Person(val items: List<Items>) {
         val firstName: String,
         val lastName: String,
         val userTag: String,
-        val department: Department,
+        val department: String,
         val position: String,
         val birthday: String,
         val phone: String
     ) {
-        enum class Department{
+        /*enum class Department{
             android, ios, design, management, qa, back_office, frontend, hr, pr, backend, support,
             analytics
-        }
+        }*/
 
     }
 }
