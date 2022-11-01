@@ -28,16 +28,7 @@ class MainActivity : AppCompatActivity() {
         val departments = arrayListOf<String>("Все", "android", "ios", "design", "management",
             "qa", "back_office", "frontend", "hr", "pr", "backend", "support", "analytics")
 
-        val viewPager: ViewPager2 = findViewById(R.id.viewPager)
         val tabLayout: TabLayout = findViewById(R.id.tabLayout)
-
-
-
-        viewPager.adapter = ViewPagerAdapter(departments)
-
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = departments[position].toString()
-        }.attach()
 
         //Skeleton
         var view :View
@@ -60,21 +51,18 @@ class MainActivity : AppCompatActivity() {
         rv.setAdapter(adapter)
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-            }
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
 
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-
-            }
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                viewPager.currentItem = tabLayout.selectedTabPosition
                 var tabPosition: Int = tab?.position ?:0
                 if (tabPosition > 0 ){
                     val itemsFilter = items.filter { it.department == departments[tabPosition]}
-                    adapter.setMovieList(itemsFilter)
+                    adapter.setMovieList(itemsFilter, departments[tabPosition].
+                        replaceFirstChar {it.uppercase()})
                 } else {
-                    adapter.setMovieList(items)
+                    adapter.setMovieList(items,"Все")
                 }
 
             }
@@ -87,7 +75,7 @@ class MainActivity : AppCompatActivity() {
         call.enqueue(object : Callback<Person> {
             override fun onResponse(call: Call<Person>, response: Response<Person>) {
                 items = response.body()?.items as ArrayList<Person.Items>
-                adapter.setMovieList(items)
+                adapter.setMovieList(items,"Все")
             }
 
             override fun onFailure(call: Call<Person>, t: Throwable) {
