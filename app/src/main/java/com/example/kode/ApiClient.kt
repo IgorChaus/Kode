@@ -4,18 +4,27 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
+
 
 object ApiClient {
     const val BASE_URL = "https://stoplight.io/mocks/kode-education/trainee-test/25143926/"
     fun getClient(): Retrofit {
 
-        val interceptor : HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
+        //Это нужно для отладки retrofit
+       /* val interceptor : HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
 
         val client : OkHttpClient = OkHttpClient.Builder().apply {
             addInterceptor(interceptor)
-        }.build()
+        }.build()*/
+
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(1, TimeUnit.SECONDS)
+            .readTimeout(1, TimeUnit.SECONDS)
+            .writeTimeout(1, TimeUnit.SECONDS)
+            .build()
 
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)

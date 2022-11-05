@@ -8,11 +8,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import java.security.AccessController.getContext
+import kotlin.system.exitProcess
 
-class RVAdapter(_persons: List<Person.Items>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class RVAdapter(_persons: ArrayList<Person.Items>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         private const val TYPE_HEARDER = 0
@@ -22,7 +26,12 @@ class RVAdapter(_persons: List<Person.Items>): RecyclerView.Adapter<RecyclerView
     var items = _persons
     var department = "Все"
 
-    fun setMovieList(_persons: List<Person.Items>, _department: String) {
+    fun clear() {
+        items.clear()
+        notifyDataSetChanged()
+    }
+
+    fun setMovieList(_persons: ArrayList<Person.Items>, _department: String) {
         items = _persons
         department = _department
         notifyDataSetChanged();
@@ -58,7 +67,16 @@ class RVAdapter(_persons: List<Person.Items>): RecyclerView.Adapter<RecyclerView
         when (viewHolder.itemViewType) {
             TYPE_HEARDER -> {
                 val headerViewHolder = viewHolder as HeaderViewHolder
-                headerViewHolder.department.text = department
+                if (department !=   "") {
+                    headerViewHolder.department.text = department
+//                    headerViewHolder.progressBar.visibility = View.INVISIBLE
+//                    headerViewHolder.container.setBackgroundColor(Color.parseColor("#FAFAFA"))
+                }else{
+//                    headerViewHolder.progressBar.visibility = View.VISIBLE
+//                    headerViewHolder.container.setBackgroundColor(Color.parseColor("#FFFFFFFF"))
+                    headerViewHolder.department.text = department
+                }
+
             }
             TYPE_PERSON -> {
                 val personViewHolder = viewHolder as PersonViewHolder
@@ -80,6 +98,7 @@ class RVAdapter(_persons: List<Person.Items>): RecyclerView.Adapter<RecyclerView
         return items.size
     }
 
+
     class PersonViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val personPhoto: ImageView = itemView.findViewById(R.id.imageView)
         val personName: TextView = itemView.findViewById(R.id.personName)
@@ -89,6 +108,8 @@ class RVAdapter(_persons: List<Person.Items>): RecyclerView.Adapter<RecyclerView
 
     class HeaderViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val department: TextView = itemView.findViewById(R.id.department)
+//        val progressBar: ProgressBar = itemView.findViewById(R.id.progressBar)
+//        val container: ConstraintLayout = itemView.findViewById(R.id.container)
     }
 
 }
