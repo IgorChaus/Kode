@@ -1,0 +1,20 @@
+package com.example.kode
+
+import android.content.Intent
+import android.os.Bundle
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+
+class ErrorActivity: AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.screen_error)
+
+        val textView: TextView = findViewById(R.id.textView3)
+        textView.setOnClickListener {
+            val intent: Intent = Intent(this@ErrorActivity,MainActivity::class.java)
+            startActivity(intent)
+        }
+    }
+}
+

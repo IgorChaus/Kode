@@ -26,15 +26,16 @@ class RVAdapter(_persons: ArrayList<Person.Items>): RecyclerView.Adapter<Recycle
     var items = _persons
     var department = "Все"
 
-    fun clear() {
-        items.clear()
-        notifyDataSetChanged()
-    }
 
     fun setMovieList(_persons: ArrayList<Person.Items>, _department: String) {
         items = _persons
         department = _department
         notifyDataSetChanged();
+    }
+
+    fun setHeader(_department: String) {
+        department = _department
+        notifyItemChanged(0)
     }
 
     override fun getItemViewType(position: Int): Int{
@@ -69,11 +70,9 @@ class RVAdapter(_persons: ArrayList<Person.Items>): RecyclerView.Adapter<Recycle
                 val headerViewHolder = viewHolder as HeaderViewHolder
                 if (department !=   "") {
                     headerViewHolder.department.text = department
-//                    headerViewHolder.progressBar.visibility = View.INVISIBLE
-//                    headerViewHolder.container.setBackgroundColor(Color.parseColor("#FAFAFA"))
+                    headerViewHolder.container.setBackgroundColor(Color.parseColor("#FAFAFA"))
                 }else{
-//                    headerViewHolder.progressBar.visibility = View.VISIBLE
-//                    headerViewHolder.container.setBackgroundColor(Color.parseColor("#FFFFFFFF"))
+                    headerViewHolder.container.setBackgroundColor(Color.parseColor("#FFFFFF"))
                     headerViewHolder.department.text = department
                 }
 
@@ -108,8 +107,7 @@ class RVAdapter(_persons: ArrayList<Person.Items>): RecyclerView.Adapter<Recycle
 
     class HeaderViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val department: TextView = itemView.findViewById(R.id.department)
-//        val progressBar: ProgressBar = itemView.findViewById(R.id.progressBar)
-//        val container: ConstraintLayout = itemView.findViewById(R.id.container)
+        val container: ConstraintLayout = itemView.findViewById(R.id.container)
     }
 
 }

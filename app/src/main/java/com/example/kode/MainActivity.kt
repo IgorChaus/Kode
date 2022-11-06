@@ -1,6 +1,8 @@
 package com.example.kode
 
 import android.content.Context
+import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
@@ -45,10 +47,31 @@ class MainActivity : AppCompatActivity() {
         val adapter: RVAdapter = RVAdapter(items)
         rv.setAdapter(adapter)
 
+        var apiService = ApiClient.getClient().create(ApiInterface::class.java)
+        val call: Call<Person> = apiService.getPersons()
 
+        call.enqueue(object : Callback<Person> {
+            override fun onResponse(call: Call<Person>, response: Response<Person>) {
+                if(response.isSuccessful) {
+                    items = response.body()?.items as ArrayList<Person.Items>
+                    hideSkeleton(listView)
+                    adapter.setMovieList(items, "Все")
+                }else{
+                    val intent = Intent(this@MainActivity,ErrorActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+
+            override fun onFailure(call: Call<Person>, t: Throwable) {
+                val intent = Intent(this@MainActivity,ErrorActivity::class.java)
+                startActivity(intent)
+            }
+        })
 
         val swipeContainer: SwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout)
+        swipeContainer.setProgressBackgroundColorSchemeColor(Color.parseColor("#FFFFFF"))
         swipeContainer.setOnRefreshListener {
+                adapter.setHeader("")
                 var apiService = ApiClient.getClient().create(ApiInterface::class.java)
                 val call: Call<Person> = apiService.getPersons()
                 call.enqueue(object : Callback<Person> {
@@ -66,11 +89,13 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
                         swipeContainer.setRefreshing(false)
+                        adapter.setHeader(departments[tabPosition].replaceFirstChar {it.uppercase()})
                     }
 
                     override fun onFailure(call: Call<Person>, t: Throwable) {
                         Log.i("MyTag", "Response = " + t);
                         swipeContainer.setRefreshing(false)
+                        adapter.setHeader(departments[tabPosition].replaceFirstChar {it.uppercase()})
                     }
                 })
 
@@ -96,28 +121,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
-
-        var apiService = ApiClient.getClient().create(ApiInterface::class.java)
-        val call: Call<Person> = apiService.getPersons()
-
-        call.enqueue(object : Callback<Person> {
-            override fun onResponse(call: Call<Person>, response: Response<Person>) {
-                if(response.isSuccessful) {
-                    items = response.body()?.items as ArrayList<Person.Items>
-                    hideSkeleton(listView)
-                    adapter.setMovieList(items, "Все")
-                }else{
-                    hideSkeleton(listView)
-                    Log.d("MyTag","Выводим активити с ошибкой")
-                }
-            }
-
-            override fun onFailure(call: Call<Person>, t: Throwable) {
-                Log.i("MyTag", "Ошибка " + t.toString())
-
-            }
-        })
-
 
     }
 
