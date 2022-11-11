@@ -3,10 +3,12 @@ package com.example.kode
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -18,8 +20,8 @@ import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.nio.file.attribute.AclEntry.newBuilder
-import java.util.concurrent.TimeUnit
+import androidx.appcompat.widget.Toolbar
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -30,6 +32,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
 
         val departments = arrayListOf<String>("Все", "android", "ios", "design", "management",
             "qa", "back_office", "frontend", "hr", "pr", "backend", "support", "analytics")
