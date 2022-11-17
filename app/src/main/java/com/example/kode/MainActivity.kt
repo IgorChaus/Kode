@@ -93,7 +93,7 @@ class MainActivity : AppCompatActivity() {
                 if(response.isSuccessful) {
                     items = response.body()?.items as ArrayList<Person.Items>
                     hideSkeleton(listView)
-                    adapter.setMovieList(items, "Все")
+                    adapter.setMovieList(items)
                 }else{
                     val intent = Intent(this@MainActivity,ErrorActivity::class.java)
                     startActivity(intent)
@@ -109,24 +109,22 @@ class MainActivity : AppCompatActivity() {
         editText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 var strSearch = s.toString()
-//                var searchFilter: ArrayList<Person.Items>
-//                if (strSearch.length > 1) {
+                var searchFilter: ArrayList<Person.Items>
+                if (strSearch.length > 1) {
                  val   searchFilter = items.filter {
                         it.firstName.contains(strSearch, ignoreCase = true) ||
                                 it.lastName.contains(strSearch, ignoreCase = true) ||
                                 it.userTag.contains(strSearch, ignoreCase = true)
                     } as ArrayList<Person.Items>
-                    adapter.setMovieList(searchFilter, departments[tabPosition].
-                    replaceFirstChar {it.uppercase()})
+                    adapter.setMovieList(searchFilter)
 
-                /*}else{
+                }else{
                     searchFilter = items.filter {
                         it.firstName.contains(strSearch, ignoreCase = true) ||
                                 it.lastName.contains(strSearch, ignoreCase = true)
                     } as ArrayList<Person.Items>
-                    adapter.setMovieList(searchFilter, departments[tabPosition].
-                    replaceFirstChar {it.uppercase()})
-                }*/
+                    adapter.setMovieList(searchFilter)
+                }
 
             }
 
@@ -138,7 +136,6 @@ class MainActivity : AppCompatActivity() {
         val swipeContainer: SwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout)
         swipeContainer.setProgressBackgroundColorSchemeColor(Color.parseColor("#FFFFFF"))
         swipeContainer.setOnRefreshListener {
-                adapter.setHeader("")
                 var apiService = ApiClient.getClient().create(ApiInterface::class.java)
                 val call: Call<Person> = apiService.getPersons()
                 call.enqueue(object : Callback<Person> {
@@ -149,20 +146,17 @@ class MainActivity : AppCompatActivity() {
                                 val itemsFilterUpdate= items_update.
                                     filter { it.department == departments[tabPosition]}
                                         as ArrayList<Person.Items>
-                                adapter.setMovieList(itemsFilterUpdate, departments[tabPosition].
-                                replaceFirstChar {it.uppercase()})
+                                adapter.setMovieList(itemsFilterUpdate)
                             } else {
-                                adapter.setMovieList(items_update,"Все")
+                                adapter.setMovieList(items_update)
                             }
                         }
                         swipeContainer.setRefreshing(false)
-                        adapter.setHeader(departments[tabPosition].replaceFirstChar {it.uppercase()})
                     }
 
                     override fun onFailure(call: Call<Person>, t: Throwable) {
                         Log.i("MyTag", "Response = " + t);
                         swipeContainer.setRefreshing(false)
-                        adapter.setHeader(departments[tabPosition].replaceFirstChar {it.uppercase()})
                     }
                 })
 
@@ -179,10 +173,9 @@ class MainActivity : AppCompatActivity() {
                 tabPosition = tab?.position ?:0
                 if (tabPosition > 0 ){
                     val itemsFilter= items.filter { it.department == departments[tabPosition]} as ArrayList<Person.Items>
-                    adapter.setMovieList(itemsFilter, departments[tabPosition].
-                        replaceFirstChar {it.uppercase()})
+                    adapter.setMovieList(itemsFilter)
                 } else {
-                    adapter.setMovieList(items,"Все")
+                    adapter.setMovieList(items)
                 }
 
             }
