@@ -30,7 +30,8 @@ class RVAdapter(_persons: ArrayList<Person.Items>): RecyclerView.Adapter<Recycle
     fun setMovieList(_persons: ArrayList<Person.Items>, _department: String) {
         items = _persons
         department = _department
-        notifyDataSetChanged();
+  //      Log.i("MyTag",items.toString())
+        notifyDataSetChanged()
     }
 
     fun setHeader(_department: String) {
@@ -80,7 +81,7 @@ class RVAdapter(_persons: ArrayList<Person.Items>): RecyclerView.Adapter<Recycle
             TYPE_PERSON -> {
                 val personViewHolder = viewHolder as PersonViewHolder
                 val path: String = items.get(position).avatarUrl
-                Glide.with(personViewHolder.itemView.getContext()).load(R.drawable.ig1).circleCrop()
+                Glide.with(personViewHolder.itemView.getContext()).load(path).circleCrop()
                     .into(personViewHolder.personPhoto)
                 personViewHolder.personName.text = items.get(position).firstName + " " +
                         items.get(position).lastName
@@ -94,6 +95,7 @@ class RVAdapter(_persons: ArrayList<Person.Items>): RecyclerView.Adapter<Recycle
 
 
     override fun getItemCount(): Int {
+        Log.i("MyTag","item.size ${items.size}")
         return items.size
     }
 

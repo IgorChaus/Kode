@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="MyDarkToolbarStyle" parent="ThemeOverlay.AppCompat.Light">
+    <!--<style name="MyDarkToolbarStyle1" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:colorBackground">@color/tool_bar_background</item>
         <item name="android:textColor">@color/tool_bar_text</item>
-    </style>
-
-   <!-- <style name="Toolbar">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">?attr/actionBarSize</item>
-        <item name="android:background">"#F7F7F8"</item>
     </style>-->
+
+    <style name="tab_text" parent="@android:style/TextAppearance.Widget.TabWidget">
+        <item name="android:fontFamily">@font/inter</item>
+        <item name="android:textSize">15dp</item>
+    </style>
 </resources>

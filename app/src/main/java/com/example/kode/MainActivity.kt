@@ -1,15 +1,21 @@
 package com.example.kode
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
+import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,16 +28,43 @@ import retrofit2.Callback
 import retrofit2.Response
 import androidx.appcompat.widget.Toolbar
 
-
+private const val DRAWABLE_LEFT_INDEX = 0
+private const val DRAWABLE_RIGHT_INDEX = 2
 
 class MainActivity : AppCompatActivity() {
 
     var items = ArrayList<Person.Items>()
     var tabPosition: Int = 0
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val editText: EditText = findViewById(R.id.editText)
+
+        editText.setOnTouchListener(object : View.OnTouchListener {
+            override fun onTouch(v: View, event: MotionEvent): Boolean {
+                when {
+                    rightDrawableClicked(event, v as EditText) -> {
+                        editText.setText("")
+                        return true
+                    }
+                    leftDrawableClicked(event,v as EditText) -> {
+
+                        //Hide keyboard
+                        val  imm = v.getContext().getSystemService(
+                            Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0)
+
+                        return true
+
+                    }else -> return false
+                }
+            }
+        })
+
+
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -71,6 +104,35 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(this@MainActivity,ErrorActivity::class.java)
                 startActivity(intent)
             }
+        })
+
+        editText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                var strSearch = s.toString()
+//                var searchFilter: ArrayList<Person.Items>
+//                if (strSearch.length > 1) {
+                 val   searchFilter = items.filter {
+                        it.firstName.contains(strSearch, ignoreCase = true) ||
+                                it.lastName.contains(strSearch, ignoreCase = true) ||
+                                it.userTag.contains(strSearch, ignoreCase = true)
+                    } as ArrayList<Person.Items>
+                    adapter.setMovieList(searchFilter, departments[tabPosition].
+                    replaceFirstChar {it.uppercase()})
+
+                /*}else{
+                    searchFilter = items.filter {
+                        it.firstName.contains(strSearch, ignoreCase = true) ||
+                                it.lastName.contains(strSearch, ignoreCase = true)
+                    } as ArrayList<Person.Items>
+                    adapter.setMovieList(searchFilter, departments[tabPosition].
+                    replaceFirstChar {it.uppercase()})
+                }*/
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
         val swipeContainer: SwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout)
@@ -155,6 +217,32 @@ class MainActivity : AppCompatActivity() {
     fun hideSkeleton(listView: ArrayList<View>){
         for(i in listView){
             i.setVisibility(View.GONE)
+        }
+    }
+
+    fun leftDrawableClicked(event: MotionEvent, view: EditText): Boolean {
+
+        val leftDrawable = view.compoundDrawables[DRAWABLE_LEFT_INDEX]
+
+        return if (leftDrawable == null) {
+            false
+        } else {
+            val startOfDrawable = view.paddingLeft
+            val endOfDrawable = startOfDrawable + leftDrawable.bounds.width()
+            startOfDrawable <= event.x && event.x <= endOfDrawable
+        }
+    }
+
+    fun rightDrawableClicked(event: MotionEvent, view: EditText): Boolean {
+
+        val rightDrawable = view.compoundDrawables[DRAWABLE_RIGHT_INDEX]
+
+        return if (rightDrawable == null) {
+            false
+        } else {
+            val startOfDrawable = view.width - rightDrawable.bounds.width() - view.paddingRight
+            val endOfDrawable = startOfDrawable + rightDrawable.bounds.width()
+            startOfDrawable <= event.x && event.x <= endOfDrawable
         }
     }
 
