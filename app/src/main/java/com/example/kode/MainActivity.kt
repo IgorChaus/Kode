@@ -11,7 +11,6 @@ import android.text.TextWatcher
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -27,6 +26,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 private const val DRAWABLE_LEFT_INDEX = 0
 private const val DRAWABLE_RIGHT_INDEX = 2
@@ -36,10 +37,33 @@ class MainActivity : AppCompatActivity() {
     var items = ArrayList<Person.Items>()
     var tabPosition: Int = 0
 
+    private lateinit var sheetBehavior: BottomSheetBehavior<ConstraintLayout>
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val bottomSheet: ConstraintLayout = findViewById(R.id.bottomSheet)
+        sheetBehavior = BottomSheetBehavior.from(bottomSheet)
+
+        sheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                var linLayout: LinearLayout = findViewById(R.id.linLayout)
+                linLayout.background = ColorDrawable(Color.parseColor("#29050510"))
+                when (newState) {
+                    BottomSheetBehavior.STATE_EXPANDED ->
+                        linLayout.background = ColorDrawable(Color.parseColor("#29050510"))
+                    BottomSheetBehavior.STATE_COLLAPSED ->
+                        linLayout.background = ColorDrawable(Color.parseColor("#FFFFFF"))
+                    else -> linLayout.background = ColorDrawable(Color.parseColor("#FFFFFF"))
+                }
+            }
+        })
+
 
         val editText: EditText = findViewById(R.id.editText)
 
