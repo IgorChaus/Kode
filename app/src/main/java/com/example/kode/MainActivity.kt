@@ -3,8 +3,10 @@ package com.example.kode
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,6 +18,9 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -37,6 +42,8 @@ class MainActivity : AppCompatActivity() {
     var items = ArrayList<Person.Items>()
     var tabPosition: Int = 0
 
+    var checkedBotton: Int = R.id.radioButton1
+
     private lateinit var sheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
     @SuppressLint("ClickableViewAccessibility")
@@ -52,6 +59,10 @@ class MainActivity : AppCompatActivity() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+                var checkBotton: RadioButton = findViewById(checkedBotton)
+                checkBotton.isChecked = true
+
                 var linLayout: LinearLayout = findViewById(R.id.linLayout)
                 linLayout.background = ColorDrawable(Color.parseColor("#29050510"))
                 when (newState) {
@@ -63,7 +74,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
-
 
         val editText: EditText = findViewById(R.id.editText)
 
@@ -113,11 +123,12 @@ class MainActivity : AppCompatActivity() {
         val call: Call<Person> = apiService.getPersons()
 
         call.enqueue(object : Callback<Person> {
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onResponse(call: Call<Person>, response: Response<Person>) {
                 if(response.isSuccessful) {
                     items = response.body()?.items as ArrayList<Person.Items>
                     hideSkeleton(listView)
-                    adapter.setMovieList(items)
+                    adapter.setMovieList(items, checkedBotton)
                 }else{
                     val intent = Intent(this@MainActivity,ErrorActivity::class.java)
                     startActivity(intent)
@@ -131,25 +142,25 @@ class MainActivity : AppCompatActivity() {
         })
 
         editText.addTextChangedListener(object : TextWatcher {
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun afterTextChanged(s: Editable?) {
                 var strSearch = s.toString()
-                var searchFilter: ArrayList<Person.Items>
+                var searchFilter: ArrayList<Person.Items> = arrayListOf()
                 if (strSearch.length > 1) {
-                 val   searchFilter = items.filter {
+                    searchFilter = items.filter {
                         it.firstName.contains(strSearch, ignoreCase = true) ||
                                 it.lastName.contains(strSearch, ignoreCase = true) ||
                                 it.userTag.contains(strSearch, ignoreCase = true)
                     } as ArrayList<Person.Items>
-                    adapter.setMovieList(searchFilter)
 
                 }else{
                     searchFilter = items.filter {
                         it.firstName.contains(strSearch, ignoreCase = true) ||
                                 it.lastName.contains(strSearch, ignoreCase = true)
                     } as ArrayList<Person.Items>
-                    adapter.setMovieList(searchFilter)
                 }
 
+                adapter.setMovieList(searchFilter, checkedBotton)
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -163,6 +174,7 @@ class MainActivity : AppCompatActivity() {
                 var apiService = ApiClient.getClient().create(ApiInterface::class.java)
                 val call: Call<Person> = apiService.getPersons()
                 call.enqueue(object : Callback<Person> {
+                    @RequiresApi(Build.VERSION_CODES.O)
                     override fun onResponse(call: Call<Person>, response: Response<Person>) {
                         if(response.isSuccessful){
                             var items_update = response.body()?.items as ArrayList<Person.Items>
@@ -170,9 +182,9 @@ class MainActivity : AppCompatActivity() {
                                 val itemsFilterUpdate= items_update.
                                     filter { it.department == departments[tabPosition]}
                                         as ArrayList<Person.Items>
-                                adapter.setMovieList(itemsFilterUpdate)
+                                adapter.setMovieList(itemsFilterUpdate,checkedBotton)
                             } else {
-                                adapter.setMovieList(items_update)
+                                adapter.setMovieList(items_update,checkedBotton)
                             }
                         }
                         swipeContainer.setRefreshing(false)
@@ -193,17 +205,29 @@ class MainActivity : AppCompatActivity() {
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
 
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 tabPosition = tab?.position ?:0
                 if (tabPosition > 0 ){
                     val itemsFilter= items.filter { it.department == departments[tabPosition]} as ArrayList<Person.Items>
-                    adapter.setMovieList(itemsFilter)
+                    adapter.setMovieList(itemsFilter, checkedBotton)
                 } else {
-                    adapter.setMovieList(items)
+                    adapter.setMovieList(items, checkedBotton)
                 }
 
             }
 
+        })
+
+
+        val radioGroup: RadioGroup = findViewById(R.id.radioGroup)
+        radioGroup.clearCheck()
+        radioGroup.setOnCheckedChangeListener(object : RadioGroup.OnCheckedChangeListener{
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onCheckedChanged(group: RadioGroup, checkedId: Int){
+                checkedBotton = checkedId
+                adapter.setMovieList(items, checkedBotton)
+            }
         })
 
     }

@@ -1,5 +1,7 @@
 package com.example.kode
 
+import java.time.LocalDate
+
 data class Person(val items: List<Items>) {
 
     data class Items(
@@ -13,10 +15,7 @@ data class Person(val items: List<Items>) {
         val birthday: String,
         val phone: String
     ) {
-        /*enum class Department{
-            android, ios, design, management, qa, back_office, frontend, hr, pr, backend, support,
-            analytics
-        }*/
+
 
     }
 }
