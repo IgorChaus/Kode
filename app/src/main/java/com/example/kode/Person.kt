@@ -14,9 +14,10 @@ data class Person(val items: List<Items>) {
         val position: String,
         val birthday: String,
         val phone: String
-    ) {
-
-
-    }
+    )
 }
+
+
+
+
 

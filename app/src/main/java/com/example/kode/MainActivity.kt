@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity() {
         val llm: LinearLayoutManager = LinearLayoutManager(this)
         rv.setLayoutManager(llm)
 
-        val adapter: RVAdapter = RVAdapter(items)
+        val adapter: RAdapter = RAdapter(items)
         rv.setAdapter(adapter)
 
         var apiService = ApiClient.getClient().create(ApiInterface::class.java)
