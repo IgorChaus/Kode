@@ -223,7 +223,7 @@ class MainActivity : AppCompatActivity() {
 
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                val tabName = tab?.text
+                tabName = tab?.text.toString()
                 if (tabName == "Все"){
                     adapter.setMovieList(items, checkedBotton)
                 } else {
@@ -242,13 +242,19 @@ class MainActivity : AppCompatActivity() {
         radioGroup.setOnCheckedChangeListener(object : RadioGroup.OnCheckedChangeListener{
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onCheckedChanged(group: RadioGroup, checkedId: Int){
-
                 checkedBotton = checkedId
-                adapter.setMovieList(items, checkedBotton)
+                if (tabName == "Все"){
+                    adapter.setMovieList(items, checkedBotton)
+                } else {
+                    val itemsFilter= items.filter { it.department == department1[tabName]}
+                            as ArrayList<Person.Items>
+                    adapter.setMovieList(itemsFilter, checkedBotton)
+                }
             }
         })
 
     }
+
 
     //Get hight of screen
     fun getSkeletonRowCount(context: Context): Int{
