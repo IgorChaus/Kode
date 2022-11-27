@@ -41,10 +41,25 @@ class MainActivity : AppCompatActivity() {
 
     var items = ArrayList<Person.Items>()
     var tabName: String = "Все"
+    var strSearch: String =""
 
     var checkedBotton: Int = R.id.radioButton1
 
     private lateinit var sheetBehavior: BottomSheetBehavior<ConstraintLayout>
+
+    val departments = mapOf("Все" to "All",
+        "Android" to "android",
+        "iOS" to "ios",
+        "Дизайн" to "design",
+        "Менеджмент" to "management",
+        "QA" to "qa",
+        "Бэк-офис" to "back_office",
+        "Frontend" to "frontend",
+        "HR" to "hr",
+        "PR" to "pr",
+        "Backend" to "backend",
+        "Техподдержка" to "support",
+        "Аналитика" to "analytics")
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,28 +114,12 @@ class MainActivity : AppCompatActivity() {
         })
 
 
-
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-
-        val department1 = mapOf("Все" to "All",
-                                "Android" to "android",
-                                "iOS" to "ios",
-                                "Дизайн" to "design",
-                                "Менеджмент" to "management",
-                                "QA" to "qa",
-                                "Бэк-офис" to "back_office",
-                                "Frontend" to "frontend",
-                                "HR" to "hr",
-                                "PR" to "pr",
-                                "Backend" to "backend",
-                                "Техподдержка" to "support",
-                                "Аналитика" to "analytics")
-
         val tabLayout: TabLayout = findViewById(R.id.tabLayout)
 
-        for(i in department1) {
+        for(i in departments) {
             tabLayout.addTab(tabLayout.newTab().setText(i.key))
         }
 
@@ -160,23 +159,8 @@ class MainActivity : AppCompatActivity() {
         editText.addTextChangedListener(object : TextWatcher {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun afterTextChanged(s: Editable?) {
-                var strSearch = s.toString()
-                var searchFilter: ArrayList<Person.Items> = arrayListOf()
-                if (strSearch.length > 1) {
-                    searchFilter = items.filter {
-                        it.firstName.contains(strSearch, ignoreCase = true) ||
-                                it.lastName.contains(strSearch, ignoreCase = true) ||
-                                it.userTag.contains(strSearch, ignoreCase = true)
-                    } as ArrayList<Person.Items>
-
-                }else{
-                    searchFilter = items.filter {
-                        it.firstName.contains(strSearch, ignoreCase = true) ||
-                                it.lastName.contains(strSearch, ignoreCase = true)
-                    } as ArrayList<Person.Items>
-                }
-
-                adapter.setMovieList(searchFilter, checkedBotton)
+                strSearch = s.toString()
+                adapter.setMovieList(setFilter(), checkedBotton)
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -193,15 +177,9 @@ class MainActivity : AppCompatActivity() {
                     @RequiresApi(Build.VERSION_CODES.O)
                     override fun onResponse(call: Call<Person>, response: Response<Person>) {
                         if(response.isSuccessful){
-                            var items_update = response.body()?.items as ArrayList<Person.Items>
-                            if (tabName == "Все" ){
-                                adapter.setMovieList(items_update,checkedBotton)
-                            } else {
-                                val itemsFilterUpdate= items_update.
-                                filter { it.department == department1[tabName]}
-                                        as ArrayList<Person.Items>
-                                adapter.setMovieList(itemsFilterUpdate,checkedBotton)
-                            }
+                            items.clear()
+                            items = response.body()?.items as ArrayList<Person.Items>
+                            adapter.setMovieList(setFilter(), checkedBotton)
                         }
                         swipeContainer.setRefreshing(false)
                     }
@@ -224,14 +202,7 @@ class MainActivity : AppCompatActivity() {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 tabName = tab?.text.toString()
-                if (tabName == "Все"){
-                    adapter.setMovieList(items, checkedBotton)
-                } else {
-                    val itemsFilter= items.filter { it.department == department1[tabName]}
-                            as ArrayList<Person.Items>
-                    adapter.setMovieList(itemsFilter, checkedBotton)
-                }
-
+                adapter.setMovieList(setFilter(), checkedBotton)
             }
 
         })
@@ -243,18 +214,37 @@ class MainActivity : AppCompatActivity() {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onCheckedChanged(group: RadioGroup, checkedId: Int){
                 checkedBotton = checkedId
-                if (tabName == "Все"){
-                    adapter.setMovieList(items, checkedBotton)
-                } else {
-                    val itemsFilter= items.filter { it.department == department1[tabName]}
-                            as ArrayList<Person.Items>
-                    adapter.setMovieList(itemsFilter, checkedBotton)
-                }
+                adapter.setMovieList(setFilter(), checkedBotton)
             }
         })
 
     }
 
+    fun setFilter(): ArrayList<Person.Items>{
+
+        val filterTab: ArrayList<Person.Items>
+
+        if (tabName == "Все") {
+            filterTab = items
+        }else {
+            filterTab = items.filter { it.department == departments[tabName] }
+                    as ArrayList<Person.Items>
+        }
+
+        if (strSearch.length > 1) {
+            return filterTab.filter {
+                it.firstName.contains(strSearch, ignoreCase = true) ||
+                        it.lastName.contains(strSearch, ignoreCase = true) ||
+                        it.userTag.contains(strSearch, ignoreCase = true)
+            } as ArrayList<Person.Items>
+
+        }else{
+            return filterTab.filter {
+                it.firstName.contains(strSearch, ignoreCase = true) ||
+                        it.lastName.contains(strSearch, ignoreCase = true)
+            } as ArrayList<Person.Items>
+        }
+    }
 
     //Get hight of screen
     fun getSkeletonRowCount(context: Context): Int{
