@@ -96,8 +96,13 @@ class MainActivity : AppCompatActivity() {
             override fun onTouch(v: View, event: MotionEvent): Boolean {
                 when {
                     rightDrawableClicked(event, v as EditText) -> {
-                        editText.setText("")
-                        return true
+                        when(sheetBehavior.state){
+                            BottomSheetBehavior.STATE_COLLAPSED ->
+                                sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
+                            BottomSheetBehavior.STATE_EXPANDED ->
+                                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
+                        }
+                      return true
                     }
                     leftDrawableClicked(event,v as EditText) -> {
 
@@ -119,8 +124,8 @@ class MainActivity : AppCompatActivity() {
 
         val tabLayout: TabLayout = findViewById(R.id.tabLayout)
 
-        for(i in departments) {
-            tabLayout.addTab(tabLayout.newTab().setText(i.key))
+        departments.forEach{
+            tabLayout.addTab(tabLayout.newTab().setText(it.key))
         }
 
         val listView = arrayListOf<View>()
