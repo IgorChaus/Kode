@@ -40,7 +40,7 @@ private const val DRAWABLE_RIGHT_INDEX = 2
 class MainActivity : AppCompatActivity() {
 
     var items = ArrayList<Person.Items>()
-    var tabPosition: Int = 0
+    var tabName: String = "Все"
 
     var checkedBotton: Int = R.id.radioButton1
 
@@ -103,10 +103,26 @@ class MainActivity : AppCompatActivity() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val departments = arrayListOf<String>("Все", "android", "ios", "design", "management",
-            "qa", "back_office", "frontend", "hr", "pr", "backend", "support", "analytics")
+
+        val department1 = mapOf("Все" to "All",
+                                "Android" to "android",
+                                "iOS" to "ios",
+                                "Дизайн" to "design",
+                                "Менеджмент" to "management",
+                                "QA" to "qa",
+                                "Бэк-офис" to "back_office",
+                                "Frontend" to "frontend",
+                                "HR" to "hr",
+                                "PR" to "pr",
+                                "Backend" to "backend",
+                                "Техподдержка" to "support",
+                                "Аналитика" to "analytics")
 
         val tabLayout: TabLayout = findViewById(R.id.tabLayout)
+
+        for(i in department1) {
+            tabLayout.addTab(tabLayout.newTab().setText(i.key))
+        }
 
         val listView = arrayListOf<View>()
         showSkeleton(listView)
@@ -178,13 +194,13 @@ class MainActivity : AppCompatActivity() {
                     override fun onResponse(call: Call<Person>, response: Response<Person>) {
                         if(response.isSuccessful){
                             var items_update = response.body()?.items as ArrayList<Person.Items>
-                            if (tabPosition > 0 ){
+                            if (tabName == "Все" ){
+                                adapter.setMovieList(items_update,checkedBotton)
+                            } else {
                                 val itemsFilterUpdate= items_update.
-                                    filter { it.department == departments[tabPosition]}
+                                filter { it.department == department1[tabName]}
                                         as ArrayList<Person.Items>
                                 adapter.setMovieList(itemsFilterUpdate,checkedBotton)
-                            } else {
-                                adapter.setMovieList(items_update,checkedBotton)
                             }
                         }
                         swipeContainer.setRefreshing(false)
@@ -207,12 +223,13 @@ class MainActivity : AppCompatActivity() {
 
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                tabPosition = tab?.position ?:0
-                if (tabPosition > 0 ){
-                    val itemsFilter= items.filter { it.department == departments[tabPosition]} as ArrayList<Person.Items>
-                    adapter.setMovieList(itemsFilter, checkedBotton)
-                } else {
+                val tabName = tab?.text
+                if (tabName == "Все"){
                     adapter.setMovieList(items, checkedBotton)
+                } else {
+                    val itemsFilter= items.filter { it.department == department1[tabName]}
+                            as ArrayList<Person.Items>
+                    adapter.setMovieList(itemsFilter, checkedBotton)
                 }
 
             }
@@ -225,6 +242,7 @@ class MainActivity : AppCompatActivity() {
         radioGroup.setOnCheckedChangeListener(object : RadioGroup.OnCheckedChangeListener{
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onCheckedChanged(group: RadioGroup, checkedId: Int){
+
                 checkedBotton = checkedId
                 adapter.setMovieList(items, checkedBotton)
             }
