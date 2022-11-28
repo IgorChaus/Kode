@@ -47,20 +47,23 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var sheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
-    val departments = mapOf("Все" to "All",
-        "Android" to "android",
-        "iOS" to "ios",
-        "Дизайн" to "design",
-        "Менеджмент" to "management",
-        "QA" to "qa",
-        "Бэк-офис" to "back_office",
-        "Frontend" to "frontend",
-        "HR" to "hr",
-        "PR" to "pr",
-        "Backend" to "backend",
-        "Техподдержка" to "support",
-        "Аналитика" to "analytics")
-
+    companion object {
+        val departments = mapOf(
+            "Все" to "All",
+            "Android" to "android",
+            "iOS" to "ios",
+            "Дизайн" to "design",
+            "Менеджмент" to "management",
+            "QA" to "qa",
+            "Бэк-офис" to "back_office",
+            "Frontend" to "frontend",
+            "HR" to "hr",
+            "PR" to "pr",
+            "Backend" to "backend",
+            "Техподдержка" to "support",
+            "Аналитика" to "analytics"
+        )
+    }
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

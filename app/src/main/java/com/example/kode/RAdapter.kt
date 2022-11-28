@@ -1,5 +1,7 @@
 package com.example.kode
 
+import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import java.time.LocalDate
@@ -77,6 +80,7 @@ class RAdapter(_persons: ArrayList<Person.Items>): RecyclerView.Adapter<Recycler
         val personTag: TextView = itemView.findViewById(R.id.personTag)
         val personDepartment: TextView = itemView.findViewById(R.id.personDepartment)
         val birthday: TextView = itemView.findViewById(R.id.personBirthday)
+
     }
 
     class SeparatorHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -92,7 +96,7 @@ class RAdapter(_persons: ArrayList<Person.Items>): RecyclerView.Adapter<Recycler
         itemViewHolder.personName.text = item.firstName + " " +
                 item.lastName
         itemViewHolder.personTag.text = " " + item.userTag
-        itemViewHolder.personDepartment.text = item.department.toString()
+        itemViewHolder.personDepartment.text = item.department
         if(sorting == R.id.radioButton1)
             itemViewHolder.birthday.text = ""
         else {
@@ -100,6 +104,24 @@ class RAdapter(_persons: ArrayList<Person.Items>): RecyclerView.Adapter<Recycler
             var formatter: DateTimeFormatter =
                 DateTimeFormatter.ofPattern("dd MMM", Locale("ru"))
             itemViewHolder.birthday.text = date.format(formatter)
+        }
+        holder.itemView.setOnClickListener {
+          /*  if (adapterPosition == RecyclerView.NO_POSITION) {
+                return@setOnClickListener
+            }*/
+            val intent = Intent(itemViewHolder.itemView.context,Portfolio::class.java)
+            intent.putExtra("path",path)
+            intent.putExtra("personName",item.firstName + " " +
+                    item.lastName)
+            intent.putExtra("tag",item.userTag)
+            intent.putExtra("department",item.department)
+            intent.putExtra("birthday",item.birthday)
+
+
+            intent.putExtra("age",item.birthday)
+            intent.putExtra("phone",item.phone)
+
+            itemViewHolder.itemView.context.startActivity(intent)
         }
     }
     private fun bindSeparator(holder: RecyclerView.ViewHolder, separator: String) {
