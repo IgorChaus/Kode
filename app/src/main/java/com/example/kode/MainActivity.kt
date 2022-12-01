@@ -1,6 +1,7 @@
 package com.example.kode
 
 import android.annotation.SuppressLint
+import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
@@ -32,6 +33,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.res.ResourcesCompat
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 private const val DRAWABLE_LEFT_INDEX = 0
@@ -223,6 +225,20 @@ class MainActivity : AppCompatActivity() {
             override fun onCheckedChanged(group: RadioGroup, checkedId: Int){
                 checkedBotton = checkedId
                 adapter.setMovieList(setFilter(), checkedBotton)
+                if (checkedBotton == R.id.radioButton2){
+                    editText.setCompoundDrawablesWithIntrinsicBounds(
+                        ResourcesCompat.getDrawable(getResources(), R.drawable.icon_search, null),
+                        null,
+                        ResourcesCompat.getDrawable(getResources(), R.drawable.icon_right_purple, null),
+                        null)
+                }else {
+                    editText.setCompoundDrawablesWithIntrinsicBounds(
+                        ResourcesCompat.getDrawable(getResources(), R.drawable.icon_search, null),
+                        null,
+                        ResourcesCompat.getDrawable(getResources(), R.drawable.icon_right, null),
+                        null)
+                }
+
             }
         })
 
