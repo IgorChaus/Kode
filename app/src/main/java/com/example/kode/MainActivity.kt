@@ -17,6 +17,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.RadioButton
@@ -35,6 +36,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import java.security.AccessController.getContext
 
 private const val DRAWABLE_LEFT_INDEX = 0
 private const val DRAWABLE_RIGHT_INDEX = 2
@@ -66,6 +68,7 @@ class MainActivity : AppCompatActivity() {
             "Аналитика" to "analytics"
         )
     }
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -147,6 +150,36 @@ class MainActivity : AppCompatActivity() {
         var apiService = ApiClient.getClient().create(ApiInterface::class.java)
         val call: Call<Person> = apiService.getPersons()
 
+        val button: Button = findViewById(R.id.button)
+        button.setOnClickListener {
+            editText.clearFocus()
+            button.visibility = View.GONE
+            strSearch = ""
+            editText.setText(strSearch)
+
+            //Hide keyboard
+            val  imm = editText.getContext().getSystemService(
+                Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(editText.getWindowToken(), 0)
+
+            adapter.setMovieList(setFilter(), checkedBotton)
+
+            if (checkedBotton == R.id.radioButton2){
+                editText.setCompoundDrawablesWithIntrinsicBounds(
+                    ResourcesCompat.getDrawable(getResources(), R.drawable.icon_search, null),
+                    null,
+                    ResourcesCompat.getDrawable(getResources(), R.drawable.icon_right_purple, null),
+                    null)
+            }else {
+                editText.setCompoundDrawablesWithIntrinsicBounds(
+                    ResourcesCompat.getDrawable(getResources(), R.drawable.icon_search, null),
+                    null,
+                    ResourcesCompat.getDrawable(getResources(), R.drawable.icon_right, null),
+                    null)
+            }
+
+        }
+
         call.enqueue(object : Callback<Person> {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onResponse(call: Call<Person>, response: Response<Person>) {
@@ -177,6 +210,18 @@ class MainActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
+
+        editText.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus) {
+                button.visibility = View.VISIBLE
+                editText.setCompoundDrawablesWithIntrinsicBounds(
+                    ResourcesCompat.getDrawable(getResources(), R.drawable.icon_search_black, null),
+                    null,
+                    null,
+                    null)
+            } else
+                button.visibility = View.GONE
+        }
 
         val swipeContainer: SwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout)
         swipeContainer.setProgressBackgroundColorSchemeColor(Color.parseColor("#FFFFFF"))
