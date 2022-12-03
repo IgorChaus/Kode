@@ -19,6 +19,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
@@ -37,6 +38,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.snackbar.Snackbar
 import java.security.AccessController.getContext
 
 private const val DRAWABLE_LEFT_INDEX = 0
@@ -100,33 +102,15 @@ class MainActivity : AppCompatActivity() {
         })
 
         val editText: EditText = findViewById(R.id.editText)
-
-        editText.setOnTouchListener(object : View.OnTouchListener {
-            override fun onTouch(v: View, event: MotionEvent): Boolean {
-                when {
-                    rightDrawableClicked(event, v as EditText) -> {
-                        when(sheetBehavior.state){
-                            BottomSheetBehavior.STATE_COLLAPSED ->
-                                sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
-                            BottomSheetBehavior.STATE_EXPANDED ->
-                                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
-                        }
-                      return true
-                    }
-                    leftDrawableClicked(event,v as EditText) -> {
-
-                        //Hide keyboard
-                        val  imm = v.getContext().getSystemService(
-                            Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0)
-
-                        return true
-
-                    }else -> return false
-                }
+        val imageButton: ImageButton = findViewById(R.id.imageButton)
+        imageButton.setOnClickListener {
+            when(sheetBehavior.state){
+                BottomSheetBehavior.STATE_COLLAPSED ->
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
+                BottomSheetBehavior.STATE_EXPANDED ->
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
             }
-        })
-
+        }
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -164,20 +148,11 @@ class MainActivity : AppCompatActivity() {
             imm.hideSoftInputFromWindow(editText.getWindowToken(), 0)
 
             setFilter(rv,adapter)
+            imageButton.visibility = View.VISIBLE
 
-            if (checkedBotton == R.id.radioButton2){
-                editText.setCompoundDrawablesWithIntrinsicBounds(
-                    ResourcesCompat.getDrawable(getResources(), R.drawable.icon_search, null),
-                    null,
-                    ResourcesCompat.getDrawable(getResources(), R.drawable.icon_right_purple, null),
-                    null)
-            }else {
-                editText.setCompoundDrawablesWithIntrinsicBounds(
-                    ResourcesCompat.getDrawable(getResources(), R.drawable.icon_search, null),
-                    null,
-                    ResourcesCompat.getDrawable(getResources(), R.drawable.icon_right, null),
-                    null)
-            }
+            editText.setCompoundDrawablesWithIntrinsicBounds(
+                ResourcesCompat.getDrawable(getResources(), R.drawable.icon_search, null),
+                    null, null, null)
 
         }
 
@@ -213,13 +188,14 @@ class MainActivity : AppCompatActivity() {
         editText.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus) {
                 button.visibility = View.VISIBLE
+                imageButton.visibility = View.GONE
                 editText.setCompoundDrawablesWithIntrinsicBounds(
                     ResourcesCompat.getDrawable(getResources(), R.drawable.icon_search_black, null),
-                    null,
-                    null,
-                    null)
-            } else
+                    null, null, null)
+            } else {
                 button.visibility = View.GONE
+                imageButton.visibility = View.VISIBLE
+            }
         }
 
         val swipeContainer: SwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout)
@@ -267,18 +243,11 @@ class MainActivity : AppCompatActivity() {
                 checkedBotton = checkedId
                 setFilter(rv,adapter)
                 if (checkedBotton == R.id.radioButton2){
-                    editText.setCompoundDrawablesWithIntrinsicBounds(
-                        ResourcesCompat.getDrawable(getResources(), R.drawable.icon_search, null),
-                        null,
-                        ResourcesCompat.getDrawable(getResources(), R.drawable.icon_right_purple, null),
-                        null)
+                    imageButton.setImageResource(R.drawable.icon_right_purple)
                 }else {
-                    editText.setCompoundDrawablesWithIntrinsicBounds(
-                        ResourcesCompat.getDrawable(getResources(), R.drawable.icon_search, null),
-                        null,
-                        ResourcesCompat.getDrawable(getResources(), R.drawable.icon_right, null),
-                        null)
+                    imageButton.setImageResource(R.drawable.icon_right)
                 }
+                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
 
             }
         })
@@ -352,30 +321,5 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun leftDrawableClicked(event: MotionEvent, view: EditText): Boolean {
-
-        val leftDrawable = view.compoundDrawables[DRAWABLE_LEFT_INDEX]
-
-        return if (leftDrawable == null) {
-            false
-        } else {
-            val startOfDrawable = view.paddingLeft
-            val endOfDrawable = startOfDrawable + leftDrawable.bounds.width()
-            startOfDrawable <= event.x && event.x <= endOfDrawable
-        }
-    }
-
-    fun rightDrawableClicked(event: MotionEvent, view: EditText): Boolean {
-
-        val rightDrawable = view.compoundDrawables[DRAWABLE_RIGHT_INDEX]
-
-        return if (rightDrawable == null) {
-            false
-        } else {
-            val startOfDrawable = view.width - rightDrawable.bounds.width() - view.paddingRight
-            val endOfDrawable = startOfDrawable + rightDrawable.bounds.width()
-            startOfDrawable <= event.x && event.x <= endOfDrawable
-        }
-    }
 
 }

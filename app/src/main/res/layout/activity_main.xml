@@ -24,6 +24,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/round_corners"
+                android:gravity="center"
                 android:orientation="horizontal"
                 tools:layout_editor_absoluteX="16dp"
                 tools:layout_editor_absoluteY="5dp">
@@ -34,19 +36,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/round_corners"
+                    android:backgroundTint="@android:color/transparent"
                     android:drawableLeft="@drawable/icon_search"
-                    android:drawableRight="@drawable/icon_right"
                     android:drawablePadding="10dp"
                     android:ems="10"
                     android:hint="Введите имя, тэг, почту..."
                     android:imeOptions="actionSearch"
                     android:inputType="text"
                     android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
                     android:singleLine="false"
                     android:textColor="#C3C3C6"
                     android:textSize="15sp" />
+
+
+                <ImageButton
+                    android:id="@+id/imageButton"
+                    android:layout_width="70dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/icon_right" />
 
                 <Button
                     android:id="@+id/button"
@@ -60,7 +69,8 @@
                     android:textAllCaps="false"
                     android:textColor="#6534FF"
                     android:textSize="14sp"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    tools:visibility="visible" />
             </LinearLayout>
 
         </androidx.appcompat.widget.Toolbar>
@@ -73,11 +83,23 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:tabIndicatorColor="#6534FF"
             app:tabMode="auto"
             app:tabSelectedTextColor="#050510"
             app:tabTextAppearance="@style/tab_text"
-            app:tabTextColor="#97979B"/>
+            app:tabTextColor="#97979B" />
 
+
+        <View
+            android:id="@+id/view4"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:clickable="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tabLayout" />
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
@@ -85,7 +107,7 @@
             android:layout_height="640dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tabLayout">
+            app:layout_constraintTop_toBottomOf="@+id/view4">
 
             <LinearLayout
                 android:id="@+id/linLayout"

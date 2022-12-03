@@ -1,17 +1,21 @@
 package com.example.kode
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 class Portfolio: AppCompatActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.portfolio)
@@ -31,7 +35,9 @@ class Portfolio: AppCompatActivity() {
         val depatStr = intent.extras!!.getString("department")
         department.text = MainActivity.departments.filterValues { it == depatStr }.keys.first()
         val birthdayStr = intent.extras!!.getString("birthday")
-        birthday.text = birthdayStr
+        birthday.text = LocalDate.parse(birthdayStr).format(DateTimeFormatter
+            .ofPattern("dd MMMM YYYY", Locale("ru")))
+
         telephone.text = intent.extras!!.getString("phone")
 
         val formatYear: DateTimeFormatter = DateTimeFormatter.ofPattern("YYYY")
