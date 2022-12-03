@@ -22,6 +22,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -162,7 +163,7 @@ class MainActivity : AppCompatActivity() {
                 Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(editText.getWindowToken(), 0)
 
-            adapter.setMovieList(setFilter(), checkedBotton)
+            setFilter(rv,adapter)
 
             if (checkedBotton == R.id.radioButton2){
                 editText.setCompoundDrawablesWithIntrinsicBounds(
@@ -181,7 +182,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         call.enqueue(object : Callback<Person> {
-            @RequiresApi(Build.VERSION_CODES.O)
             override fun onResponse(call: Call<Person>, response: Response<Person>) {
                 if(response.isSuccessful) {
                     items = response.body()?.items as ArrayList<Person.Items>
@@ -200,10 +200,9 @@ class MainActivity : AppCompatActivity() {
         })
 
         editText.addTextChangedListener(object : TextWatcher {
-            @RequiresApi(Build.VERSION_CODES.O)
             override fun afterTextChanged(s: Editable?) {
                 strSearch = s.toString()
-                adapter.setMovieList(setFilter(), checkedBotton)
+                setFilter(rv,adapter)
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -229,12 +228,11 @@ class MainActivity : AppCompatActivity() {
                 var apiService = ApiClient.getClient().create(ApiInterface::class.java)
                 val call: Call<Person> = apiService.getPersons()
                 call.enqueue(object : Callback<Person> {
-                    @RequiresApi(Build.VERSION_CODES.O)
                     override fun onResponse(call: Call<Person>, response: Response<Person>) {
                         if(response.isSuccessful){
                             items.clear()
                             items = response.body()?.items as ArrayList<Person.Items>
-                            adapter.setMovieList(setFilter(), checkedBotton)
+                            setFilter(rv,adapter)
                         }
                         swipeContainer.setRefreshing(false)
                     }
@@ -254,10 +252,9 @@ class MainActivity : AppCompatActivity() {
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
 
-            @RequiresApi(Build.VERSION_CODES.O)
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 tabName = tab?.text.toString()
-                adapter.setMovieList(setFilter(), checkedBotton)
+                setFilter(rv,adapter)
             }
 
         })
@@ -266,10 +263,9 @@ class MainActivity : AppCompatActivity() {
         val radioGroup: RadioGroup = findViewById(R.id.radioGroup)
         radioGroup.clearCheck()
         radioGroup.setOnCheckedChangeListener(object : RadioGroup.OnCheckedChangeListener{
-            @RequiresApi(Build.VERSION_CODES.O)
             override fun onCheckedChanged(group: RadioGroup, checkedId: Int){
                 checkedBotton = checkedId
-                adapter.setMovieList(setFilter(), checkedBotton)
+                setFilter(rv,adapter)
                 if (checkedBotton == R.id.radioButton2){
                     editText.setCompoundDrawablesWithIntrinsicBounds(
                         ResourcesCompat.getDrawable(getResources(), R.drawable.icon_search, null),
@@ -289,7 +285,8 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun setFilter(): ArrayList<Person.Items>{
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun setFilter(rv: RecyclerView, adapter: RAdapter){
 
         val filterTab: ArrayList<Person.Items>
 
@@ -300,18 +297,29 @@ class MainActivity : AppCompatActivity() {
                     as ArrayList<Person.Items>
         }
 
+        val itemsFilter: ArrayList<Person.Items>
         if (strSearch.length > 1) {
-            return filterTab.filter {
+            itemsFilter = filterTab.filter {
                 it.firstName.contains(strSearch, ignoreCase = true) ||
                         it.lastName.contains(strSearch, ignoreCase = true) ||
                         it.userTag.contains(strSearch, ignoreCase = true)
             } as ArrayList<Person.Items>
-
         }else{
-            return filterTab.filter {
+            itemsFilter = filterTab.filter {
                 it.firstName.contains(strSearch, ignoreCase = true) ||
                         it.lastName.contains(strSearch, ignoreCase = true)
             } as ArrayList<Person.Items>
+        }
+
+        val emptyView: ConstraintLayout = findViewById(R.id.empty_view)
+        if (itemsFilter.isEmpty()) {
+            rv.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        }
+        else {
+            rv.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+            adapter.setMovieList(itemsFilter, checkedBotton)
         }
     }
 
@@ -369,6 +377,5 @@ class MainActivity : AppCompatActivity() {
             startOfDrawable <= event.x && event.x <= endOfDrawable
         }
     }
-
 
 }

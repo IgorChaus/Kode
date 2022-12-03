@@ -8,7 +8,7 @@
     android:background="@drawable/rounded_dialog"
     android:paddingBottom="32dp"
     app:behavior_hideable="false"
-    app:behavior_peekHeight="16dp"
+    app:behavior_peekHeight="50dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <View
@@ -25,7 +25,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="30dp"
         android:fontFamily="@font/inter_semibold"
         android:text="Сортировка"
         android:textColor="@color/black"
@@ -67,7 +67,7 @@
         android:id="@+id/view1"
         android:layout_width="134dp"
         android:layout_height="5dp"
-        android:layout_marginTop="192dp"
+        android:layout_marginTop="205dp"
         android:background="@drawable/rounded_line_short"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
