@@ -8,7 +8,7 @@
     android:background="@drawable/rounded_dialog"
     android:paddingBottom="32dp"
     app:behavior_hideable="false"
-    app:behavior_peekHeight="16dp"
+    app:behavior_peekHeight="20dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <View

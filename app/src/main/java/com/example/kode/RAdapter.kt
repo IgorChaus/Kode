@@ -20,13 +20,13 @@ import kotlin.collections.ArrayList
 
 class RAdapter(_persons: ArrayList<Person.Items>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    var items = _persons
-    var sorting: Int = R.id.radioButton1
-    var  its: ArrayList<Any> = arrayListOf()
+    private var items = _persons
+    private var sorting: Int = R.id.radioButton1
+    private var  its: ArrayList<Any> = arrayListOf()
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun setMovieList(_persons: ArrayList<Person.Items>, _sorting: Int) {
+    fun setDataList(_persons: ArrayList<Person.Items>, _sorting: Int) {
         items = _persons
         sorting = _sorting
         its.clear()
@@ -95,7 +95,7 @@ class RAdapter(_persons: ArrayList<Person.Items>): RecyclerView.Adapter<Recycler
             .into(itemViewHolder.personPhoto)
         itemViewHolder.personName.text = item.firstName + " " +
                 item.lastName
-        itemViewHolder.personTag.text = " " + item.userTag
+        itemViewHolder.personTag.text = " " + item.userTag.lowercase()
         itemViewHolder.personDepartment.text = item.department
         if(sorting == R.id.radioButton1)
             itemViewHolder.birthday.text = ""
