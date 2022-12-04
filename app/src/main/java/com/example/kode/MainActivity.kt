@@ -198,9 +198,19 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        val snackbarLoading: Snackbar = Snackbar.make(rv,"Секундочку, гружусь...",Snackbar
+            .LENGTH_INDEFINITE)
+        snackbarLoading.setBackgroundTint(Color.parseColor("#6534FF"))
+        snackbarLoading.setTextColor(Color.WHITE)
+
+        val snackbarError: Snackbar = Snackbar.make(rv,"Не могу обновить данные.\n" +
+                "Проверьте соединение с Интернетом",Snackbar.LENGTH_LONG)
+        snackbarError.setBackgroundTint(Color.parseColor("#F44336"))
+        snackbarError.setTextColor(Color.WHITE)
         val swipeContainer: SwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout)
         swipeContainer.setProgressBackgroundColorSchemeColor(Color.parseColor("#FFFFFF"))
         swipeContainer.setOnRefreshListener {
+                snackbarLoading.show()
                 var apiService = ApiClient.getClient().create(ApiInterface::class.java)
                 val call: Call<Person> = apiService.getPersons()
                 call.enqueue(object : Callback<Person> {
@@ -209,12 +219,18 @@ class MainActivity : AppCompatActivity() {
                             items.clear()
                             items = response.body()?.items as ArrayList<Person.Items>
                             setFilter(rv,adapter)
+                            snackbarLoading.dismiss()
+                        }else{
+                            snackbarLoading.dismiss()
+                            snackbarError.show()
                         }
                         swipeContainer.setRefreshing(false)
                     }
 
                     override fun onFailure(call: Call<Person>, t: Throwable) {
                         Log.i("MyTag", "Response = " + t);
+                        snackbarLoading.dismiss()
+                        snackbarError.show()
                         swipeContainer.setRefreshing(false)
                     }
                 })
