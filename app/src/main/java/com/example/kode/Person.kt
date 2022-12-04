@@ -1,7 +1,5 @@
 package com.example.kode
 
-import java.time.LocalDate
-
 data class Person(val items: List<Items>) {
 
     data class Items(

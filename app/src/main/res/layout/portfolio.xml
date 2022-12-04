@@ -11,9 +11,11 @@
         android:layout_width="104dp"
         android:layout_height="104dp"
         android:layout_marginTop="72dp"
+        android:contentDescription="@string/large_photo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ImageContrastCheck"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
@@ -23,10 +25,10 @@
         android:layout_marginStart="87dp"
         android:layout_marginTop="200dp"
         android:fontFamily="@font/inter"
-        android:text="TextView"
         android:textColor="#050510"
         android:textSize="24sp"
         android:textStyle="bold"
+        tools:text="Full Name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -37,11 +39,12 @@
         android:layout_marginStart="4dp"
         android:layout_marginTop="204dp"
         android:fontFamily="@font/inter"
-        android:text="TextView"
         android:textColor="#97979B"
         android:textSize="17sp"
         app:layout_constraintStart_toEndOf="@+id/fullName"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TextContrastCheck"
+        tools:text="tg" />
 
     <TextView
         android:id="@+id/department"
@@ -49,8 +52,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:fontFamily="@font/inter"
-        android:text="TextView"
         android:textSize="13sp"
+        tools:text="Department"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fullName" />
@@ -61,12 +64,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="18dp"
         android:layout_marginTop="307dp"
-        android:drawableLeft="@drawable/star"
         android:drawablePadding="14dp"
         android:fontFamily="@font/inter"
-        android:text="TextView"
         android:textColor="#050510"
         android:textSize="16sp"
+        tools:text="birthday"
+        app:drawableStartCompat="@drawable/star"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -76,11 +79,12 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:fontFamily="@font/inter"
-        android:text="TextView"
         android:textColor="#97979B"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/birthday"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="TextContrastCheck"
+        tools:text="age" />
 
     <TextView
         android:id="@+id/telephone"
@@ -88,22 +92,23 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="18dp"
         android:layout_marginTop="48dp"
-        android:drawableLeft="@drawable/telefone"
         android:drawablePadding="14dp"
         android:fontFamily="@font/inter"
-        android:text="TextView"
         android:textColor="#050510"
         android:textSize="16sp"
+        tools:text="phone"
+        app:drawableStartCompat="@drawable/telefone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/birthday" />
 
     <ImageButton
         android:id="@+id/bButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginStart="15dp"
         android:layout_marginTop="50dp"
         android:background="?android:attr/windowBackground"
+        android:contentDescription="@string/back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/arrow" />

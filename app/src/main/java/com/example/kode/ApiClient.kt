@@ -1,14 +1,13 @@
 package com.example.kode
 
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 
 object ApiClient {
-    const val BASE_URL = "https://stoplight.io/mocks/kode-education/trainee-test/25143926/"
+    private const val BASE_URL = "https://stoplight.io/mocks/kode-education/trainee-test/25143926/"
     fun getClient(): Retrofit {
 
         //Это нужно для отладки retrofit
@@ -26,12 +25,9 @@ object ApiClient {
             .writeTimeout(2, TimeUnit.SECONDS)
             .build()
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(client)
-            .build()
 
-        return retrofit
+
+        return Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create())
+                    .client(client).build()
     }
 }

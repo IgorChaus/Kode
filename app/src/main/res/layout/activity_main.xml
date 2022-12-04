@@ -8,7 +8,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="10dp">
+        android:paddingStart="10dp"
+        tools:ignore="RtlSymmetry">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -36,17 +37,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:autofillHints="username"
                     android:backgroundTint="@android:color/transparent"
-                    android:drawableLeft="@drawable/icon_search"
+                    android:drawableStart="@drawable/icon_search"
                     android:drawablePadding="10dp"
                     android:ems="10"
-                    android:hint="Введите имя, тэг, почту..."
+                    android:fontFamily="@font/inter"
+                    android:hint="@string/prompt"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
                     android:paddingLeft="10dp"
                     android:singleLine="false"
-                    android:textColor="#C3C3C6"
-                    android:textSize="15sp" />
+                    android:textColor="#050510"
+                    android:textSize="15sp"
+                    tools:ignore="RtlHardcoded,TextContrastCheck" />
 
 
                 <ImageButton
@@ -55,6 +59,7 @@
                     android:layout_height="50dp"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
+                    android:contentDescription="@string/imgsorting"
                     android:src="@drawable/icon_right" />
 
                 <Button
@@ -65,7 +70,7 @@
                     android:background="@android:color/transparent"
                     android:backgroundTint="@color/white"
                     android:fontFamily="@font/inter"
-                    android:text="Отмена"
+                    android:text="@string/cancelButton"
                     android:textAllCaps="false"
                     android:textColor="#6534FF"
                     android:textSize="14sp"
@@ -80,6 +85,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="@color/white"
+            android:contentDescription="@string/tabs"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
@@ -95,7 +101,6 @@
             android:layout_width="wrap_content"
             android:layout_height="1dp"
             android:background="@android:color/darker_gray"
-            android:clickable="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -136,6 +141,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="60dp"
+                        android:contentDescription="@string/imgsearch"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.501"
                         app:layout_constraintStart_toStartOf="parent"
@@ -149,7 +155,7 @@
                         android:layout_marginTop="8dp"
                         android:fontFamily="@font/inter"
                         android:gravity="center"
-                        android:text="Мы никого не нашли"
+                        android:text="@string/empty_message1"
                         android:textColor="#050510"
                         android:textSize="17sp"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -163,13 +169,14 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:fontFamily="@font/inter"
-                        android:text="Попробуй скорректировать запрос"
+                        android:text="@string/empty_message2"
                         android:textColor="#97979B"
                         android:textSize="16sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.588"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+                        app:layout_constraintTop_toBottomOf="@+id/textView4"
+                        tools:ignore="TextContrastCheck" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -11,9 +11,11 @@
         android:layout_height="72dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:src="@drawable/ig1"
+        android:contentDescription="@string/item_photo"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ImageContrastCheck"
+        tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/personName"
@@ -21,29 +23,29 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="30dp"
-        android:text="TextView"
         android:textColor="#000000"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Full Name"/>
 
     <TextView
         android:id="@+id/personDepartment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="TextView"
         android:textSize="13sp"
         app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/personName" />
+        app:layout_constraintTop_toBottomOf="@+id/personName"
+        tools:text="Department"/>
 
     <TextView
         android:id="@+id/personTag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
         app:layout_constraintBottom_toBottomOf="@+id/personName"
-        app:layout_constraintStart_toEndOf="@+id/personName" />
+        app:layout_constraintStart_toEndOf="@+id/personName"
+        tools:text="tg"/>
 
     <TextView
         android:id="@+id/personBirthday"
@@ -55,6 +57,7 @@
         android:textColor="#55555C"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="birthday"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

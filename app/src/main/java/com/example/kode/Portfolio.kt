@@ -1,9 +1,7 @@
 package com.example.kode
 
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -36,7 +34,7 @@ class Portfolio: AppCompatActivity() {
         department.text = MainActivity.departments.filterValues { it == depatStr }.keys.first()
         val birthdayStr = intent.extras!!.getString("birthday")
         birthday.text = LocalDate.parse(birthdayStr).format(DateTimeFormatter
-            .ofPattern("dd MMMM YYYY", Locale("ru")))
+            .ofPattern("dd MMMM yyyy", Locale("ru")))
 
         telephone.text = intent.extras!!.getString("phone")
 
@@ -51,17 +49,17 @@ class Portfolio: AppCompatActivity() {
         }
     }
 
-    fun ageString(ageInt: Int): String{
+    private fun ageString(ageInt: Int): String{
         when (ageInt){
-            1               ->  return ageInt.toString() + " год"
-            in 2 .. 4 ->  return ageInt.toString() + " года"
-            in 5 .. 20 -> return ageInt.toString() + " лет"
+            1               ->  return ageInt.toString() + " ${R.string.god}"
+            in 2 .. 4 ->  return ageInt.toString() + " ${R.string.goda}"
+            in 5 .. 20 -> return ageInt.toString() + " ${R.string.let}"
         }
 
         when (ageInt % 10){
-            1                 ->    return ageInt.toString() + " год"
-            in 2 .. 4   ->    return ageInt.toString() + " года"
-            0, in 5 .. 9   ->    return ageInt.toString() + " лет"
+            1                 ->    return ageInt.toString() + " ${R.string.god}"
+            in 2 .. 4   ->    return ageInt.toString() + " ${R.string.goda}"
+            0, in 5 .. 9   ->    return ageInt.toString() + " ${R.string.let}"
         }
         return ""
     }

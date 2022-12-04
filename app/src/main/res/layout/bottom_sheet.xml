@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:fontFamily="@font/inter_semibold"
-        android:text="Сортировка"
+        android:text="@string/sorting"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -42,15 +42,17 @@
         android:paddingStart="18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        tools:ignore="RtlSymmetry">
 
         <RadioButton
             android:id="@+id/radioButton1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/inter_medium"
+            android:minHeight="48dp"
             android:paddingStart="14dp"
-            android:text="По алфавиту"
+            android:text="@string/sortingABC"
             android:textSize="16sp" />
 
         <RadioButton
@@ -58,8 +60,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/inter_medium"
+            android:minHeight="48dp"
             android:paddingStart="14dp"
-            android:text="По дню рождения"
+            android:text="@string/sortingBirthday"
             android:textSize="16sp" />
     </RadioGroup>
 

@@ -26,7 +26,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.tabs.TabLayout
-import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -35,6 +34,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
+import kotlin.math.ceil
 
 
 class MainActivity : AppCompatActivity() {
@@ -77,21 +77,23 @@ class MainActivity : AppCompatActivity() {
         val rv: RecyclerView = findViewById(R.id.rv1)
 
         val llm = LinearLayoutManager(this)
-        rv.setLayoutManager(llm)
+        rv.layoutManager = llm
 
         val adapter = RAdapter(items)
-        rv.setAdapter(adapter)
+        rv.adapter = adapter
 
         //--------------------- SEARCH ----------------------
         val editText: EditText = findViewById(R.id.editText)
 
         val sortButton: ImageButton = findViewById(R.id.imageButton)
         sortButton.setOnClickListener {
+            Log.i("MyTag",sheetBehavior.state.toString())
             when(sheetBehavior.state){
                 BottomSheetBehavior.STATE_COLLAPSED ->
                     sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
                 BottomSheetBehavior.STATE_EXPANDED ->
                     sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
+                else -> TODO()
             }
         }
 
@@ -103,15 +105,15 @@ class MainActivity : AppCompatActivity() {
             editText.setText(strSearch)
 
             //Hide keyboard
-            val  imm = editText.getContext().getSystemService(
+            val  imm = editText.context.getSystemService(
                 Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(editText.getWindowToken(), 0)
+            imm.hideSoftInputFromWindow(editText.windowToken, 0)
 
             setFilter(rv,adapter)
             sortButton.visibility = View.VISIBLE
 
             editText.setCompoundDrawablesWithIntrinsicBounds(
-                ResourcesCompat.getDrawable(getResources(), R.drawable.icon_search, null),
+                ResourcesCompat.getDrawable(resources, R.drawable.icon_search, null),
                 null, null, null)
 
         }
@@ -127,12 +129,12 @@ class MainActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
-        editText.setOnFocusChangeListener { view, hasFocus ->
+        editText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 buttonCancel.visibility = View.VISIBLE
                 sortButton.visibility = View.GONE
                 editText.setCompoundDrawablesWithIntrinsicBounds(
-                    ResourcesCompat.getDrawable(getResources(), R.drawable.icon_search_black, null),
+                    ResourcesCompat.getDrawable(resources, R.drawable.icon_search_black, null),
                     null, null, null)
             } else {
                 buttonCancel.visibility = View.GONE
@@ -163,7 +165,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         //---------------- FIRST FILLING DATA ----------------------
-        var apiService = ApiClient.getClient().create(ApiInterface::class.java)
+        val apiService = ApiClient.getClient().create(ApiInterface::class.java)
         val call: Call<Person> = apiService.getPersons()
 
         call.enqueue(object : Callback<Person> {
@@ -200,9 +202,9 @@ class MainActivity : AppCompatActivity() {
 
         swipeContainer.setOnRefreshListener {
                 snackbarLoading.show()
-                var apiService = ApiClient.getClient().create(ApiInterface::class.java)
-                val call: Call<Person> = apiService.getPersons()
-                call.enqueue(object : Callback<Person> {
+                val apiGetClients = ApiClient.getClient().create(ApiInterface::class.java)
+                val callResult: Call<Person> = apiGetClients.getPersons()
+                callResult.enqueue(object : Callback<Person> {
                     override fun onResponse(call: Call<Person>, response: Response<Person>) {
                         if(response.isSuccessful){
                             items.clear()
@@ -213,14 +215,13 @@ class MainActivity : AppCompatActivity() {
                             snackbarLoading.dismiss()
                             snackbarError.show()
                         }
-                        swipeContainer.setRefreshing(false)
+                        swipeContainer.isRefreshing = false
                     }
 
                     override fun onFailure(call: Call<Person>, t: Throwable) {
-                        Log.i("MyTag", "Response = " + t);
                         snackbarLoading.dismiss()
                         snackbarError.show()
-                        swipeContainer.setRefreshing(false)
+                        swipeContainer.isRefreshing = false
                     }
                 })
             }
@@ -235,10 +236,10 @@ class MainActivity : AppCompatActivity() {
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
 
-                var checkBotton: RadioButton = findViewById(checkedBotton)
+                val checkBotton: RadioButton = findViewById(checkedBotton)
                 checkBotton.isChecked = true
 
-                var linLayout: LinearLayout = findViewById(R.id.linLayout)
+                val linLayout: LinearLayout = findViewById(R.id.linLayout)
                 linLayout.background = ColorDrawable(Color.parseColor("#29050510"))
                 when (newState) {
                     BottomSheetBehavior.STATE_EXPANDED ->
@@ -252,43 +253,37 @@ class MainActivity : AppCompatActivity() {
 
         val radioGroup: RadioGroup = findViewById(R.id.radioGroup)
         radioGroup.clearCheck()
-        radioGroup.setOnCheckedChangeListener(object : RadioGroup.OnCheckedChangeListener{
-            override fun onCheckedChanged(group: RadioGroup, checkedId: Int){
-                checkedBotton = checkedId
-                setFilter(rv,adapter)
-                if (checkedBotton == R.id.radioButton2){
-                    sortButton.setImageResource(R.drawable.icon_right_purple)
-                }else {
-                    sortButton.setImageResource(R.drawable.icon_right)
-                }
-                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
-
+        radioGroup.setOnCheckedChangeListener { _, checkedId ->
+            checkedBotton = checkedId
+            setFilter(rv, adapter)
+            if (checkedBotton == R.id.radioButton2) {
+                sortButton.setImageResource(R.drawable.icon_right_purple)
+            } else {
+                sortButton.setImageResource(R.drawable.icon_right)
             }
-        })
+            sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
 
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun setFilter(rv: RecyclerView, adapter: RAdapter){
 
-        val filterTab: ArrayList<Person.Items>
-
-        if (tabName == "Все") {
-            filterTab = items
+        val filterTab: ArrayList<Person.Items> = if (tabName == "Все") {
+            items
         }else {
-            filterTab = items.filter { it.department == departments[tabName] }
+            items.filter { it.department == departments[tabName] }
                     as ArrayList<Person.Items>
         }
 
-        val itemsFilter: ArrayList<Person.Items>
-        if (strSearch.length > 1) {
-            itemsFilter = filterTab.filter {
+        val itemsFilter: ArrayList<Person.Items> = if (strSearch.length > 1) {
+            filterTab.filter {
                 it.firstName.contains(strSearch, ignoreCase = true) ||
                         it.lastName.contains(strSearch, ignoreCase = true) ||
                         it.userTag.contains(strSearch, ignoreCase = true)
             } as ArrayList<Person.Items>
         }else{
-            itemsFilter = filterTab.filter {
+            filterTab.filter {
                 it.firstName.contains(strSearch, ignoreCase = true) ||
                         it.lastName.contains(strSearch, ignoreCase = true)
             } as ArrayList<Person.Items>
@@ -296,38 +291,39 @@ class MainActivity : AppCompatActivity() {
 
         val emptyView: ConstraintLayout = findViewById(R.id.empty_view)
         if (itemsFilter.isEmpty()) {
-            rv.setVisibility(View.GONE);
-            emptyView.setVisibility(View.VISIBLE);
+            rv.visibility = View.GONE
+            emptyView.visibility = View.VISIBLE
         }
         else {
-            rv.setVisibility(View.VISIBLE);
-            emptyView.setVisibility(View.GONE);
+            rv.visibility = View.VISIBLE
+            emptyView.visibility = View.GONE
             adapter.setDataList(itemsFilter, checkedBotton)
         }
     }
 
-    fun showSkeleton(listView: ArrayList<View>){
+    private fun showSkeleton(listView: ArrayList<View>){
         var view :View
-        val ltInflater: LayoutInflater = getLayoutInflater();
+        val ltInflater: LayoutInflater = layoutInflater
         val linLayout: LinearLayout = findViewById(R.id.linLayout)
 
-        val metrics: DisplayMetrics = this.getResources().getDisplayMetrics()
+        val metrics: DisplayMetrics = this.resources.displayMetrics
         val heightDpi = ((metrics.heightPixels / metrics.density).toInt()).toDouble()
-        var counter = (Math.ceil(heightDpi / 102)).toInt() //Get hight of item
+        var counter = (ceil(heightDpi / 102)).toInt() //Get hight of item
 
         while (counter >= 1){
-            view = ltInflater.inflate(R.layout.skeleton_item, null, false)
+            view = ltInflater.inflate(R.layout.skeleton_item, findViewById(android.R.id.content)
+                , false)
             linLayout.addView(view)
             listView.add(view)
             counter--
         }
     }
 
-    fun hideSkeleton(listView: ArrayList<View>){
-        for(i in listView){
-            i.setVisibility(View.GONE)
+    fun hideSkeleton(listView: ArrayList<View>) {
+
+        listView.forEach {
+            it.visibility = View.GONE
         }
     }
-
 
 }

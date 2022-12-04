@@ -1,16 +1,14 @@
 package com.example.kode
 
-import android.content.Context
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import java.time.LocalDate
@@ -25,6 +23,7 @@ class RAdapter(_persons: ArrayList<Person.Items>): RecyclerView.Adapter<Recycler
     private var  its: ArrayList<Any> = arrayListOf()
 
 
+    @SuppressLint("NotifyDataSetChanged")
     @RequiresApi(Build.VERSION_CODES.O)
     fun setDataList(_persons: ArrayList<Person.Items>, _sorting: Int) {
         items = _persons
@@ -41,7 +40,7 @@ class RAdapter(_persons: ArrayList<Person.Items>): RecyclerView.Adapter<Recycler
             val currentDate = LocalDate.now()
 
             items.sortWith(
-                compareBy({ LocalDate.parse(it.birthday).format(formatMMDD) })
+                compareBy { LocalDate.parse(it.birthday).format(formatMMDD) }
             )
 
             its.addAll(items.filter
@@ -87,11 +86,12 @@ class RAdapter(_persons: ArrayList<Person.Items>): RecyclerView.Adapter<Recycler
         val separetor: TextView = itemView.findViewById(R.id.year)
     }
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     private fun bindItem(holder: RecyclerView.ViewHolder, item: Person.Items) {
         val itemViewHolder = holder as ItemViewHolder
         val path: String = item.avatarUrl
-        Glide.with(itemViewHolder.itemView.getContext()).load(path).circleCrop()
+        Glide.with(itemViewHolder.itemView.context).load(path).circleCrop()
             .into(itemViewHolder.personPhoto)
         itemViewHolder.personName.text = item.firstName + " " +
                 item.lastName
@@ -100,8 +100,8 @@ class RAdapter(_persons: ArrayList<Person.Items>): RecyclerView.Adapter<Recycler
         if(sorting == R.id.radioButton1)
             itemViewHolder.birthday.text = ""
         else {
-            var date = LocalDate.parse(item.birthday)
-            var formatter: DateTimeFormatter =
+            val date = LocalDate.parse(item.birthday)
+            val formatter: DateTimeFormatter =
                 DateTimeFormatter.ofPattern("dd MMM", Locale("ru"))
             itemViewHolder.birthday.text = date.format(formatter)
         }
