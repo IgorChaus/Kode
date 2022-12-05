@@ -106,9 +106,9 @@ class RAdapter(_persons: ArrayList<Person.Items>): RecyclerView.Adapter<Recycler
             itemViewHolder.birthday.text = date.format(formatter)
         }
         holder.itemView.setOnClickListener {
-          /*  if (adapterPosition == RecyclerView.NO_POSITION) {
+            if (holder.getAdapterPosition() == RecyclerView.NO_POSITION) {
                 return@setOnClickListener
-            }*/
+            }
             val intent = Intent(itemViewHolder.itemView.context,Portfolio::class.java)
             intent.putExtra("path",path)
             intent.putExtra("personName",item.firstName + " " +
