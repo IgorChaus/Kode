@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/inter"
-        android:textColor="#C3C3C6"
+        android:textColor="@color/grey_light"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/view3"
@@ -24,7 +24,7 @@
         android:layout_width="72dp"
         android:layout_height="1dp"
         android:layout_marginStart="24dp"
-        android:background="#C3C3C6"
+        android:background="@color/grey_light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -34,7 +34,7 @@
         android:layout_width="72dp"
         android:layout_height="1dp"
         android:layout_marginEnd="24dp"
-        android:background="#C3C3C6"
+        android:background="@color/grey_light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

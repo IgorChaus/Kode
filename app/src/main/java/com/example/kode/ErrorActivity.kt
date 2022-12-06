@@ -12,7 +12,7 @@ class ErrorActivity: AppCompatActivity() {
 
         val textView: TextView = findViewById(R.id.textView3)
         textView.setOnClickListener {
-            val intent = Intent(this@ErrorActivity,MainActivity::class.java)
+            val intent = Intent(this,MainActivity::class.java)
             startActivity(intent)
         }
     }

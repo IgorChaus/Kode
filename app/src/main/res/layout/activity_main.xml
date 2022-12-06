@@ -47,7 +47,7 @@
                     android:inputType="text"
                     android:paddingLeft="10dp"
                     android:singleLine="false"
-                    android:textColor="#050510"
+                    android:textColor="@color/black"
                     android:textSize="15sp"
                     tools:ignore="RtlHardcoded,TextContrastCheck" />
 
@@ -71,7 +71,7 @@
                     android:fontFamily="@font/inter"
                     android:text="@string/cancelButton"
                     android:textAllCaps="false"
-                    android:textColor="#6534FF"
+                    android:textColor="@color/purple"
                     android:textSize="14sp"
                     android:visibility="gone"
                     tools:visibility="visible" />
@@ -88,18 +88,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            app:tabIndicatorColor="#6534FF"
+            app:tabIndicatorColor="@color/purple"
             app:tabMode="auto"
-            app:tabSelectedTextColor="#050510"
+            app:tabSelectedTextColor="@color/black"
             app:tabTextAppearance="@style/tab_text"
-            app:tabTextColor="#97979B" />
+            app:tabTextColor="@color/grey" />
 
 
         <View
             android:id="@+id/view4"
             android:layout_width="wrap_content"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
+            android:background="@color/grey_light"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -155,7 +155,7 @@
                         android:fontFamily="@font/inter"
                         android:gravity="center"
                         android:text="@string/empty_message1"
-                        android:textColor="#050510"
+                        android:textColor="@color/black"
                         android:textSize="17sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.54"
@@ -169,7 +169,7 @@
                         android:layout_marginTop="12dp"
                         android:fontFamily="@font/inter"
                         android:text="@string/empty_message2"
-                        android:textColor="#97979B"
+                        android:textColor="@color/grey"
                         android:textSize="16sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.588"

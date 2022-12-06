@@ -3,7 +3,6 @@ package com.example.kode
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
@@ -189,16 +188,17 @@ class MainActivity : AppCompatActivity() {
         // --------------- UPDATE DATA -------------------------------------------
         val snackbarLoading: Snackbar = Snackbar.make(rv,"Секундочку, гружусь...",Snackbar
             .LENGTH_INDEFINITE)
-        snackbarLoading.setBackgroundTint(Color.parseColor("#6534FF"))
-        snackbarLoading.setTextColor(Color.WHITE)
+        snackbarLoading.setBackgroundTint(ResourcesCompat.getColor(resources,R.color.purple,null))
+        snackbarLoading.setTextColor(ResourcesCompat.getColor(resources,R.color.white,null))
 
         val snackbarError: Snackbar = Snackbar.make(rv,"""Не могу обновить данные.
             |Проверьте соединение с Интернетом.""".trimMargin(),Snackbar.LENGTH_LONG)
-        snackbarError.setBackgroundTint(Color.parseColor("#F44336"))
-        snackbarError.setTextColor(Color.WHITE)
+        snackbarError.setBackgroundTint(ResourcesCompat.getColor(resources,R.color.purple,null))
+        snackbarError.setTextColor(ResourcesCompat.getColor(resources,R.color.white,null))
 
         val swipeContainer: SwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout)
-        swipeContainer.setProgressBackgroundColorSchemeColor(Color.parseColor("#FFFFFF"))
+        swipeContainer.setProgressBackgroundColorSchemeColor(ResourcesCompat.getColor(resources,
+            R.color.white,null))
 
         swipeContainer.setOnRefreshListener {
                 snackbarLoading.show()
@@ -240,13 +240,17 @@ class MainActivity : AppCompatActivity() {
                 checkBotton.isChecked = true
 
                 val linLayout: LinearLayout = findViewById(R.id.linLayout)
-                linLayout.background = ColorDrawable(Color.parseColor("#29050510"))
+                linLayout.background = ColorDrawable(ResourcesCompat.getColor(resources,
+                    R.color.grey_transpar, null))
                 when (newState) {
                     BottomSheetBehavior.STATE_EXPANDED ->
-                        linLayout.background = ColorDrawable(Color.parseColor("#29050510"))
+                        linLayout.background = ColorDrawable(ResourcesCompat.getColor(resources,
+                            R.color.grey_transpar, null))
                     BottomSheetBehavior.STATE_COLLAPSED ->
-                        linLayout.background = ColorDrawable(Color.parseColor("#FFFFFF"))
-                    else -> linLayout.background = ColorDrawable(Color.parseColor("#FFFFFF"))
+                        linLayout.background = ColorDrawable(ResourcesCompat.getColor(resources,
+                            R.color.white, null))
+                    else -> linLayout.background = ColorDrawable(ResourcesCompat.getColor(resources,
+                        R.color.white, null))
                 }
             }
         })
