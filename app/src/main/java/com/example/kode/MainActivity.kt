@@ -82,6 +82,9 @@ class MainActivity : AppCompatActivity() {
         rv.adapter = adapter
 
         //--------------------- SEARCH ----------------------
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
         val editText: EditText = findViewById(R.id.editText)
 
         val sortButton: ImageButton = findViewById(R.id.imageButton)
@@ -143,9 +146,6 @@ class MainActivity : AppCompatActivity() {
 
 
         //---------------- TABS ---------------------------
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
-
         val tabLayout: TabLayout = findViewById(R.id.tabLayout)
         departments.forEach{
             tabLayout.addTab(tabLayout.newTab().setText(it.key))
