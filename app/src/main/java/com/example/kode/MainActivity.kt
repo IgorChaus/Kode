@@ -21,6 +21,7 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -30,6 +31,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
@@ -239,16 +241,33 @@ class MainActivity : AppCompatActivity() {
                 val checkBotton: RadioButton = findViewById(checkedBotton)
                 checkBotton.isChecked = true
 
+                val searchLayout: LinearLayout = findViewById(R.id.search)
                 val linLayout: LinearLayout = findViewById(R.id.linLayout)
-                linLayout.background = ColorDrawable(ResourcesCompat.getColor(resources,
-                    R.color.grey_transpar, null))
                 when (newState) {
-                    BottomSheetBehavior.STATE_EXPANDED ->
+                    BottomSheetBehavior.STATE_EXPANDED -> {
                         linLayout.background = ColorDrawable(ResourcesCompat.getColor(resources,
-                            R.color.grey_transpar, null))
-                    BottomSheetBehavior.STATE_COLLAPSED ->
+                                R.color.grey_transpar, null))
+                        window.setStatusBarColor(ContextCompat.getColor(this@MainActivity,
+                            R.color.grey_transpar))
+                        toolbar.setBackgroundColor(ContextCompat.getColor(this@MainActivity,
+                            R.color.grey_transpar))
+                        tabLayout.setBackgroundColor(ContextCompat.getColor(this@MainActivity,
+                            R.color.grey_transpar))
+                        searchLayout.background = AppCompatResources
+                            .getDrawable(this@MainActivity, R.drawable.round_corners_dark)
+                    }
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
                         linLayout.background = ColorDrawable(ResourcesCompat.getColor(resources,
-                            R.color.white, null))
+                                R.color.white, null))
+                        window.setStatusBarColor(ContextCompat.getColor(this@MainActivity,
+                            R.color.white))
+                        toolbar.setBackgroundColor(ContextCompat.getColor(this@MainActivity,
+                            R.color.white))
+                        tabLayout.setBackgroundColor(ContextCompat.getColor(this@MainActivity,
+                            R.color.white))
+                        searchLayout.background = AppCompatResources
+                            .getDrawable(this@MainActivity,R.drawable.round_corners)
+                    }
                     else -> linLayout.background = ColorDrawable(ResourcesCompat.getColor(resources,
                         R.color.white, null))
                 }
