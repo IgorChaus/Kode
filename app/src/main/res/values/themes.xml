@@ -15,4 +15,9 @@
 
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="PortfolioTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/grey_pale</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
+    </style>
 </resources>

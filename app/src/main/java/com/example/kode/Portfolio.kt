@@ -29,7 +29,7 @@ class Portfolio: AppCompatActivity() {
         val path = intent.extras!!.getString("path")
         Glide.with(this).load(path).circleCrop().into(photo)
         fullName.text = intent.extras!!.getString("personName")
-        tag.text = intent.extras!!.getString("tag")
+        tag.text = intent.extras!!.getString("tag")?.lowercase()
         val depatStr = intent.extras!!.getString("department")
         department.text = MainActivity.departments.filterValues { it == depatStr }.keys.first()
         val birthdayStr = intent.extras!!.getString("birthday")
@@ -38,7 +38,7 @@ class Portfolio: AppCompatActivity() {
 
         telephone.text = intent.extras!!.getString("phone")
 
-        val formatYear: DateTimeFormatter = DateTimeFormatter.ofPattern("YYYY")
+        val formatYear: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy")
         val currentYear = LocalDate.now().format(formatYear).toInt()
         val birthdayYear = LocalDate.parse(birthdayStr).format(formatYear).toInt()
         age.text = ageString(currentYear - birthdayYear)
@@ -51,15 +51,15 @@ class Portfolio: AppCompatActivity() {
 
     private fun ageString(ageInt: Int): String{
         when (ageInt){
-            1               ->  return ageInt.toString() + " ${R.string.god}"
-            in 2 .. 4 ->  return ageInt.toString() + " ${R.string.goda}"
-            in 5 .. 20 -> return ageInt.toString() + " ${R.string.let}"
+            1               ->  return ageInt.toString() + " ${getString(R.string.god)}"
+            in 2 .. 4 ->  return ageInt.toString() + " ${getString(R.string.goda)}"
+            in 5 .. 20 -> return ageInt.toString() + " ${getString(R.string.let)}"
         }
 
         when (ageInt % 10){
-            1                 ->    return ageInt.toString() + " ${R.string.god}"
-            in 2 .. 4   ->    return ageInt.toString() + " ${R.string.goda}"
-            0, in 5 .. 9   ->    return ageInt.toString() + " ${R.string.let}"
+            1                 ->    return ageInt.toString() + " ${getString(R.string.god)}"
+            in 2 .. 4   ->    return ageInt.toString() + " ${getString(R.string.goda)}"
+            0, in 5 .. 9   ->    return ageInt.toString() + " ${getString(R.string.let)}"
         }
         return ""
     }

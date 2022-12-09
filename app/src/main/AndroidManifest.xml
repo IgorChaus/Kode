@@ -22,7 +22,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".ErrorActivity" />
-        <activity android:name=".Portfolio" />
+        <activity
+            android:name=".Portfolio"
+            android:theme="@style/PortfolioTheme" />
+
 
         <meta-data
             android:name="preloaded_fonts"
