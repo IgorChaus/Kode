@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var sheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
+
     companion object {
         val departments = mapOf(
             "Все" to "All",
@@ -121,9 +122,10 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        editText.addTextChangedListener { s ->  strSearch = s.toString()
-                                                setFilter(rv,adapter)
-                                        }
+        editText.addTextChangedListener {
+                s ->  strSearch = s.toString()
+                setFilter(rv,adapter)
+        }
 
         editText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
