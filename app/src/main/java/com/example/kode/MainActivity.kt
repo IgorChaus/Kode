@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var sheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
+
     companion object {
         val departments = mapOf(
             "Все" to "All",
