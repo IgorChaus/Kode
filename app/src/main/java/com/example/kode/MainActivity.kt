@@ -5,15 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
-import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.annotation.RequiresApi
@@ -32,8 +29,6 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
-import kotlin.math.ceil
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -70,8 +65,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val listView = arrayListOf<View>()
-        showSkeleton(listView)
+        val skelAdapter = SkeletonAdapter()
 
         val rv: RecyclerView = findViewById(R.id.rv1)
 
@@ -79,7 +73,8 @@ class MainActivity : AppCompatActivity() {
         rv.layoutManager = llm
 
         val adapter = RAdapter(items)
-        rv.adapter = adapter
+        rv.adapter = skelAdapter
+
 
         window.setBackgroundDrawable(ContextCompat
             .getDrawable(this@MainActivity,R.color.white))
@@ -167,7 +162,7 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call<Person>, response: Response<Person>) {
                 if(response.isSuccessful) {
                     items = response.body()?.items as ArrayList<Person.Items>
-                    hideSkeleton(listView)
+                    rv.adapter = adapter
                     adapter.setDataList(items, checkedBotton)
                 }else{
                     val intent = Intent(this@MainActivity,ErrorActivity::class.java)
@@ -296,31 +291,6 @@ class MainActivity : AppCompatActivity() {
             rv.visibility = View.VISIBLE
             emptyView.visibility = View.GONE
             adapter.setDataList(itemsFilter, checkedBotton)
-        }
-    }
-
-    private fun showSkeleton(listView: ArrayList<View>){
-        var view :View
-        val ltInflater: LayoutInflater = layoutInflater
-        val linLayout: LinearLayout = findViewById(R.id.linLayout)
-
-        val metrics: DisplayMetrics = this.resources.displayMetrics
-        val heightDpi = ((metrics.heightPixels / metrics.density).toInt()).toDouble()
-        var counter = (ceil(heightDpi / 102)).toInt() //Get hight of item
-
-        while (counter >= 1){
-            view = ltInflater.inflate(R.layout.skeleton_item, findViewById(android.R.id.content)
-                , false)
-            linLayout.addView(view)
-            listView.add(view)
-            counter--
-        }
-    }
-
-    fun hideSkeleton(listView: ArrayList<View>) {
-
-        listView.forEach {
-            it.visibility = View.GONE
         }
     }
 
