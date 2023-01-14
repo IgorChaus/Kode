@@ -1,4 +1,4 @@
-package com.example.kode_viewmodel
+package com.example.kode_viewmodel.model
 
 data class Person(val items: List<Items>) {
 

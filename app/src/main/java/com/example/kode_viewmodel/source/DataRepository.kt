@@ -1,0 +1,31 @@
+package com.example.kode_viewmodel.source
+
+import android.util.Log
+import com.example.kode_viewmodel.model.Person
+import com.example.kode_viewmodel.model.Resource
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import retrofit2.HttpException
+import java.io.IOException
+
+class DataRepository {
+    suspend fun getPersons(): Resource<Person>{
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = RetrofitInstance.service.getPersons()
+                if (response.isSuccessful) {
+                    Resource.Success(data = response.body()!!)
+                } else {
+                    Resource.Error(response.code().toString() ?:"Error json API")
+                }
+
+            } catch (e: HttpException) {
+                Resource.Error(e.message ?: "HttpException")
+            } catch (e: IOException) {
+                Resource.Error("IOException")
+            } catch (e: Exception) {
+                Resource.Error(e.message ?: "Exception")
+            }
+        }
+    }
+}
