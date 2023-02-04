@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Kode-ViewModel</string>
+
+    <!--screen_error.xml-->
+    <string name="spaceship">Космический корабль</string>
+    <string name="string_error1">Какой-то сверхразум все сломал</string>
+    <string name="string_error2">Постараемся быстро починить</string>
+    <string name="string_error3">Попробовать снова</string>
 </resources>

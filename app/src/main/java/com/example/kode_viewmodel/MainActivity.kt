@@ -1,5 +1,6 @@
 package com.example.kode_viewmodel
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -46,7 +47,13 @@ class MainActivity : AppCompatActivity() {
                     adapter.refreshUsers(it.data?.items as ArrayList<Person.Items>)
                     swipeContainer.isRefreshing = false
                 }
-                is Resource.Error -> Log.i("MyTag",it.message.toString())
+                is Resource.Error -> {
+                    val intent = Intent(this@MainActivity,ErrorActivity::class.java)
+                    startActivity(intent)
+                }
+
+                is Resource.Loading -> Log.i("MyTag", "Loading")
+
             }
         })
 

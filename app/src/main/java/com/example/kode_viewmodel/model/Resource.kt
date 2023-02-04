@@ -11,5 +11,5 @@ sealed class Resource<T>(
     class Error<T>(errorMessage: String) : Resource<T>(message = errorMessage)
 
     // Оборачиваем наши данные в класс 'Loading' перд вызовом api
-    // class Loading<T> : Resource<T>()
+    class Loading<T> : Resource<T>()
 }
