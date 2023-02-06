@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit
 
 
 object RetrofitInstance {
+
     private const val BASE_URL = "https://stoplight.io/mocks/kode-education/trainee-test/25143926/"
 
     val client: OkHttpClient = OkHttpClient.Builder()
@@ -21,6 +22,7 @@ object RetrofitInstance {
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()
+
 
     val service = builder.create(PersonApi::class.java)
 

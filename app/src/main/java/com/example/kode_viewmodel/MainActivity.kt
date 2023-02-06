@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.kode_viewmodel.model.Person
 import com.example.kode_viewmodel.model.Resource
+import com.example.kode_viewmodel.source.DataRepository
 import com.example.kode_viewmodel.vm.AppViewModel
 import com.google.android.material.snackbar.Snackbar
 import retrofit2.Call
@@ -20,7 +21,11 @@ import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
-    private val viewModel by lazy {ViewModelProvider(this).get(AppViewModel::class.java)}
+    private val dataRepository = DataRepository()
+    val factory = AppViewModel.Factory(dataRepository)
+
+    private val viewModel by lazy {ViewModelProvider(this,factory)
+        .get(AppViewModel::class.java)}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -7,6 +7,6 @@ import retrofit2.http.Headers
 
 interface PersonApi {
     @Headers("Prefer: code=200, dynamic=true", "Content-Type: application/jso")
-    @GET("https://stoplight.io/mocks/kode-education/trainee-test/25143926/users")
+    @GET("users")
     suspend fun getPersons() : Response<Person>
 }
