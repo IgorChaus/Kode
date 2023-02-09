@@ -1,9 +1,40 @@
-<resources>
+<resources
+    xmlns:tools="http://schemas.android.com/tools">
+
     <string name="app_name">Kode-ViewModel</string>
+
+    <string name="god">год</string>
+    <string name="goda">года</string>
+    <string name="let">лет</string>
+
+    <!--separator.xml-->
+    <string name="skeleton">Скелетон</string>
 
     <!--screen_error.xml-->
     <string name="spaceship">Космический корабль</string>
     <string name="string_error1">Какой-то сверхразум все сломал</string>
     <string name="string_error2">Постараемся быстро починить</string>
     <string name="string_error3">Попробовать снова</string>
+
+    <!--portfolio.xml-->
+    <string name="large_photo">Большая фотография</string>
+    <string name="back">Назад</string>
+
+    <!--activity_main.xml-->
+    <string name="prompt" tools:ignore="TypographyEllipsis">Введите имя, тэг, почту...</string>
+    <string name="imgsorting">Иконка сортировки</string>
+    <string name="cancelButton">Отмена</string>
+    <string name="imgsearch">Картинка поиск</string>
+    <string name="empty_message1">Мы никого не нашли</string>
+    <string name="empty_message2">Попробуй скорректировать запрос</string>
+    <string name="tabs">Tabs</string>
+
+    <!--bottom_sheet.xml-->
+    <string name="sorting">Сортировка</string>
+    <string name="sortingABC">По алфавиту</string>
+    <string name="sortingBirthday">По дню рождения</string>
+
+    <!--item.xml-->
+    <string name="item_photo">Фото элемента</string>
+
 </resources>
