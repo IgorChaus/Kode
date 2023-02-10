@@ -33,9 +33,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var sheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
-    private var tabName: String = "Все"
-    private var strSearch: String =""
-
     private var checkedBotton: Int = R.id.radioButton1
 
     companion object {
@@ -63,6 +60,7 @@ class MainActivity : AppCompatActivity() {
         .get(AppViewModel::class.java)}
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -100,15 +98,14 @@ class MainActivity : AppCompatActivity() {
         buttonCancel.setOnClickListener {
             editText.clearFocus()
             buttonCancel.visibility = View.GONE
-            strSearch = ""
-            editText.setText(strSearch)
+            editText.setText("")
 
             //Hide keyboard
             val  imm = editText.context.getSystemService(
                 Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(editText.windowToken, 0)
 
-   //         setFilter(rv,adapter)
+            viewModel.filterSearch("")
             sortButton.visibility = View.VISIBLE
 
             editText.setCompoundDrawablesWithIntrinsicBounds(
@@ -118,8 +115,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         editText.addTextChangedListener {
-                s ->  strSearch = s.toString()
-   //         setFilter(rv,adapter)
+                s ->  viewModel.filterSearch(s.toString())
         }
 
         editText.setOnFocusChangeListener { _, hasFocus ->
@@ -148,10 +144,8 @@ class MainActivity : AppCompatActivity() {
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                tabName = tab?.text.toString()
-  //              setFilter(rv,adapter)
+                    viewModel.filterTab(tab?.text.toString())
             }
-
         })
 
         //----------------- BOTTOM SHEET --------------------------------
@@ -217,7 +211,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.itemsLiveData.observe(this, Observer {
             when(it){
                 is Resource.Success -> {
-                    adapter.refreshUsers(it.data?.items as ArrayList<Person.Items>)
+                    adapter.refreshUsers(it.data!!.items)
                     swipeContainer.isRefreshing = false
                     snackbarLoading.dismiss()
                 }

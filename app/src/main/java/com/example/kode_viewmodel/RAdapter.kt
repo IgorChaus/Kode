@@ -11,7 +11,7 @@ import com.example.kode_viewmodel.model.Person
 
 class RAdapter: RecyclerView.Adapter<RAdapter.MyViewHolder>() {
 
-    private var item: ArrayList<Person.Items> = arrayListOf()
+    private var item: List<Person.Items> = arrayListOf()
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val personPhoto: ImageView = itemView.findViewById(R.id.imageView)
@@ -43,7 +43,7 @@ class RAdapter: RecyclerView.Adapter<RAdapter.MyViewHolder>() {
         return item.size
     }
 
-    fun refreshUsers(items: ArrayList<Person.Items>) {
+    fun refreshUsers(items: List<Person.Items>) {
         this.item = items
         notifyDataSetChanged()
     }
