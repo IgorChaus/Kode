@@ -37,7 +37,7 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
         viewModelScope.launch {
             itemsLiveData.postValue(Resource.Loading())
             resourceItems = dataRepository.getPersons()
-            itemsLiveData.postValue(resourceItems)
+            itemsLiveData.postValue(setFilter())
         }
     }
 
@@ -54,47 +54,26 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
 
     fun setFilter(): Resource<Person> {
 
-        val filterTab: Resource<Person> = if (tabName == "Все") {
-            resourceItems
-        } else {
-            Resource.Success(data =Person(resourceItems.data!!.items
-                .filter { it.department == departments[tabName] }))
+         val filterTab: List<Person.Items> = if (tabName == "Все") {
+             resourceItems.data!!.items
+              } else {
+                  resourceItems.data!!.items.filter { it.department == departments[tabName] }
+              }
 
-        }
-
-        return filterTab
-
-
-
-
-
-
-
-
-      /*  val itemsFilter: ArrayList<Person.Items> = if (strSearch.length > 1) {
-            filterTab.filter {
+        val itemsFilter: Resource<Person> = if (strSearch.length > 1) {
+            Resource.Success(data =Person(filterTab.filter {
                 it.firstName.contains(strSearch, ignoreCase = true) ||
                         it.lastName.contains(strSearch, ignoreCase = true) ||
                         it.userTag.contains(strSearch, ignoreCase = true)
-            } as ArrayList<Person.Items>
+            }))
         }else{
-            filterTab.filter {
+            Resource.Success(data =Person(filterTab.filter {
                 it.firstName.contains(strSearch, ignoreCase = true) ||
                         it.lastName.contains(strSearch, ignoreCase = true)
-            } as ArrayList<Person.Items>
-        }*/
-
-        /*val emptyView: ConstraintLayout = findViewById(R.id.empty_view)
-        if (itemsFilter.isEmpty()) {
-            rv.visibility = View.GONE
-            emptyView.visibility = View.VISIBLE
+            }))
         }
-        else {
-            rv.visibility = View.VISIBLE
-            emptyView.visibility = View.GONE
-            adapter.setDataList(itemsFilter, checkedBotton)
-        }*/
 
+        return itemsFilter
     }
 
 }
