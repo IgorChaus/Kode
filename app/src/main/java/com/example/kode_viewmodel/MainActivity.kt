@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         val llm = LinearLayoutManager(this)
         rv.layoutManager = llm
 
-        val adapter = RAdapter()
+        val adapter = RVAdapter()
         rv.adapter = adapter
 
         window.setBackgroundDrawable(
@@ -211,7 +211,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.itemsLiveData.observe(this, Observer {
             when(it){
                 is Resource.Success -> {
-                    adapter.refreshUsers(it.data!!.items)
+                    adapter.refreshUsers(it.data!!)
                     swipeContainer.isRefreshing = false
                     snackbarLoading.dismiss()
                 }

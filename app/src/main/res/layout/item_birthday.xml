@@ -50,4 +50,16 @@
         app:layout_constraintStart_toEndOf="@+id/personName"
         tools:text="tg" />
 
+    <TextView
+        android:id="@+id/personBirthday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="20dp"
+        android:textColor="@color/grey_dark"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="birthday" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
