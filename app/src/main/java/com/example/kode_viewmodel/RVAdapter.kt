@@ -15,45 +15,15 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class RVAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class RVAdapter(private val itemClickListener: ItemClickListener)
+            :RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    interface ItemClickListener {
+        fun onItemClick(path: String, personName: String, tag: String, department: String,
+                        birthday: String, phone: String)
+    }
 
     private var  items: List<IRow> = listOf()
-
-
-    /* @SuppressLint("NotifyDataSetChanged")
-     @RequiresApi(Build.VERSION_CODES.O)
-     fun setDataList(_persons: ArrayList<Person.Items>, _sorting: Int) {
-         items = _persons
-         sorting = _sorting
-         its.clear()
-
-         if (sorting == R.id.radioButton1){
-             items.sortWith(
-                 compareBy({ it.firstName }, { it.lastName })
-             )
-             its.addAll(items)
-         }else{
-             val formatMMDD: DateTimeFormatter = DateTimeFormatter.ofPattern("MMdd")
-             val currentDate = LocalDate.now()
-
-             items.sortWith(
-                 compareBy { LocalDate.parse(it.birthday).format(formatMMDD) }
-             )
-
-             its.addAll(items.filter
-             { LocalDate.parse(it.birthday).format(formatMMDD)  >= currentDate.format(formatMMDD)})
-
-             val formatYear: DateTimeFormatter = DateTimeFormatter.ofPattern("YYYY")
-             its.add(currentDate.format(formatYear))
-
-             its.addAll(items.filter
-             { LocalDate.parse(it.birthday).format(formatMMDD)  < currentDate.format(formatMMDD)})
-
-         }
-
-         notifyDataSetChanged()
-
-     }*/
 
     fun refreshUsers(items: List<IRow>) {
         this.items = items
@@ -65,6 +35,7 @@ class RVAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             is ABC -> R.layout.item
             is Birthday -> R.layout.item_birthday
             is Separator -> R.layout.separator
+            is Skeleton -> R.layout.skeleton_item
             else -> throw IllegalArgumentException()
         }
 
@@ -78,6 +49,9 @@ class RVAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         R.layout.separator -> SeparatorHolder(
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.separator, parent, false))
+        R.layout.skeleton_item -> SkeletonHolder(
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.skeleton_item, parent, false))
         else -> throw IllegalArgumentException()
     }
 
@@ -102,6 +76,8 @@ class RVAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val separetor: TextView = itemView.findViewById(R.id.year)
     }
 
+    class SkeletonHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     private fun bindItem(holder: RecyclerView.ViewHolder, item: ABC) {
@@ -113,11 +89,20 @@ class RVAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 item.lastName
         itemViewHolder.personTag.text = " " + item.userTag.lowercase()
         itemViewHolder.personDepartment.text = item.department
+        holder.itemView.setOnClickListener {
+            if (holder.getAdapterPosition() == RecyclerView.NO_POSITION) {
+                return@setOnClickListener
+            }
+            itemClickListener.onItemClick(path, item.firstName + " " +
+                    item.lastName, item.userTag, item.department,
+                item.birthday, item.phone)
+        }
     }
 
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     private fun bindItemBirthday(holder: RecyclerView.ViewHolder, item: Birthday) {
+
         val itemViewHolder = holder as ItemBirthdayViewHolder
         val path: String = item.avatarUrl
         Glide.with(itemViewHolder.itemView.context).load(path).circleCrop()
@@ -131,22 +116,36 @@ class RVAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val formatter: DateTimeFormatter =
             DateTimeFormatter.ofPattern("dd MMM", Locale("ru"))
         itemViewHolder.birthday.text = date.format(formatter)
+        holder.itemView.setOnClickListener {
+            if (holder.getAdapterPosition() == RecyclerView.NO_POSITION) {
+                return@setOnClickListener
+            }
+            itemClickListener.onItemClick(path, item.firstName + " " +
+                    item.lastName, item.userTag, item.department,
+                item.birthday, item.phone)
+        }
 
     }
 
 
-    private fun bindSeparator(holder: RecyclerView.ViewHolder, separator: String) {
-        (holder as SeparatorHolder).separetor.text = separator
+    private fun bindSeparator(holder: RecyclerView.ViewHolder, separator: Separator) {
+        (holder as SeparatorHolder).separetor.text = separator.year
+    }
+
+    private fun bindSkeleton(holder: RecyclerView.ViewHolder, skeleton: Skeleton){
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) =
-        when (holder.itemViewType) {
-            R.layout.item -> bindItem(holder,items[position] as ABC)
-            R.layout.item_birthday -> bindItemBirthday(holder,items[position] as Birthday)
-            R.layout.separator -> bindSeparator(holder,items[position] as String)
-            else -> throw IllegalArgumentException()
-        }
+  override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) =
+      when (holder.itemViewType) {
+          R.layout.item -> bindItem(holder,items[position] as ABC)
+          R.layout.item_birthday -> bindItemBirthday(holder,items[position] as Birthday)
+          R.layout.separator -> bindSeparator(holder,items[position] as Separator)
+          R.layout.skeleton_item -> bindSkeleton(holder,items[position] as Skeleton)
+          else -> throw IllegalArgumentException()
+      }
+
+
 
 
     override fun getItemCount() = items.count()

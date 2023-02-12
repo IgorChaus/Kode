@@ -2,12 +2,14 @@ package com.example.kode_viewmodel
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -18,8 +20,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.kode_viewmodel.model.Person
-import com.example.kode_viewmodel.model.Resource
+import com.example.kode_viewmodel.model.*
 import com.example.kode_viewmodel.source.DataRepository
 import com.example.kode_viewmodel.vm.AppViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -29,7 +30,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainActivity : AppCompatActivity() {
+@RequiresApi(Build.VERSION_CODES.O)
+class MainActivity : AppCompatActivity(), RVAdapter.ItemClickListener {
 
     private lateinit var sheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
@@ -59,6 +61,7 @@ class MainActivity : AppCompatActivity() {
     private val viewModel by lazy {ViewModelProvider(this,factory)
         .get(AppViewModel::class.java)}
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -69,7 +72,7 @@ class MainActivity : AppCompatActivity() {
         val llm = LinearLayoutManager(this)
         rv.layoutManager = llm
 
-        val adapter = RVAdapter()
+        val adapter = RVAdapter(this)
         rv.adapter = adapter
 
         window.setBackgroundDrawable(
@@ -179,7 +182,7 @@ class MainActivity : AppCompatActivity() {
         radioGroup.clearCheck()
         radioGroup.setOnCheckedChangeListener { _, checkedId ->
             checkedBotton = checkedId
-    //        setFilter(rv, adapter)
+            viewModel.sorting(checkedBotton)
             if (checkedBotton == R.id.radioButton2) {
                 sortButton.setImageResource(R.drawable.icon_right_purple)
             } else {
@@ -214,6 +217,7 @@ class MainActivity : AppCompatActivity() {
                     adapter.refreshUsers(it.data!!)
                     swipeContainer.isRefreshing = false
                     snackbarLoading.dismiss()
+
                 }
 
                 is Resource.Error -> {
@@ -231,7 +235,20 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.fetchPersons()
+    }
+
+    override fun onItemClick(path: String, personName: String, tag: String, department: String,
+                             birthday: String, phone: String){
+            val intent = Intent(this, Portfolio::class.java)
+
+            intent.putExtra("path", path)
+            intent.putExtra("personName", personName)
+            intent.putExtra("tag", tag)
+            intent.putExtra("department", department)
+            intent.putExtra("birthday", birthday)
+            intent.putExtra("phone", phone)
+
+            startActivity(intent)
 
     }
 }
