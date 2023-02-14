@@ -237,16 +237,15 @@ class MainActivity : AppCompatActivity(), RVAdapter.ItemClickListener {
 
     }
 
-    override fun onItemClick(path: String, personName: String, tag: String, department: String,
-                             birthday: String, phone: String){
+    override fun onItemClick(item: ABC){
             val intent = Intent(this, Portfolio::class.java)
 
-            intent.putExtra("path", path)
-            intent.putExtra("personName", personName)
-            intent.putExtra("tag", tag)
-            intent.putExtra("department", department)
-            intent.putExtra("birthday", birthday)
-            intent.putExtra("phone", phone)
+            intent.putExtra("path", item.avatarUrl)
+            intent.putExtra("personName", item.firstName + " " + item.lastName)
+            intent.putExtra("tag", item.userTag)
+            intent.putExtra("department", item.department)
+            intent.putExtra("birthday", item.birthday)
+            intent.putExtra("phone", item.phone)
 
             startActivity(intent)
 

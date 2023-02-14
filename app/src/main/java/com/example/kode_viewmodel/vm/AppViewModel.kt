@@ -1,6 +1,7 @@
 package com.example.kode_viewmodel.vm
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

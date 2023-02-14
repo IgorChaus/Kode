@@ -19,8 +19,7 @@ class RVAdapter(private val itemClickListener: ItemClickListener)
             :RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     interface ItemClickListener {
-        fun onItemClick(path: String, personName: String, tag: String, department: String,
-                        birthday: String, phone: String)
+        fun onItemClick(item: ABC)
     }
 
     private var  items: List<IRow> = listOf()
@@ -32,8 +31,8 @@ class RVAdapter(private val itemClickListener: ItemClickListener)
 
     override fun getItemViewType(position: Int): Int =
         when (items[position]) {
-            is ABC -> R.layout.item
             is Birthday -> R.layout.item_birthday
+            is ABC -> R.layout.item
             is Separator -> R.layout.separator
             is Skeleton -> R.layout.skeleton_item
             else -> throw IllegalArgumentException()
@@ -60,7 +59,6 @@ class RVAdapter(private val itemClickListener: ItemClickListener)
         val personName: TextView = itemView.findViewById(R.id.personName)
         val personTag: TextView = itemView.findViewById(R.id.personTag)
         val personDepartment: TextView = itemView.findViewById(R.id.personDepartment)
-
     }
 
     class ItemBirthdayViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -69,7 +67,6 @@ class RVAdapter(private val itemClickListener: ItemClickListener)
         val personTag: TextView = itemView.findViewById(R.id.personTag)
         val personDepartment: TextView = itemView.findViewById(R.id.personDepartment)
         val birthday: TextView = itemView.findViewById(R.id.personBirthday)
-
     }
 
     class SeparatorHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -93,16 +90,13 @@ class RVAdapter(private val itemClickListener: ItemClickListener)
             if (holder.getAdapterPosition() == RecyclerView.NO_POSITION) {
                 return@setOnClickListener
             }
-            itemClickListener.onItemClick(path, item.firstName + " " +
-                    item.lastName, item.userTag, item.department,
-                item.birthday, item.phone)
+            itemClickListener.onItemClick(item)
         }
     }
 
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     private fun bindItemBirthday(holder: RecyclerView.ViewHolder, item: Birthday) {
-
         val itemViewHolder = holder as ItemBirthdayViewHolder
         val path: String = item.avatarUrl
         Glide.with(itemViewHolder.itemView.context).load(path).circleCrop()
@@ -120,11 +114,8 @@ class RVAdapter(private val itemClickListener: ItemClickListener)
             if (holder.getAdapterPosition() == RecyclerView.NO_POSITION) {
                 return@setOnClickListener
             }
-            itemClickListener.onItemClick(path, item.firstName + " " +
-                    item.lastName, item.userTag, item.department,
-                item.birthday, item.phone)
+            itemClickListener.onItemClick(item)
         }
-
     }
 
 
@@ -144,9 +135,6 @@ class RVAdapter(private val itemClickListener: ItemClickListener)
           R.layout.skeleton_item -> bindSkeleton(holder,items[position] as Skeleton)
           else -> throw IllegalArgumentException()
       }
-
-
-
 
     override fun getItemCount() = items.count()
 }
