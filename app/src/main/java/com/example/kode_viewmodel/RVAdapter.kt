@@ -19,7 +19,7 @@ class RVAdapter(private val itemClickListener: ItemClickListener)
             :RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     interface ItemClickListener {
-        fun onItemClick(item: ABC)
+        fun onItemClick(item: Person.Items)
     }
 
     private var  items: List<IRow> = listOf()

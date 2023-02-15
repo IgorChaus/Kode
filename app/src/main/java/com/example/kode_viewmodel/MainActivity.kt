@@ -87,7 +87,6 @@ class MainActivity : AppCompatActivity(), RVAdapter.ItemClickListener {
 
         val sortButton: ImageButton = findViewById(R.id.imageButton)
         sortButton.setOnClickListener {
-            Log.i("MyTag",sheetBehavior.state.toString())
             when(sheetBehavior.state){
                 BottomSheetBehavior.STATE_COLLAPSED ->
                     sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
@@ -226,6 +225,7 @@ class MainActivity : AppCompatActivity(), RVAdapter.ItemClickListener {
                         swipeContainer.isRefreshing = false
                     }else{
                         val intent = Intent(this@MainActivity,ErrorActivity::class.java)
+                        Log.i("MyTag","Error" + it.message)
                         startActivity(intent)
                     }
                 }
@@ -237,7 +237,7 @@ class MainActivity : AppCompatActivity(), RVAdapter.ItemClickListener {
 
     }
 
-    override fun onItemClick(item: ABC){
+    override fun onItemClick(item: Person.Items){
             val intent = Intent(this, Portfolio::class.java)
 
             intent.putExtra("path", item.avatarUrl)

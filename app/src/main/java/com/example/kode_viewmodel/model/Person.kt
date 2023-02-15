@@ -2,7 +2,7 @@ package com.example.kode_viewmodel.model
 
 data class Person(val items: List<Items>) {
 
-    data class Items(
+    open  class Items(
         val id: String,
         val avatarUrl: String,
         val firstName: String,
