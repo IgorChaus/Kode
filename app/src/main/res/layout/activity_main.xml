@@ -50,7 +50,7 @@
                     android:inputType="text"
                     android:paddingLeft="10dp"
                     android:singleLine="false"
-                    android:textColor="@color/black"
+                    android:textColor="?attr/appColorPrimary"
                     android:textSize="15sp"
                     tools:ignore="RtlHardcoded,TextContrastCheck" />
 
@@ -74,7 +74,7 @@
                     android:fontFamily="@font/inter"
                     android:text="@string/cancelButton"
                     android:textAllCaps="false"
-                    android:textColor="@color/purple"
+                    android:textColor="?attr/appColorSeconary"
                     android:textSize="14sp"
                     android:visibility="gone"
                     tools:visibility="visible" />
@@ -91,17 +91,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            app:tabIndicatorColor="@color/purple"
+            app:tabIndicatorColor="?attr/appColorSeconary"
             app:tabMode="auto"
-            app:tabSelectedTextColor="@color/black"
+            app:tabSelectedTextColor="?attr/appColorPrimary"
             app:tabTextAppearance="@style/tab_text"
-            app:tabTextColor="@color/grey" />
+            app:tabTextColor="?attr/appColorPrimaryVariant1" />
 
         <View
             android:id="@+id/view4"
             android:layout_width="wrap_content"
             android:layout_height="1dp"
-            android:background="@color/grey_light"
+            android:background="?attr/appColorPrimaryVariant3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"

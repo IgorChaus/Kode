@@ -1,10 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="tab_text" parent="@android:style/TextAppearance.Widget.TabWidget">
+    <style name="tab_text">
         <item name="android:fontFamily">@font/inter</item>
         <item name="android:textSize">15sp</item>
     </style>
 
+    <style name="radio_button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:buttonTint">?attr/appColorSeconary</item>
+        <item name="android:fontFamily">@font/inter_medium</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingStart">14dp</item>
+        <item name="android:textColor">?attr/appColorPrimary</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="separator">
+        <item name="android:layout_width">72dp</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_marginStart">24dp</item>
+        <item name="android:background">?attr/appColorPrimaryVariant3</item>
+    </style>
 
 </resources>

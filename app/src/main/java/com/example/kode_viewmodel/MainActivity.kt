@@ -26,9 +26,6 @@ import com.example.kode_viewmodel.vm.AppViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 @RequiresApi(Build.VERSION_CODES.O)
 class MainActivity : AppCompatActivity(), RVAdapter.ItemClickListener {
@@ -166,7 +163,7 @@ class MainActivity : AppCompatActivity(), RVAdapter.ItemClickListener {
                 when (newState) {
                     BottomSheetBehavior.STATE_EXPANDED -> {
                         window.setBackgroundDrawable(ContextCompat
-                            .getDrawable(this@MainActivity,R.color.grey_transpar))
+                            .getDrawable(this@MainActivity,R.color.grey_300))
                     }
                     BottomSheetBehavior.STATE_COLLAPSED -> {
                         window.setBackgroundDrawable(ContextCompat

@@ -89,6 +89,7 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
                     it.id, it.avatarUrl, it.firstName,
                     it.lastName, it.userTag, it.department, it.position, it.birthday, it.phone
                 )
+
             }
 
             val arraylistItems = ArrayList(listItems)

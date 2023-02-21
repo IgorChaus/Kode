@@ -123,7 +123,7 @@ class RVAdapter(private val itemClickListener: ItemClickListener)
         (holder as SeparatorHolder).separetor.text = separator.year
     }
 
-    private fun bindSkeleton(holder: RecyclerView.ViewHolder, skeleton: Skeleton){
+    private fun bindSkeleton(){
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -132,7 +132,7 @@ class RVAdapter(private val itemClickListener: ItemClickListener)
           R.layout.item -> bindItem(holder,items[position] as ABC)
           R.layout.item_birthday -> bindItemBirthday(holder,items[position] as Birthday)
           R.layout.separator -> bindSeparator(holder,items[position] as Separator)
-          R.layout.skeleton_item -> bindSkeleton(holder,items[position] as Skeleton)
+          R.layout.skeleton_item -> bindSkeleton()
           else -> throw IllegalArgumentException()
       }
 

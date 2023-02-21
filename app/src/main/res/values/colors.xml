@@ -8,11 +8,11 @@
 
     <color name="black">#050510</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="grey">#97979B</color>
-    <color name="grey_light">#C3C3C6</color>
-    <color name="grey_dark">#55555C</color>
-    <color name="grey_transpar">#D7D7D9</color>
-    <color name="grey_pale">#F7F7F8</color>
+    <color name="grey_100">#F7F7F8</color>
+    <color name="grey_300">#D7D7D9</color>
+    <color name="grey_500">#C3C3C6</color>
+    <color name="grey_700">#97979B</color>
+    <color name="grey_900">#55555C</color>
     <color name="purple">#6534FF</color>
     <color name="red">#F44336</color>
 

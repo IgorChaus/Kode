@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/inter"
-        android:textColor="@color/grey_light"
+        android:textColor="?attr/appColorPrimaryVariant3"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/view3"
@@ -21,21 +21,15 @@
 
     <View
         android:id="@+id/view2"
-        android:layout_width="72dp"
-        android:layout_height="1dp"
-        android:layout_marginStart="24dp"
-        android:background="@color/grey_light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/separator" />
 
     <View
         android:id="@+id/view3"
-        android:layout_width="72dp"
-        android:layout_height="1dp"
-        android:layout_marginEnd="24dp"
-        android:background="@color/grey_light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/separator" />
 </androidx.constraintlayout.widget.ConstraintLayout>
