@@ -12,9 +12,9 @@ class ABC(id: String,
                department: String,
                position: String,
                birthday: String,
-               phone: String)
-    :Person.Items(id, avatarUrl, firstName, lastName, userTag, department, position, birthday, phone)
-    ,IRow
+               phone: String
+) : Person.Items(id, avatarUrl, firstName, lastName, userTag, department, position, birthday, phone),
+    IRow
 
 
 class Birthday(id: String,
@@ -25,10 +25,10 @@ class Birthday(id: String,
                department: String,
                position: String,
                birthday: String,
-               phone: String)
-    :Person.Items(id, avatarUrl, firstName, lastName, userTag, department, position, birthday, phone)
-    ,IRow
+               phone: String
+) : Person.Items(id, avatarUrl, firstName, lastName, userTag, department, position, birthday, phone),
+    IRow
 
-class Separator(val year: String): IRow
+class Separator(val year: String) : IRow
 
 class Skeleton: IRow

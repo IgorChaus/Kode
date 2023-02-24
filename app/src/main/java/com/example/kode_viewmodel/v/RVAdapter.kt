@@ -1,4 +1,4 @@
-package com.example.kode_viewmodel
+package com.example.kode_viewmodel.v
 
 import android.annotation.SuppressLint
 import android.os.Build
@@ -10,13 +10,14 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.kode_viewmodel.R
 import com.example.kode_viewmodel.model.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class RVAdapter(private val itemClickListener: ItemClickListener)
-            :RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class RVAdapter(private val itemClickListener: ItemClickListener) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     interface ItemClickListener {
         fun onItemClick(item: Person.Items)
@@ -127,14 +128,14 @@ class RVAdapter(private val itemClickListener: ItemClickListener)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-  override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) =
-      when (holder.itemViewType) {
-          R.layout.item -> bindItem(holder,items[position] as ABC)
-          R.layout.item_birthday -> bindItemBirthday(holder,items[position] as Birthday)
-          R.layout.separator -> bindSeparator(holder,items[position] as Separator)
-          R.layout.skeleton_item -> bindSkeleton()
-          else -> throw IllegalArgumentException()
-      }
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) =
+        when (holder.itemViewType) {
+            R.layout.item -> bindItem(holder,items[position] as ABC)
+            R.layout.item_birthday -> bindItemBirthday(holder,items[position] as Birthday)
+            R.layout.separator -> bindSeparator(holder,items[position] as Separator)
+            R.layout.skeleton_item -> bindSkeleton()
+            else -> throw IllegalArgumentException()
+        }
 
     override fun getItemCount() = items.count()
 }

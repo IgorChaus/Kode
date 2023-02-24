@@ -1,4 +1,4 @@
-package com.example.kode_viewmodel
+package com.example.kode_viewmodel.v
 
 import android.os.Build
 import android.os.Bundle
@@ -8,11 +8,13 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.example.kode_viewmodel.R
+import com.example.kode_viewmodel.v.MainActivity
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class Portfolio: AppCompatActivity() {
+class Portfolio : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
