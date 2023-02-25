@@ -1,12 +1,8 @@
 package com.example.kode_viewmodel.vm
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.kode_viewmodel.R
 import com.example.kode_viewmodel.model.*
 import com.example.kode_viewmodel.source.DataRepository
@@ -18,7 +14,9 @@ import java.time.format.DateTimeFormatter
 @RequiresApi(Build.VERSION_CODES.O)
 class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
 
-    val itemsLiveData: MutableLiveData<Resource<List<IRow>>> = MutableLiveData()
+    // Object must be observable but with a private setter, so we separate LiveData's objects
+    private val itemsDataEmitter: MutableLiveData<Resource<List<IRow>>> = MutableLiveData()
+    val itemsLiveData: LiveData<Resource<List<IRow>>> = itemsDataEmitter
 
     private var tabName: String = "Все"
     private var strSearch: String = ""
@@ -27,11 +25,12 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
 
     init{
         val skelList = List(8){ Skeleton() }
-        itemsLiveData.postValue(Resource.Success(skelList))
+        itemsDataEmitter.postValue(Resource.Success(skelList))
         firstFetchPersons()
     }
 
     class Factory(private val dataRepository: DataRepository) : ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return AppViewModel(dataRepository) as T
         }
@@ -40,13 +39,13 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
 
     fun fetchPersons(){
         viewModelScope.launch {
-            itemsLiveData.postValue(Resource.Loading())
+            itemsDataEmitter.postValue(Resource.Loading())
             val _resourceItems = dataRepository.getPersons()
             if(_resourceItems is Resource.Success) {
                 resourceItems = _resourceItems
-                itemsLiveData.postValue(sortPerson(setFilter()))
+                itemsDataEmitter.postValue(sortPerson(setFilter()))
             }else
-                itemsLiveData.postValue(Resource
+                itemsDataEmitter.postValue(Resource
                     .Error(_resourceItems.message ?:"Error json API"))
         }
     }
@@ -56,26 +55,26 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
             val _resourceItems = dataRepository.getPersons()
             if(_resourceItems is Resource.Success) {
                 resourceItems = _resourceItems
-                itemsLiveData.postValue(sortPerson(setFilter()))
+                itemsDataEmitter.postValue(sortPerson(setFilter()))
             }else
-                itemsLiveData.postValue(Resource
+                itemsDataEmitter.postValue(Resource
                     .Error(_resourceItems.message ?:"Error json API"))
         }
     }
 
     fun filterTab(tabName: String){
         this.tabName = tabName
-        itemsLiveData.postValue(sortPerson(setFilter()))
+        itemsDataEmitter.postValue(sortPerson(setFilter()))
     }
 
     fun filterSearch(strSearch: String){
         this.strSearch = strSearch
-        itemsLiveData.postValue(sortPerson(setFilter()))
+        itemsDataEmitter.postValue(sortPerson(setFilter()))
     }
 
     fun sorting(sorting: Int){
         this.sorting = sorting
-        itemsLiveData.postValue(sortPerson(setFilter()))
+        itemsDataEmitter.postValue(sortPerson(setFilter()))
     }
 
 

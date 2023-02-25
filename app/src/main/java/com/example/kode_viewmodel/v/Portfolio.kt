@@ -9,7 +9,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.kode_viewmodel.R
-import com.example.kode_viewmodel.v.MainActivity
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -53,15 +52,15 @@ class Portfolio : AppCompatActivity() {
 
     private fun ageString(ageInt: Int): String{
         when (ageInt){
-            1               ->  return ageInt.toString() + " ${getString(R.string.god)}"
-            in 2 .. 4 ->  return ageInt.toString() + " ${getString(R.string.goda)}"
-            in 5 .. 20 -> return ageInt.toString() + " ${getString(R.string.let)}"
+            1             ->  return ageInt.toString() + " ${getString(R.string.god)}"
+            in 2..4 ->  return ageInt.toString() + " ${getString(R.string.goda)}"
+            in 5..20 -> return ageInt.toString() + " ${getString(R.string.let)}"
         }
 
         when (ageInt % 10){
-            1                 ->    return ageInt.toString() + " ${getString(R.string.god)}"
-            in 2 .. 4   ->    return ageInt.toString() + " ${getString(R.string.goda)}"
-            0, in 5 .. 9   ->    return ageInt.toString() + " ${getString(R.string.let)}"
+            1               ->    return ageInt.toString() + " ${getString(R.string.god)}"
+            in 2..4   ->    return ageInt.toString() + " ${getString(R.string.goda)}"
+            0, in 5..9 ->    return ageInt.toString() + " ${getString(R.string.let)}"
         }
         return ""
     }
