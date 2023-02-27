@@ -22,6 +22,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.kode_viewmodel.R
 import com.example.kode_viewmodel.model.*
 import com.example.kode_viewmodel.source.DataRepository
+import com.example.kode_viewmodel.source.RetrofitInstance
 import com.example.kode_viewmodel.vm.AppViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
@@ -34,7 +35,7 @@ class MainActivity : AppCompatActivity(), RVAdapter.ItemClickListener {
 
     private var checkedBotton: Int = R.id.radioButton1
 
-    private val dataRepository = DataRepository()
+    private val dataRepository = DataRepository(RetrofitInstance.service)
     val factory = AppViewModel.Factory(dataRepository)
 
     private val viewModel by lazy {ViewModelProvider(this,factory)
