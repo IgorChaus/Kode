@@ -91,7 +91,6 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
                     it.id, it.avatarUrl, it.firstName,
                     it.lastName, it.userTag, it.department, it.position, it.birthday, it.phone
                 )
-
             }
 
             val arraylistItems = ArrayList(listItems)
@@ -126,7 +125,9 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
             val baseYear = LocalDate.of(currentDate.year, currentDate.month, currentDate.dayOfMonth)
             val nextYear = LocalDate.from(baseYear).plusYears(1)
             val formatYear: DateTimeFormatter = DateTimeFormatter.ofPattern("YYYY")
-            sepItems.add(Separator(nextYear.format(formatYear)))
+
+            if(items.isNotEmpty())
+                sepItems.add(Separator(nextYear.format(formatYear)))
 
             sepItems.addAll(arraylistItems.filter
             { LocalDate.parse(it.birthday).format(formatMMDD)  < currentDate.format(formatMMDD)})
