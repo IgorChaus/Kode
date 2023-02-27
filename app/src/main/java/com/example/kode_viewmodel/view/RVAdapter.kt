@@ -1,4 +1,4 @@
-package com.example.kode_viewmodel.v
+package com.example.kode_viewmodel.view
 
 import android.annotation.SuppressLint
 import android.os.Build
@@ -25,6 +25,7 @@ class RVAdapter(private val itemClickListener: ItemClickListener) :
 
     private var  items: List<IRow> = listOf()
 
+    @SuppressLint("NotifyDataSetChanged")
     fun refreshUsers(items: List<IRow>) {
         this.items = items
         notifyDataSetChanged()

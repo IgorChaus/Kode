@@ -1,4 +1,4 @@
-package com.example.kode_viewmodel.vm
+package com.example.kode_viewmodel.viewmodel
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -6,7 +6,8 @@ import androidx.lifecycle.*
 import com.example.kode_viewmodel.R
 import com.example.kode_viewmodel.model.*
 import com.example.kode_viewmodel.source.DataRepository
-import com.example.kode_viewmodel.v.MainActivity.Companion.departments
+import com.example.kode_viewmodel.view.MainActivity.Companion.departments
+import com.example.kode_viewmodel.wrappers.Resource
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -45,7 +46,8 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
                 resourceItems = _resourceItems
                 itemsDataEmitter.postValue(sortPerson(setFilter()))
             }else
-                itemsDataEmitter.postValue(Resource
+                itemsDataEmitter.postValue(
+                    Resource
                     .Error(_resourceItems.message ?:"Error json API"))
         }
     }
@@ -57,7 +59,8 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
                 resourceItems = _resourceItems
                 itemsDataEmitter.postValue(sortPerson(setFilter()))
             }else
-                itemsDataEmitter.postValue(Resource
+                itemsDataEmitter.postValue(
+                    Resource
                     .Error(_resourceItems.message ?:"Error json API"))
         }
     }

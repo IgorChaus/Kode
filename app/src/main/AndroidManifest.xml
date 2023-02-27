@@ -15,7 +15,7 @@
         android:theme="@style/Theme.KodeViewModel"
         tools:targetApi="31">
         <activity
-            android:name=".v.MainActivity"
+            android:name=".view.MainActivity"
             android:windowSoftInputMode="stateHidden"
             android:exported="true">
             <intent-filter>
@@ -29,10 +29,10 @@
                 android:value="" />
         </activity>
 
-        <activity android:name=".v.ErrorActivity" />
+        <activity android:name=".view.ErrorActivity" />
 
         <activity
-            android:name=".v.Portfolio"
+            android:name=".view.Portfolio"
             android:theme="@style/PortfolioTheme" />
 
         <meta-data

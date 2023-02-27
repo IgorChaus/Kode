@@ -1,4 +1,4 @@
-package com.example.kode_viewmodel.v
+package com.example.kode_viewmodel.view
 
 import android.content.Context
 import android.content.Intent
@@ -23,7 +23,8 @@ import com.example.kode_viewmodel.R
 import com.example.kode_viewmodel.model.*
 import com.example.kode_viewmodel.source.DataRepository
 import com.example.kode_viewmodel.source.RetrofitInstance
-import com.example.kode_viewmodel.vm.AppViewModel
+import com.example.kode_viewmodel.viewmodel.AppViewModel
+import com.example.kode_viewmodel.wrappers.Resource
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout

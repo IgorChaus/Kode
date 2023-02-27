@@ -1,4 +1,4 @@
-package com.example.kode_viewmodel.v
+package com.example.kode_viewmodel.view
 
 import android.content.Intent
 import android.os.Build

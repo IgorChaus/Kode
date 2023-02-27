@@ -1,7 +1,5 @@
 package com.example.kode_viewmodel.model
 
-import com.example.kode_viewmodel.vm.AppViewModel
-
 interface IRow
 
 class ABC(id: String,

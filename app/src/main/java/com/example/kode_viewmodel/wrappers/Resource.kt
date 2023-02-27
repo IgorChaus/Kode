@@ -1,4 +1,4 @@
-package com.example.kode_viewmodel.model
+package com.example.kode_viewmodel.wrappers
 
 sealed class Resource<T>(
     val data: T? = null,
