@@ -32,16 +32,14 @@ import com.google.android.material.tabs.TabLayout
 @RequiresApi(Build.VERSION_CODES.O)
 class MainActivity : AppCompatActivity(), RVAdapter.ItemClickListener {
 
-    private lateinit var sheetBehavior: BottomSheetBehavior<ConstraintLayout>
-
-    private var checkedBotton: Int = R.id.radioButton1
-
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
 
+        lateinit var sheetBehavior: BottomSheetBehavior<ConstraintLayout>
+        var checkedBotton: Int = R.id.radioButton1
+
         val dataRepository = DataRepository(RetrofitInstance.service)
         val factory = AppViewModel.Factory(dataRepository)
-
         val viewModel by lazy {ViewModelProvider(this,factory)
             .get(AppViewModel::class.java)}
 
