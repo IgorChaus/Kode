@@ -36,14 +36,14 @@ class MainActivity : AppCompatActivity(), RVAdapter.ItemClickListener {
 
     private var checkedBotton: Int = R.id.radioButton1
 
-    private val dataRepository = DataRepository(RetrofitInstance.service)
-    val factory = AppViewModel.Factory(dataRepository)
-
-    private val viewModel by lazy {ViewModelProvider(this,factory)
-        .get(AppViewModel::class.java)}
-
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        val dataRepository = DataRepository(RetrofitInstance.service)
+        val factory = AppViewModel.Factory(dataRepository)
+
+        val viewModel by lazy {ViewModelProvider(this,factory)
+            .get(AppViewModel::class.java)}
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
