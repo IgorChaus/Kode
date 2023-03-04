@@ -16,8 +16,8 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class RVAdapter(private val itemClickListener: ItemClickListener) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class RVAdapter(private val itemClickListener: ItemClickListener)
+    : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     interface ItemClickListener {
         fun onItemClick(item: Person.Items)
