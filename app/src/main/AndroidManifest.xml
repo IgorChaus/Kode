@@ -29,10 +29,10 @@
                 android:value="" />
         </activity>
 
-        <activity android:name=".view.ErrorActivity" />
+        <activity android:name=".view.ErrorFragment" />
 
         <activity
-            android:name=".view.Portfolio"
+            android:name=".view.ItemFragment"
             android:theme="@style/PortfolioTheme" />
 
         <meta-data

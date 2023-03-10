@@ -9,11 +9,12 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.kode_viewmodel.R
+import com.example.kode_viewmodel.view.MainFragment.Companion.departments
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class Portfolio : AppCompatActivity() {
+class ItemFragment : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +33,7 @@ class Portfolio : AppCompatActivity() {
         fullName.text = intent.extras!!.getString("personName")
         tag.text = intent.extras!!.getString("tag")?.lowercase()
         val depatStr = intent.extras!!.getString("department")
-        department.text = MainActivity.departments.filterValues { it == depatStr }.keys.first()
+        department.text = MainFragment.departments.filterValues { it == depatStr }.keys.first()
         val birthdayStr = intent.extras!!.getString("birthday")
         birthday.text = LocalDate.parse(birthdayStr).format(DateTimeFormatter
             .ofPattern("dd MMMM yyyy", Locale("ru")))
