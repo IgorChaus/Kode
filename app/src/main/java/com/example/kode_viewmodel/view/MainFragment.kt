@@ -3,7 +3,6 @@ package com.example.kode_viewmodel.view
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,6 +50,14 @@ class MainFragment: Fragment(), RVAdapter.ItemClickListener {
         )
     }
 
+    val viewModel: AppViewModel by activityViewModels()
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.firstFetchPersons()
+    }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -58,11 +65,9 @@ class MainFragment: Fragment(), RVAdapter.ItemClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?): View {
 
-        val view = inflater.inflate(R.layout.fragment_main, container, false)
+        val view = inflater.inflate(R.layout.main_screen, container, false)
         lateinit var sheetBehavior: BottomSheetBehavior<ConstraintLayout>
         var checkedBotton: Int = R.id.radioButton1
-
-        val viewModel: AppViewModel by activityViewModels()
 
         val rv: RecyclerView = view.findViewById(R.id.rv1)
 
@@ -227,7 +232,7 @@ class MainFragment: Fragment(), RVAdapter.ItemClickListener {
                         swipeContainer.isRefreshing = false
                     } else {
                         activity?.supportFragmentManager?.beginTransaction()
-                            ?.replace(R.id.container, ErrorFragment.getIstance())
+                            ?.replace(R.id.container, ErrorScreen.getIstance())
                             ?.commit()
                     }
                 }
@@ -237,22 +242,26 @@ class MainFragment: Fragment(), RVAdapter.ItemClickListener {
             }
         }
 
-        viewModel.firstFetchPersons()
-
         return view
     }
 
     override fun onItemClick(item: Person.Items){
-       /* val intent = Intent(this, ItemFragment::class.java)
 
-        intent.putExtra("path", item.avatarUrl)
-        intent.putExtra("personName", item.firstName + " " + item.lastName)
-        intent.putExtra("tag", item.userTag)
-        intent.putExtra("department", item.department)
-        intent.putExtra("birthday", item.birthday)
-        intent.putExtra("phone", item.phone)
+        val bundle = Bundle()
+        bundle.putString("path", item.avatarUrl)
+        bundle.putString("personName", item.firstName + " " + item.lastName)
+        bundle.putString("tag", item.userTag)
+        bundle.putString("department", item.department)
+        bundle.putString("birthday", item.birthday)
+        bundle.putString("phone", item.phone)
 
-        startActivity(intent)*/
+        val itemFragment = ItemScreen.getIstance()
+        itemFragment.setArguments(bundle)
+
+        activity?.supportFragmentManager?.beginTransaction()
+            ?.replace(R.id.container, itemFragment)
+            ?.addToBackStack(null)
+            ?.commit()
 
     }
 }
