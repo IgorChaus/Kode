@@ -27,7 +27,6 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
     init{
         val skelList = List(8){ Skeleton() }
         itemsDataEmitter.postValue(Resource.Success(skelList))
-        firstFetchPersons()
     }
 
     class Factory(private val dataRepository: DataRepository) : ViewModelProvider.Factory {

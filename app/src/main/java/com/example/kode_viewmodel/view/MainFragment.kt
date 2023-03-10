@@ -226,9 +226,9 @@ class MainFragment: Fragment(), RVAdapter.ItemClickListener {
                         snackbarError.show()
                         swipeContainer.isRefreshing = false
                     } else {
-                       // val intent = Intent(this@MainActivity, ErrorFragment::class.java)
-                        Log.i("MyTag", "Error" + it.message)
-                      //  startActivity(intent)
+                        activity?.supportFragmentManager?.beginTransaction()
+                            ?.replace(R.id.container, ErrorFragment.getIstance())
+                            ?.commit()
                     }
                 }
 
@@ -236,6 +236,8 @@ class MainFragment: Fragment(), RVAdapter.ItemClickListener {
 
             }
         }
+
+        viewModel.firstFetchPersons()
 
         return view
     }
