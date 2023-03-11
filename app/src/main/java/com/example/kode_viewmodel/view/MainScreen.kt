@@ -248,6 +248,7 @@ class MainScreen: Fragment(), RVAdapter.ItemClickListener {
 
                 is Resource.Loading -> snackbarLoading.show()
 
+                else -> return@observe
             }
         }
 

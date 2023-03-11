@@ -17,7 +17,7 @@
     <string name="string_error2">Постараемся быстро починить</string>
     <string name="string_error3">Попробовать снова</string>
 
-    <!--portfolio.xml-->
+    <!--screen_item.xml-->
     <string name="large_photo">Большая фотография</string>
     <string name="back">Назад</string>
 
@@ -25,10 +25,12 @@
     <string name="prompt" tools:ignore="TypographyEllipsis">Введите имя, тэг, почту...</string>
     <string name="imgsorting">Иконка сортировки</string>
     <string name="cancelButton">Отмена</string>
+    <string name="tabs">Tabs</string>
+
+    <!--no_search_item.xml-->
     <string name="imgsearch">Картинка поиск</string>
     <string name="empty_message1">Мы никого не нашли</string>
     <string name="empty_message2">Попробуй скорректировать запрос</string>
-    <string name="tabs">Tabs</string>
 
     <!--bottom_sheet.xml-->
     <string name="sorting">Сортировка</string>
