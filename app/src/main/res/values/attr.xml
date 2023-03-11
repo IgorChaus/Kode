@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="appBackground" format = "color"/>
     <attr name="appColorPrimary" format = "color"/>
     <attr name="appColorPrimaryVariant1" format = "color"/>
     <attr name="appColorPrimaryVariant2" format = "color"/>
     <attr name="appColorPrimaryVariant3" format = "color"/>
     <attr name="appColorPrimaryVariant4" format = "color"/>
+    <attr name="appColorPrimaryVariant5" format = "color"/>
     <attr name="appColorSeconary" format = "color"/>
-
+    <attr name="appColorSeconaryVariant" format = "color"/>
 </resources>

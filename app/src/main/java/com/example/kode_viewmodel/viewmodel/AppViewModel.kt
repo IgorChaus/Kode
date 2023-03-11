@@ -6,7 +6,7 @@ import androidx.lifecycle.*
 import com.example.kode_viewmodel.R
 import com.example.kode_viewmodel.model.*
 import com.example.kode_viewmodel.source.DataRepository
-import com.example.kode_viewmodel.view.MainFragment.Companion.departments
+import com.example.kode_viewmodel.view.MainScreen.Companion.departments
 import com.example.kode_viewmodel.wrappers.Resource
 import kotlinx.coroutines.launch
 import java.time.LocalDate

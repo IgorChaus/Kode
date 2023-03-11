@@ -27,7 +27,7 @@ class ErrorScreen : Fragment() {
         val textView: TextView = view.findViewById(R.id.textView3)
         textView.setOnClickListener {
             activity?.supportFragmentManager?.beginTransaction()
-                ?.replace(R.id.container, MainFragment.getIstance())
+                ?.replace(R.id.container, MainScreen.getIstance())
                 ?.commit()
         }
         return view

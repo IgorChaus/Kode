@@ -2,6 +2,7 @@ package com.example.kode_viewmodel.view
 
 import android.os.Build
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +13,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.kode_viewmodel.R
-import com.example.kode_viewmodel.view.MainFragment.Companion.departments
+import com.example.kode_viewmodel.view.MainScreen.Companion.departments
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -30,6 +31,12 @@ class ItemScreen : Fragment() {
         savedInstanceState: Bundle?): View {
 
         val view = inflater.inflate(R.layout.screen_item, container, false)
+
+        val typedValue = TypedValue()
+        requireContext().theme.resolveAttribute(R.attr.appColorPrimaryVariant4,
+            typedValue, true)
+        val color = requireContext().getColor(typedValue.resourceId)
+        requireActivity().window.setStatusBarColor(color)
 
         val photo: ImageView = view.findViewById(R.id.photo)
         val fullName: TextView = view.findViewById(R.id.fullName)

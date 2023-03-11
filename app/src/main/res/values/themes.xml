@@ -14,18 +14,16 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
 
+        <item name="appBackground">@color/white</item>
         <item name="appColorPrimary">@color/black</item>
         <item name="appColorPrimaryVariant1">@color/grey_700</item>
         <item name="appColorPrimaryVariant2">@color/grey_900</item>
         <item name="appColorPrimaryVariant3">@color/grey_500</item>
         <item name="appColorPrimaryVariant4">@color/grey_100</item>
+        <item name="appColorPrimaryVariant5">@color/grey_300</item>
         <item name="appColorSeconary">@color/purple</item>
+        <item name="appColorSeconaryVariant">@color/red</item>
 
-    </style>
-
-    <style name="PortfolioTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/grey_100</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
     </style>
 
 </resources>
