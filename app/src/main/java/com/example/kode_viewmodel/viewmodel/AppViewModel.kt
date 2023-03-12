@@ -71,7 +71,8 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
 
     fun filterSearch(strSearch: String){
         this.strSearch = strSearch
-        itemsDataEmitter.postValue(sortPerson(setFilter()))
+        val resultSearch = sortPerson(setFilter())
+        itemsDataEmitter.postValue(resultSearch)
     }
 
     fun sorting(sorting: Int){

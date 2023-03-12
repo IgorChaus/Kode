@@ -29,7 +29,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 
-class MainScreen: Fragment(), RVAdapter.ItemClickListener {
+class MainScreen: Fragment() {
 
     companion object {
         fun getIstance() = MainScreen()
@@ -69,14 +69,6 @@ class MainScreen: Fragment(), RVAdapter.ItemClickListener {
         val view = inflater.inflate(R.layout.main_screen, container, false)
         lateinit var sheetBehavior: BottomSheetBehavior<ConstraintLayout>
         var checkedBotton: Int = R.id.radioButton1
-
-        val rv: RecyclerView = view.findViewById(R.id.rv1)
-
-        val llm = LinearLayoutManager(requireContext())
-        rv.layoutManager = llm
-
-        val adapter = RVAdapter(this)
-        rv.adapter = adapter
 
         val mainActivity = activity as AppCompatActivity
 
@@ -127,6 +119,7 @@ class MainScreen: Fragment(), RVAdapter.ItemClickListener {
 
         editText.addTextChangedListener {
                 s ->  viewModel.filterSearch(s.toString())
+
         }
 
         editText.setOnFocusChangeListener { _, hasFocus ->
@@ -202,76 +195,13 @@ class MainScreen: Fragment(), RVAdapter.ItemClickListener {
             sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
-
-
-        val swipeContainer: SwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout)
-        swipeContainer.setProgressBackgroundColorSchemeColor(colorBackground)
-
-        swipeContainer.setOnRefreshListener {
-            viewModel.fetchPersons()
-        }
-
-        val snackbarLoading: Snackbar = Snackbar.make(rv,"Секундочку, гружусь...", Snackbar
-            .LENGTH_INDEFINITE)
-        requireContext().theme.resolveAttribute(R.attr.appColorSeconary,
-            typedValue, true)
-        var color = requireContext().getColor(typedValue.resourceId)
-        snackbarLoading.setBackgroundTint(color)
-        snackbarLoading.setTextColor(colorBackground)
-
-        val snackbarError: Snackbar = Snackbar.make(rv,"""Не могу обновить данные.
-            |Проверьте соединение с Интернетом.""".trimMargin(), Snackbar.LENGTH_LONG)
-        requireContext().theme.resolveAttribute(R.attr.appColorSeconaryVariant,
-            typedValue, true)
-        color = requireContext().getColor(typedValue.resourceId)
-        snackbarError.setBackgroundTint(color)
-        snackbarError.setTextColor(colorBackground)
-
-        viewModel.itemsLiveData.observe(viewLifecycleOwner) {
-            when (it) {
-                is Resource.Success -> {
-                    adapter.refreshUsers(it.data!!)
-                    swipeContainer.isRefreshing = false
-                    snackbarLoading.dismiss()
-                }
-
-                is Resource.Error -> {
-                    if (it.message == "IOException") {
-                        snackbarError.show()
-                        swipeContainer.isRefreshing = false
-                    } else {
-                        activity?.supportFragmentManager?.beginTransaction()
-                            ?.replace(R.id.container, ErrorScreen.getIstance())
-                            ?.commit()
-                    }
-                }
-
-                is Resource.Loading -> snackbarLoading.show()
-
-                else -> return@observe
-            }
-        }
+        activity?.supportFragmentManager?.beginTransaction()
+            ?.replace(R.id.container_list, ListFragment.getIstance())
+            ?.addToBackStack(null)
+            ?.commit()
 
         return view
     }
 
-    override fun onItemClick(item: Person.Items){
 
-        val bundle = Bundle()
-        bundle.putString("path", item.avatarUrl)
-        bundle.putString("personName", item.firstName + " " + item.lastName)
-        bundle.putString("tag", item.userTag)
-        bundle.putString("department", item.department)
-        bundle.putString("birthday", item.birthday)
-        bundle.putString("phone", item.phone)
-
-        val itemFragment = ItemScreen.getIstance()
-        itemFragment.setArguments(bundle)
-
-        activity?.supportFragmentManager?.beginTransaction()
-            ?.replace(R.id.container, itemFragment)
-            ?.addToBackStack(null)
-            ?.commit()
-
-    }
 }

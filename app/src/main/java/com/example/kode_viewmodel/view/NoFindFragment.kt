@@ -5,15 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.example.kode_viewmodel.R
 
-class NoFindScreen : Fragment() {
+class NoFindFragment : Fragment() {
 
     companion object {
-        fun getIstance() = NoFindScreen()
+        fun getIstance() = NoFindFragment()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
