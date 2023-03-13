@@ -26,7 +26,7 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
 
     init{
         val skelList = List(8){ Skeleton() }
-        itemsDataEmitter.postValue(Resource.Success(skelList))
+        itemsDataEmitter.postValue(Resource.Success(skelList,strSearch))
     }
 
     class Factory(private val dataRepository: DataRepository) : ViewModelProvider.Factory {
@@ -54,6 +54,7 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
     fun firstFetchPersons(){
         viewModelScope.launch {
             val _resourceItems = dataRepository.getPersons()
+
             if(_resourceItems is Resource.Success) {
                 resourceItems = _resourceItems
                 itemsDataEmitter.postValue(sortPerson(setFilter()))
@@ -62,6 +63,7 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
                     Resource
                     .Error(_resourceItems.message ?:"Error json API"))
         }
+
     }
 
     fun filterTab(tabName: String){
@@ -71,8 +73,7 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
 
     fun filterSearch(strSearch: String){
         this.strSearch = strSearch
-        val resultSearch = sortPerson(setFilter())
-        itemsDataEmitter.postValue(resultSearch)
+        itemsDataEmitter.postValue(sortPerson(setFilter()))
     }
 
     fun sorting(sorting: Int){
@@ -99,7 +100,7 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
                 compareBy({ it.firstName }, { it.lastName })
             )
 
-            result = Resource.Success(arraylistItems)
+            result = Resource.Success(arraylistItems, strSearch)
 
         } else {
             val listItems: List<Birthday> = items.map {
@@ -132,7 +133,8 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
             sepItems.addAll(arraylistItems.filter
             { LocalDate.parse(it.birthday).format(formatMMDD)  < currentDate.format(formatMMDD)})
 
-            result = Resource.Success(sepItems)
+            result = Resource.Success(sepItems, strSearch)
+
         }
 
         return result

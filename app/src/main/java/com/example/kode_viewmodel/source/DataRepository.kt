@@ -14,7 +14,7 @@ class DataRepository(val service: PersonApi) {
             try {
                 val response = service.getPersons()
                 if (response.isSuccessful) {
-                    Resource.Success(data = response.body()!!)
+                    Resource.Success(data = response.body()!!,"")
                 } else {
                     Resource.Error(response.code().toString())
                 }

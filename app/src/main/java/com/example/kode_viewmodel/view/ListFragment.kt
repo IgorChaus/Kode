@@ -72,9 +72,17 @@ class ListFragment: Fragment(), RVAdapter.ItemClickListener {
         viewModel.itemsLiveData.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Success -> {
-                    adapter.refreshUsers(it.data!!)
-                    swipeContainer.isRefreshing = false
-                    snackbarLoading.dismiss()
+                    if(it.data?.isEmpty()!! && (it.search != "")) {
+                        activity?.supportFragmentManager?.beginTransaction()
+                            ?.replace(R.id.container_list, NoFindFragment.getIstance())
+                            ?.addToBackStack(null)
+                            ?.commit()
+                        snackbarLoading.dismiss()
+                    }else {
+                        adapter.refreshUsers(it.data)
+                        swipeContainer.isRefreshing = false
+                        snackbarLoading.dismiss()
+                    }
                 }
 
                 is Resource.Error -> {
