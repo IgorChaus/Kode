@@ -57,6 +57,12 @@ class ItemScreen : Fragment() {
             .ofPattern("dd MMMM yyyy", Locale("ru")))
 
         telephone.text = this.arguments?.getString("phone")
+        telephone.setOnClickListener {
+            childFragmentManager?.beginTransaction()
+                ?.replace(R.id.container_buttons, ButtonsFragment.getIstance())
+                ?.addToBackStack(null)
+                ?.commit()
+        }
 
         val formatYear: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy")
         val currentYear = LocalDate.now().format(formatYear).toInt()

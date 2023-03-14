@@ -91,7 +91,7 @@ class ListFragment: Fragment(), RVAdapter.ItemClickListener {
                         swipeContainer.isRefreshing = false
                     } else {
                         activity?.supportFragmentManager?.beginTransaction()
-                            ?.replace(R.id.container_activity, ErrorScreen.getIstance())
+                            ?.replace(R.id.container_buttons, ErrorScreen.getIstance())
                             ?.commit()
                     }
                 }
