@@ -18,7 +18,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-open class ItemScreen : Fragment() {
+class ItemScreen : Fragment() {
 
     companion object {
         fun getIstance() = ItemScreen()
@@ -57,23 +57,6 @@ open class ItemScreen : Fragment() {
             .ofPattern("dd MMMM yyyy", Locale("ru")))
 
         telephone.text = this.arguments?.getString("phone")
-        telephone.setOnClickListener {
-
-            val bundle = Bundle()
-            bundle.putString("path", path)
-            bundle.putString("personName", this.arguments?.getString("personName"))
-            bundle.putString("tag", this.arguments?.getString("tag")?.lowercase())
-            bundle.putString("department", this.arguments?.getString("department"))
-            bundle.putString("birthday", this.arguments?.getString("birthday"))
-            bundle.putString("phone", this.arguments?.getString("phone"))
-
-            val itemButtonScreenFragment = ItemButtonScreen.getIstance()
-            itemButtonScreenFragment.setArguments(bundle)
-            activity?.supportFragmentManager?.beginTransaction()
-                ?.replace(R.id.container_activity, itemButtonScreenFragment)
-                ?.addToBackStack("ItemScreen")
-                ?.commit()
-        }
 
         val formatYear: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy")
         val currentYear = LocalDate.now().format(formatYear).toInt()
