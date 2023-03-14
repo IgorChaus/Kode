@@ -120,7 +120,7 @@ class ListFragment: Fragment(), RVAdapter.ItemClickListener {
 
         activity?.supportFragmentManager?.beginTransaction()
             ?.replace(R.id.container_activity, itemFragment)
-            ?.addToBackStack(null)
+            ?.addToBackStack("ListFragment")
             ?.commit()
 
     }

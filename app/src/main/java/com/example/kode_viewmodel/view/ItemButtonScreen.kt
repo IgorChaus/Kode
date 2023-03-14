@@ -6,11 +6,12 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.bumptech.glide.Glide
 import com.example.kode_viewmodel.R
 import com.example.kode_viewmodel.view.MainScreen.Companion.departments
@@ -18,10 +19,10 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-open class ItemScreen : Fragment() {
+class ItemButtonScreen : ItemScreen() {
 
     companion object {
-        fun getIstance() = ItemScreen()
+        fun getIstance() = ItemButtonScreen()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -30,7 +31,7 @@ open class ItemScreen : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?): View {
 
-        val view = inflater.inflate(R.layout.screen_item, container, false)
+        val view = inflater.inflate(R.layout.screen_item_button, container, false)
 
         val typedValue = TypedValue()
         requireContext().theme.resolveAttribute(R.attr.appColorPrimaryVariant4,
@@ -57,23 +58,6 @@ open class ItemScreen : Fragment() {
             .ofPattern("dd MMMM yyyy", Locale("ru")))
 
         telephone.text = this.arguments?.getString("phone")
-        telephone.setOnClickListener {
-
-            val bundle = Bundle()
-            bundle.putString("path", path)
-            bundle.putString("personName", this.arguments?.getString("personName"))
-            bundle.putString("tag", this.arguments?.getString("tag")?.lowercase())
-            bundle.putString("department", this.arguments?.getString("department"))
-            bundle.putString("birthday", this.arguments?.getString("birthday"))
-            bundle.putString("phone", this.arguments?.getString("phone"))
-
-            val itemButtonScreenFragment = ItemButtonScreen.getIstance()
-            itemButtonScreenFragment.setArguments(bundle)
-            activity?.supportFragmentManager?.beginTransaction()
-                ?.replace(R.id.container_activity, itemButtonScreenFragment)
-                ?.addToBackStack("ItemScreen")
-                ?.commit()
-        }
 
         val formatYear: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy")
         val currentYear = LocalDate.now().format(formatYear).toInt()
@@ -82,23 +66,21 @@ open class ItemScreen : Fragment() {
 
         val backButton: ImageButton = view.findViewById(R.id.bButton)
         backButton.setOnClickListener {
-                activity?.supportFragmentManager?.popBackStack()
+            activity?.supportFragmentManager?.popBackStack("ListFragment",
+                FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
+
+        val phoneButton: Button = view.findViewById(R.id.phoneButton)
+        phoneButton.text = this.arguments?.getString("phone")
+
+        val cancelButton: Button = view.findViewById(R.id.cancelButton)
+        cancelButton.setOnClickListener {
+            activity?.supportFragmentManager?.popBackStack("ItemScreen",
+                FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        }
+
         return view
     }
 
-    fun ageString(ageInt: Int): String{
-        when (ageInt){
-            1             ->  return ageInt.toString() + " ${getString(R.string.god)}"
-            in 2..4 ->  return ageInt.toString() + " ${getString(R.string.goda)}"
-            in 5..20 -> return ageInt.toString() + " ${getString(R.string.let)}"
-        }
 
-        when (ageInt % 10){
-            1               ->    return ageInt.toString() + " ${getString(R.string.god)}"
-            in 2..4   ->    return ageInt.toString() + " ${getString(R.string.goda)}"
-            0, in 5..9 ->    return ageInt.toString() + " ${getString(R.string.let)}"
-        }
-        return ""
-    }
 }
