@@ -47,23 +47,25 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
             }else
                 itemsDataEmitter.postValue(
                     Resource
-                    .Error(_resourceItems.message ?:"Error json API"))
+                        .Error(_resourceItems.message ?:"Error json API"))
         }
     }
 
     fun firstFetchPersons(){
-        viewModelScope.launch {
-            val _resourceItems = dataRepository.getPersons()
+        if (!this::resourceItems.isInitialized) {
+            viewModelScope.launch {
+                val _resourceItems = dataRepository.getPersons()
 
-            if(_resourceItems is Resource.Success) {
-                resourceItems = _resourceItems
-                itemsDataEmitter.postValue(sortPerson(setFilter()))
-            }else
-                itemsDataEmitter.postValue(
-                    Resource
-                    .Error(_resourceItems.message ?:"Error json API"))
+                if (_resourceItems is Resource.Success) {
+                    resourceItems = _resourceItems
+                    itemsDataEmitter.postValue(sortPerson(setFilter()))
+                } else
+                    itemsDataEmitter.postValue(
+                        Resource
+                            .Error(_resourceItems.message ?: "Error json API")
+                    )
+            }
         }
-
     }
 
     fun filterTab(tabName: String){
