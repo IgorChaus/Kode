@@ -1,4 +1,4 @@
-package com.example.kode_viewmodel.view
+package com.example.kode_viewmodel
 
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -6,10 +6,10 @@ import android.os.Bundle
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
-import com.example.kode_viewmodel.R
 import com.example.kode_viewmodel.model.*
 import com.example.kode_viewmodel.source.DataRepository
 import com.example.kode_viewmodel.source.RetrofitInstance
+import com.example.kode_viewmodel.view.MainScreen
 import com.example.kode_viewmodel.viewmodel.AppViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
