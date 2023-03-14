@@ -27,7 +27,7 @@ import com.google.android.material.tabs.TabLayout
 class MainScreen: Fragment() {
 
     companion object {
-        fun getIstance() = MainScreen()
+        fun getInstance() = MainScreen()
 
         val departments = mapOf(
             "Все" to "All",
@@ -63,7 +63,7 @@ class MainScreen: Fragment() {
 
         val view = inflater.inflate(R.layout.main_screen, container, false)
         lateinit var sheetBehavior: BottomSheetBehavior<ConstraintLayout>
-        var checkedBotton: Int = R.id.radioButton1
+        var checkedButton: Int = R.id.radioButton1
 
         val mainActivity = activity as AppCompatActivity
 
@@ -72,7 +72,7 @@ class MainScreen: Fragment() {
             typedValue, true)
         val colorBackground = requireContext().getColor(typedValue.resourceId)
         mainActivity.window.setBackgroundDrawable(ColorDrawable(colorBackground))
-        requireActivity().window.setStatusBarColor(colorBackground)
+        requireActivity().window.statusBarColor = colorBackground
 
 
         // --------------------- SEARCH ----------------------
@@ -157,19 +157,19 @@ class MainScreen: Fragment() {
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
 
-                val checkBotton: RadioButton = view.findViewById(checkedBotton)
-                checkBotton.isChecked = true
+                val checkButton: RadioButton = view.findViewById(checkedButton)
+                checkButton.isChecked = true
 
                 when (newState) {
                     BottomSheetBehavior.STATE_EXPANDED -> {
 
                         mainActivity.window.setBackgroundDrawable(ColorDrawable(Color.parseColor("#10000000")))
-                        requireActivity().window.setStatusBarColor(Color.parseColor("#10000000"))
+                        requireActivity().window.statusBarColor = Color.parseColor("#10000000")
 
                     }
                     BottomSheetBehavior.STATE_COLLAPSED -> {
                         mainActivity.window.setBackgroundDrawable(ColorDrawable(colorBackground))
-                        requireActivity().window.setStatusBarColor(colorBackground)
+                        requireActivity().window.statusBarColor = colorBackground
                     }
                     else -> return
                 }
@@ -179,9 +179,9 @@ class MainScreen: Fragment() {
         val radioGroup: RadioGroup = view.findViewById(R.id.radioGroup)
         radioGroup.clearCheck()
         radioGroup.setOnCheckedChangeListener { _, checkedId ->
-            checkedBotton = checkedId
-            viewModel.sorting(checkedBotton)
-            if (checkedBotton == R.id.radioButton2) {
+            checkedButton = checkedId
+            viewModel.sorting(checkedButton)
+            if (checkedButton == R.id.radioButton2) {
                 sortButton.setImageResource(R.drawable.icon_right_purple)
             } else {
                 sortButton.setImageResource(R.drawable.icon_right)
