@@ -20,7 +20,6 @@
         <item name="appColorPrimaryVariant2">@color/grey_900</item>
         <item name="appColorPrimaryVariant3">@color/grey_500</item>
         <item name="appColorPrimaryVariant4">@color/grey_100</item>
-        <item name="appColorPrimaryVariant5">@color/grey_300</item>
         <item name="appColorSeconary">@color/purple</item>
         <item name="appColorSeconaryVariant">@color/red</item>
 

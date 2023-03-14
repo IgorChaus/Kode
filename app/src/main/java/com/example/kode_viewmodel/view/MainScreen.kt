@@ -1,6 +1,7 @@
 package com.example.kode_viewmodel.view
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
@@ -18,15 +19,9 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.kode_viewmodel.R
-import com.example.kode_viewmodel.model.Person
 import com.example.kode_viewmodel.viewmodel.AppViewModel
-import com.example.kode_viewmodel.wrappers.Resource
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 
 class MainScreen: Fragment() {
@@ -167,11 +162,10 @@ class MainScreen: Fragment() {
 
                 when (newState) {
                     BottomSheetBehavior.STATE_EXPANDED -> {
-                        requireContext().theme.resolveAttribute(R.attr.appColorPrimaryVariant5,
-                            typedValue, true)
-                        val color = requireContext().getColor(typedValue.resourceId)
-                        mainActivity.window.setBackgroundDrawable(ColorDrawable(color))
-                        requireActivity().window.setStatusBarColor(color)
+
+                        mainActivity.window.setBackgroundDrawable(ColorDrawable(Color.parseColor("#10000000")))
+                        requireActivity().window.setStatusBarColor(Color.parseColor("#10000000"))
+
                     }
                     BottomSheetBehavior.STATE_COLLAPSED -> {
                         mainActivity.window.setBackgroundDrawable(ColorDrawable(colorBackground))
