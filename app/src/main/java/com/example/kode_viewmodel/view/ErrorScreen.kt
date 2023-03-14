@@ -30,6 +30,7 @@ class ErrorScreen : Fragment() {
                 ?.replace(R.id.container_activity, MainScreen.getInstance())
                 ?.commit()
         }
+
         return view
     }
 }
