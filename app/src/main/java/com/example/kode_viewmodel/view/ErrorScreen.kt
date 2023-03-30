@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.kode_viewmodel.R
+import com.example.kode_viewmodel.databinding.ErrorScreenBinding
 
 class ErrorScreen : Fragment() {
 
@@ -22,15 +24,15 @@ class ErrorScreen : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?): View {
 
-        val view = inflater.inflate(R.layout.error_screen, container, false)
+        val binding: ErrorScreenBinding =
+            DataBindingUtil.inflate(inflater,R.layout.error_screen, container, false)
 
-        val textView: TextView = view.findViewById(R.id.textView3)
-        textView.setOnClickListener {
+        binding.textView3.setOnClickListener {
             activity?.supportFragmentManager?.beginTransaction()
                 ?.replace(R.id.container_activity, MainScreen.getInstance())
                 ?.commit()
         }
 
-        return view
+        return binding.root
     }
 }
