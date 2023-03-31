@@ -17,9 +17,12 @@ import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.addTextChangedListener
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.kode_viewmodel.R
+import com.example.kode_viewmodel.databinding.MainScreenBinding
+import com.example.kode_viewmodel.databinding.ScreenItemBinding
 import com.example.kode_viewmodel.viewmodel.AppViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayout
@@ -61,7 +64,8 @@ class MainScreen: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?): View {
 
-        val view = inflater.inflate(R.layout.main_screen, container, false)
+        val binding: MainScreenBinding =
+            DataBindingUtil.inflate(inflater,R.layout.main_screen, container, false)
         lateinit var sheetBehavior: BottomSheetBehavior<ConstraintLayout>
         var checkedButton: Int = R.id.radioButton1
 
@@ -76,13 +80,9 @@ class MainScreen: Fragment() {
 
 
         // --------------------- SEARCH ----------------------
-        val toolbar: Toolbar = view.findViewById(R.id.toolbar)
-        mainActivity.setSupportActionBar(toolbar)
+        mainActivity.setSupportActionBar(binding.toolbar)
 
-        val editText: EditText = view.findViewById(R.id.editText)
-
-        val sortButton: ImageButton = view.findViewById(R.id.imageButton)
-        sortButton.setOnClickListener {
+        binding.sortButton.setOnClickListener {
             when(sheetBehavior.state){
                 BottomSheetBehavior.STATE_COLLAPSED ->
                     sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
@@ -92,52 +92,51 @@ class MainScreen: Fragment() {
             }
         }
 
-        val buttonCancel: Button = view.findViewById(R.id.button)
-        buttonCancel.setOnClickListener {
-            editText.clearFocus()
-            buttonCancel.visibility = View.GONE
-            editText.setText("")
+        binding.buttonCancel.setOnClickListener {
+            binding.editText.clearFocus()
+            binding.buttonCancel.visibility = View.GONE
+            binding.editText.setText("")
 
             // Hide keyboard
-            val  imm = editText.context.getSystemService(
+            val  imm = binding.editText.context.getSystemService(
                 Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(editText.windowToken, 0)
+            imm.hideSoftInputFromWindow(binding.editText.windowToken, 0)
 
             viewModel.filterSearch("")
-            sortButton.visibility = View.VISIBLE
+            binding.sortButton.visibility = View.VISIBLE
 
-            editText.setCompoundDrawablesWithIntrinsicBounds(
+            binding.editText.setCompoundDrawablesWithIntrinsicBounds(
                 ResourcesCompat.getDrawable(resources, R.drawable.icon_search, null),
                 null, null, null)
 
         }
 
-        editText.addTextChangedListener {
+        binding.editText.addTextChangedListener {
                 s ->  viewModel.filterSearch(s.toString())
 
         }
 
-        editText.setOnFocusChangeListener { _, hasFocus ->
+        binding.editText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
-                buttonCancel.visibility = View.VISIBLE
-                sortButton.visibility = View.GONE
-                editText.setCompoundDrawablesWithIntrinsicBounds(
+                binding.buttonCancel.visibility = View.VISIBLE
+                binding.sortButton.visibility = View.GONE
+                binding.editText.setCompoundDrawablesWithIntrinsicBounds(
                     ResourcesCompat.getDrawable(resources, R.drawable.icon_search_black, null),
                     null, null, null)
             } else {
-                buttonCancel.visibility = View.GONE
-                sortButton.visibility = View.VISIBLE
+                binding.buttonCancel.visibility = View.GONE
+                binding.sortButton.visibility = View.VISIBLE
             }
         }
 
 
         // ---------------- TABS ---------------------------
-        val tabLayout: TabLayout = view.findViewById(R.id.tabLayout)
+  //      val tabLayout: TabLayout = view.findViewById(R.id.tabLayout)
         departments.forEach{
-            tabLayout.addTab(tabLayout.newTab().setText(it.key))
+            binding.tabLayout.addTab(binding.tabLayout.newTab().setText(it.key))
         }
 
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {}
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
@@ -148,6 +147,7 @@ class MainScreen: Fragment() {
         })
 
         // ----------------- BOTTOM SHEET --------------------------------
+        val view = binding.root
         val bottomSheet: ConstraintLayout = view.findViewById(R.id.bottomSheet)
         sheetBehavior = BottomSheetBehavior.from(bottomSheet)
 
@@ -182,9 +182,9 @@ class MainScreen: Fragment() {
             checkedButton = checkedId
             viewModel.sorting(checkedButton)
             if (checkedButton == R.id.radioButton2) {
-                sortButton.setImageResource(R.drawable.icon_right_purple)
+                binding.sortButton.setImageResource(R.drawable.icon_right_purple)
             } else {
-                sortButton.setImageResource(R.drawable.icon_right)
+                binding.sortButton.setImageResource(R.drawable.icon_right)
             }
             sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
