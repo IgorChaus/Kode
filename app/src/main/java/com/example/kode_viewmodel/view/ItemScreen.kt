@@ -6,15 +6,11 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.kode_viewmodel.R
-import com.example.kode_viewmodel.databinding.ErrorScreenBinding
 import com.example.kode_viewmodel.databinding.ScreenItemBinding
 import com.example.kode_viewmodel.view.MainScreen.Companion.departments
 import java.time.LocalDate
