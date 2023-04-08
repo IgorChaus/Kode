@@ -5,18 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.example.kode_viewmodel.R
 import com.example.kode_viewmodel.databinding.ErrorScreenBinding
-import com.example.kode_viewmodel.databinding.ScreenItemBinding
 
 class ErrorScreen : Fragment() {
     private var binding: ErrorScreenBinding? = null
 
     companion object {
-        fun getIstance() = ErrorScreen()
+        fun getInstance() = ErrorScreen()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

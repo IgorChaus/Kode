@@ -10,12 +10,8 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.kode_viewmodel.R
-import com.example.kode_viewmodel.databinding.ErrorScreenBinding
 import com.example.kode_viewmodel.databinding.ListScreenBinding
-import com.example.kode_viewmodel.databinding.ScreenItemBinding
 import com.example.kode_viewmodel.model.Person
 import com.example.kode_viewmodel.viewmodel.AppViewModel
 import com.example.kode_viewmodel.wrappers.Resource
@@ -95,7 +91,7 @@ class ListFragment: Fragment(), RVAdapter.ItemClickListener {
                         binding?.swipeRefreshLayout?.isRefreshing = false
                     } else {
                         activity?.supportFragmentManager?.beginTransaction()
-                            ?.replace(R.id.container_buttons, ErrorScreen.getIstance())
+                            ?.replace(R.id.container_buttons, ErrorScreen.getInstance())
                             ?.commit()
                     }
                 }
