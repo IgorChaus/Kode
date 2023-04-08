@@ -25,10 +25,8 @@ class ErrorScreen : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
 
-  //      val view = inflater.inflate(R.layout.error_screen, container, false)
         binding = ErrorScreenBinding.inflate(inflater, container, false)
 
- //       val textView: TextView = view.findViewById(R.id.textView3)
         binding?.textView3?.setOnClickListener {
             activity?.supportFragmentManager?.beginTransaction()
                 ?.replace(R.id.container_activity, MainScreen.getInstance())

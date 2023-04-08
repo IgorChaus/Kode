@@ -13,12 +13,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.kode_viewmodel.R
+import com.example.kode_viewmodel.databinding.ErrorScreenBinding
+import com.example.kode_viewmodel.databinding.ListScreenBinding
+import com.example.kode_viewmodel.databinding.ScreenItemBinding
 import com.example.kode_viewmodel.model.Person
 import com.example.kode_viewmodel.viewmodel.AppViewModel
 import com.example.kode_viewmodel.wrappers.Resource
 import com.google.android.material.snackbar.Snackbar
 
 class ListFragment: Fragment(), RVAdapter.ItemClickListener {
+
+    private var binding: ListScreenBinding? = null
+
     companion object {
         fun getIstance() = ListFragment()
     }
@@ -29,31 +35,29 @@ class ListFragment: Fragment(), RVAdapter.ItemClickListener {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?): View {
+        savedInstanceState: Bundle?): View? {
 
-        val view = inflater.inflate(R.layout.list_screen, container, false)
+        binding = ListScreenBinding.inflate(inflater, container, false)
 
-        val rv: RecyclerView = view.findViewById(R.id.rv1)
         val llm = LinearLayoutManager(requireContext())
-        rv.layoutManager = llm
+        binding?.rv1?.layoutManager = llm
 
         val adapter = RVAdapter(this)
-        rv.adapter = adapter
+        binding?.rv1?.adapter = adapter
 
         val typedValue = TypedValue()
         requireContext().theme.resolveAttribute(R.attr.appBackground,
             typedValue, true)
         val colorBackground = requireContext().getColor(typedValue.resourceId)
 
-        val swipeContainer: SwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout)
-        swipeContainer.setProgressBackgroundColorSchemeColor(colorBackground)
-        swipeContainer.setOnRefreshListener {
+        binding?.swipeRefreshLayout?.setProgressBackgroundColorSchemeColor(colorBackground)
+        binding?.swipeRefreshLayout?.setOnRefreshListener {
             viewModel.fetchPersons()
         }
 
         val lview: View = requireActivity().findViewById(android.R.id.content)
 
-        val snackbarLoading: Snackbar = Snackbar.make(lview,"Секундочку, гружусь...", Snackbar
+        val snackbarLoading: Snackbar = Snackbar.make(lview,getString(R.string.loading), Snackbar
             .LENGTH_INDEFINITE)
         requireContext().theme.resolveAttribute(R.attr.appColorSeconary,
             typedValue, true)
@@ -61,8 +65,8 @@ class ListFragment: Fragment(), RVAdapter.ItemClickListener {
         snackbarLoading.setBackgroundTint(color)
         snackbarLoading.setTextColor(colorBackground)
 
-        val snackbarError: Snackbar = Snackbar.make(lview,"""Не могу обновить данные.
-            |Проверьте соединение с Интернетом.""".trimMargin(), Snackbar.LENGTH_LONG)
+        val snackbarError: Snackbar = Snackbar.make(lview,getString(R.string.cant_update_data),
+            Snackbar.LENGTH_LONG)
         requireContext().theme.resolveAttribute(R.attr.appColorSeconaryVariant,
             typedValue, true)
         color = requireContext().getColor(typedValue.resourceId)
@@ -80,7 +84,7 @@ class ListFragment: Fragment(), RVAdapter.ItemClickListener {
                         snackbarLoading.dismiss()
                     }else {
                         adapter.refreshUsers(it.data)
-                        swipeContainer.isRefreshing = false
+                        binding?.swipeRefreshLayout?.isRefreshing = false
                         snackbarLoading.dismiss()
                     }
                 }
@@ -88,7 +92,7 @@ class ListFragment: Fragment(), RVAdapter.ItemClickListener {
                 is Resource.Error -> {
                     if (it.message == "IOException") {
                         snackbarError.show()
-                        swipeContainer.isRefreshing = false
+                        binding?.swipeRefreshLayout?.isRefreshing = false
                     } else {
                         activity?.supportFragmentManager?.beginTransaction()
                             ?.replace(R.id.container_buttons, ErrorScreen.getIstance())
@@ -102,7 +106,7 @@ class ListFragment: Fragment(), RVAdapter.ItemClickListener {
             }
         }
 
-        return view
+        return binding?.root
     }
 
     override fun onItemClick(item: Person.Items){
@@ -123,5 +127,10 @@ class ListFragment: Fragment(), RVAdapter.ItemClickListener {
             ?.addToBackStack("ListFragment")
             ?.commit()
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 }
