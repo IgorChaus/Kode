@@ -53,7 +53,7 @@ class ListFragment: Fragment(), RVAdapter.ItemClickListener {
 
         val lview: View = requireActivity().findViewById(android.R.id.content)
 
-        val snackbarLoading: Snackbar = Snackbar.make(lview,"Секундочку, гружусь...", Snackbar
+        val snackbarLoading: Snackbar = Snackbar.make(lview,getString(R.string.loading), Snackbar
             .LENGTH_INDEFINITE)
         requireContext().theme.resolveAttribute(R.attr.appColorSeconary,
             typedValue, true)
@@ -61,8 +61,8 @@ class ListFragment: Fragment(), RVAdapter.ItemClickListener {
         snackbarLoading.setBackgroundTint(color)
         snackbarLoading.setTextColor(colorBackground)
 
-        val snackbarError: Snackbar = Snackbar.make(lview,"""Не могу обновить данные.
-            |Проверьте соединение с Интернетом.""".trimMargin(), Snackbar.LENGTH_LONG)
+        val snackbarError: Snackbar = Snackbar.make(lview,getString(R.string.cant_update_data),
+            Snackbar.LENGTH_LONG)
         requireContext().theme.resolveAttribute(R.attr.appColorSeconaryVariant,
             typedValue, true)
         color = requireContext().getColor(typedValue.resourceId)

@@ -26,6 +26,9 @@
     <string name="imgsorting">Иконка сортировки</string>
     <string name="cancelButton">Отмена</string>
     <string name="tabs">Tabs</string>
+    <string name="loading">Секундочку, гружусь…</string>
+    <string name="cant_update_data">Не могу обновить данные.
+        \nПроверьте соединение с Интернетом.</string>
 
     <!--no_search_item.xml-->
     <string name="imgsearch">Картинка поиск</string>
