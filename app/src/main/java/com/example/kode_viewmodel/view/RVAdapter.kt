@@ -11,6 +11,9 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.kode_viewmodel.R
+import com.example.kode_viewmodel.databinding.ItemBinding
+import com.example.kode_viewmodel.databinding.ItemBirthdayBinding
+import com.example.kode_viewmodel.databinding.SeparatorBinding
 import com.example.kode_viewmodel.model.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -41,38 +44,39 @@ class RVAdapter(private val itemClickListener: ItemClickListener)
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = when (viewType) {
+
         R.layout.item -> ItemViewHolder(
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.item, parent, false))
-        R.layout.item_birthday -> ItemBirthdayViewHolder(
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_birthday, parent, false))
-        R.layout.separator -> SeparatorHolder(
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.separator, parent, false))
-        R.layout.skeleton_item -> SkeletonHolder(
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.skeleton_item, parent, false))
-        else -> throw IllegalArgumentException()
+            ItemBinding.inflate(LayoutInflater
+                .from(parent.context), parent, false))
+      R.layout.item_birthday -> ItemBirthdayViewHolder(
+          ItemBirthdayBinding.inflate(LayoutInflater
+              .from(parent.context), parent, false))
+      R.layout.separator -> SeparatorHolder(
+          SeparatorBinding.inflate(LayoutInflater
+              .from(parent.context), parent, false))
+      R.layout.skeleton_item -> SkeletonHolder(
+          LayoutInflater.from(parent.context)
+              .inflate(R.layout.skeleton_item, parent, false))
+      else -> throw IllegalArgumentException()
     }
 
-    class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val personPhoto: ImageView = itemView.findViewById(R.id.imageView)
-        val personName: TextView = itemView.findViewById(R.id.personName)
-        val personTag: TextView = itemView.findViewById(R.id.personTag)
-        val personDepartment: TextView = itemView.findViewById(R.id.personDepartment)
+    class ItemViewHolder(binding: ItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        val personPhoto: ImageView = binding.imageView
+        val personName: TextView = binding.personName
+        val personTag: TextView = binding.personTag
+        val personDepartment: TextView = binding.personDepartment
     }
 
-    class ItemBirthdayViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val personPhoto: ImageView = itemView.findViewById(R.id.imageView)
-        val personName: TextView = itemView.findViewById(R.id.personName)
-        val personTag: TextView = itemView.findViewById(R.id.personTag)
-        val personDepartment: TextView = itemView.findViewById(R.id.personDepartment)
-        val birthday: TextView = itemView.findViewById(R.id.personBirthday)
+    class ItemBirthdayViewHolder(binding: ItemBirthdayBinding) : RecyclerView.ViewHolder(binding.root) {
+        val personPhoto: ImageView = binding.imageView
+        val personName: TextView = binding.personName
+        val personTag: TextView = binding.personTag
+        val personDepartment: TextView = binding.personDepartment
+        val birthday: TextView = binding.personBirthday
     }
 
-    class SeparatorHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val separetor: TextView = itemView.findViewById(R.id.year)
+    class SeparatorHolder(binding: SeparatorBinding) : RecyclerView.ViewHolder(binding.root) {
+        val separetor: TextView = binding.year
     }
 
     class SkeletonHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
