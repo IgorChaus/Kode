@@ -5,6 +5,8 @@ import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -60,68 +62,87 @@ class RVAdapter(private val itemClickListener: ItemClickListener)
 
     class ItemViewHolder(val binding: ItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        @SuppressLint("SetTextI18n")
-        fun bind(item: ABC, itemClickListener: ItemClickListener, holder: RecyclerView.ViewHolder) {
-            val path: String = item.avatarUrl
-            Glide.with(binding.root.context).load(path).circleCrop()
-                .into(binding.imageView)
-            binding.personName.text = item.firstName + " " + item.lastName
-            binding.personTag.text = " " + item.userTag.lowercase()
-            binding.personDepartment.text = item.department
-            binding.itemLayout.setOnClickListener{
-                if (holder.getAdapterPosition() == RecyclerView.NO_POSITION) {
-                    return@setOnClickListener
-                }
-                itemClickListener.onItemClick(item)
-            }
-        }
+        val personPhoto: ImageView = binding.imageView
+        val personName: TextView = binding.personName
+        val personTag: TextView = binding.personTag
+        val personDepartment: TextView = binding.personDepartment
+
     }
 
     class ItemBirthdayViewHolder(val binding: ItemBirthdayBinding)
         : RecyclerView.ViewHolder(binding.root) {
 
-        @SuppressLint("SetTextI18n")
-        @RequiresApi(Build.VERSION_CODES.O)
-        fun bind(item: Birthday, itemClickListener: ItemClickListener
-                 ,holder: RecyclerView.ViewHolder) {
-            val path: String = item.avatarUrl
-            Glide.with(binding.root.context).load(path).circleCrop()
-                .into(binding.imageView)
-            binding.personName.text = item.firstName + " " + item.lastName
-            binding.personTag.text = " " + item.userTag.lowercase()
-            binding.personDepartment.text = item.department
+        val personPhoto: ImageView = itemView.findViewById(R.id.imageView)
+        val personName: TextView = itemView.findViewById(R.id.personName)
+        val personTag: TextView = itemView.findViewById(R.id.personTag)
+        val personDepartment: TextView = itemView.findViewById(R.id.personDepartment)
+        val birthday: TextView = itemView.findViewById(R.id.personBirthday)
 
-            val date = LocalDate.parse(item.birthday)
-            val formatter: DateTimeFormatter =
-                DateTimeFormatter.ofPattern("dd MMM", Locale("ru"))
-
-            binding.personBirthday.text = date.format(formatter)
-            binding.itemBirthdayLayout.setOnClickListener{
-                if (holder.getAdapterPosition() == RecyclerView.NO_POSITION) {
-                    return@setOnClickListener
-                }
-                itemClickListener.onItemClick(item)
-            }
-        }
     }
 
     class SeparatorHolder(val binding: SeparatorBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(separator: Separator) {
-            binding.year.text = separator.year
-        }
+
+        val separetor: TextView = itemView.findViewById(R.id.year)
+
     }
 
     class SkeletonHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+
+    @SuppressLint("SetTextI18n")
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun bindItem(holder: RecyclerView.ViewHolder, item: ABC) {
+        val itemViewHolder = holder as ItemViewHolder
+        val path: String = item.avatarUrl
+        Glide.with(itemViewHolder.itemView.context).load(path).circleCrop()
+            .into(itemViewHolder.personPhoto)
+        itemViewHolder.personName.text = item.firstName + " " +
+                item.lastName
+        itemViewHolder.personTag.text = " " + item.userTag.lowercase()
+        itemViewHolder.personDepartment.text = item.department
+        holder.itemView.setOnClickListener {
+            if (holder.getAdapterPosition() == RecyclerView.NO_POSITION) {
+                return@setOnClickListener
+            }
+            itemClickListener.onItemClick(item)
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun bindItemBirthday(holder: RecyclerView.ViewHolder, item: Birthday) {
+        val itemViewHolder = holder as ItemBirthdayViewHolder
+        val path: String = item.avatarUrl
+        Glide.with(itemViewHolder.itemView.context).load(path).circleCrop()
+            .into(itemViewHolder.personPhoto)
+        itemViewHolder.personName.text = item.firstName + " " +
+                item.lastName
+        itemViewHolder.personTag.text = " " + item.userTag.lowercase()
+        itemViewHolder.personDepartment.text = item.department
+
+        val date = LocalDate.parse(item.birthday)
+        val formatter: DateTimeFormatter =
+            DateTimeFormatter.ofPattern("dd MMM", Locale("ru"))
+        itemViewHolder.birthday.text = date.format(formatter)
+        holder.itemView.setOnClickListener {
+            if (holder.getAdapterPosition() == RecyclerView.NO_POSITION) {
+                return@setOnClickListener
+            }
+            itemClickListener.onItemClick(item)
+        }
+    }
+
+
+    private fun bindSeparator(holder: RecyclerView.ViewHolder, separator: Separator) {
+        (holder as SeparatorHolder).separetor.text = separator.year
+    }
 
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) =
         when (holder.itemViewType) {
-            R.layout.item -> (holder as ItemViewHolder)
-                .bind((items[position] as ABC),itemClickListener, holder)
-            R.layout.item_birthday -> (holder as ItemBirthdayViewHolder)
-                .bind((items[position] as Birthday),itemClickListener, holder)
-            R.layout.separator -> (holder as SeparatorHolder).bind(items[position] as Separator)
+            R.layout.item -> bindItem(holder,items[position] as ABC)
+            R.layout.item_birthday -> bindItemBirthday(holder,items[position] as Birthday)
+            R.layout.separator -> bindSeparator(holder,items[position] as Separator)
             R.layout.skeleton_item -> Unit
             else -> throw IllegalArgumentException()
         }
