@@ -13,12 +13,14 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.kode_viewmodel.R
+import com.example.kode_viewmodel.databinding.ScreenItemBinding
 import com.example.kode_viewmodel.view.MainScreen.Companion.departments
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 
 class ItemScreen : Fragment() {
+    private var binding: ScreenItemBinding? = null
 
     companion object {
         fun getIstance() = ItemScreen()
@@ -28,9 +30,9 @@ class ItemScreen : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?): View {
+        savedInstanceState: Bundle?): View? {
 
-        val view = inflater.inflate(R.layout.screen_item, container, false)
+        binding = ScreenItemBinding.inflate(inflater, container, false)
 
         val typedValue = TypedValue()
         requireContext().theme.resolveAttribute(R.attr.appColorPrimaryVariant4,
@@ -38,36 +40,27 @@ class ItemScreen : Fragment() {
         val color = requireContext().getColor(typedValue.resourceId)
         requireActivity().window.setStatusBarColor(color)
 
-        val photo: ImageView = view.findViewById(R.id.photo)
-        val fullName: TextView = view.findViewById(R.id.fullName)
-        val tag: TextView = view.findViewById(R.id.tag)
-        val department: TextView = view.findViewById(R.id.department)
-        val birthday: TextView = view.findViewById(R.id.birthday)
-        val telephone: TextView = view.findViewById(R.id.telephone)
-        val age: TextView = view.findViewById(R.id.age)
-
         val path = this.arguments?.getString("path")
-        Glide.with(this).load(path).circleCrop().into(photo)
-        fullName.text = this.arguments?.getString("personName")
-        tag.text = this.arguments?.getString("tag")?.lowercase()
+        Glide.with(this).load(path).circleCrop().into(binding!!.photo)
+        binding?.fullName?.text = this.arguments?.getString("personName")
+        binding?.tag?.text = this.arguments?.getString("tag")?.lowercase()
         val depatStr = this.arguments?.getString("department")
-        department.text = departments.filterValues { it == depatStr }.keys.first()
+        binding?.department?.text = departments.filterValues { it == depatStr }.keys.first()
         val birthdayStr = this.arguments?.getString("birthday")
-        birthday.text = LocalDate.parse(birthdayStr).format(DateTimeFormatter
+        binding?.birthday?.text = LocalDate.parse(birthdayStr).format(DateTimeFormatter
             .ofPattern("dd MMMM yyyy", Locale("ru")))
 
-        telephone.text = this.arguments?.getString("phone")
+        binding?.telephone?.text = this.arguments?.getString("phone")
 
         val formatYear: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy")
         val currentYear = LocalDate.now().format(formatYear).toInt()
         val birthdayYear = LocalDate.parse(birthdayStr).format(formatYear).toInt()
-        age.text = ageString(currentYear - birthdayYear)
+        binding?.age?.text = ageString(currentYear - birthdayYear)
 
-        val backButton: ImageButton = view.findViewById(R.id.bButton)
-        backButton.setOnClickListener {
+        binding?.bButton?.setOnClickListener {
                 activity?.supportFragmentManager?.popBackStack()
         }
-        return view
+        return binding?.root
     }
 
     fun ageString(ageInt: Int): String{
@@ -83,5 +76,10 @@ class ItemScreen : Fragment() {
             0, in 5..9 ->    return ageInt.toString() + " ${getString(R.string.let)}"
         }
         return ""
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 }
