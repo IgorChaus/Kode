@@ -197,5 +197,4 @@ class MainScreen: Fragment() {
         return view
     }
 
-
 }
