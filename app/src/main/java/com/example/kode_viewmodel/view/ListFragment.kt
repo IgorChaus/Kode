@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.kode_viewmodel.R
 import com.example.kode_viewmodel.databinding.ListScreenBinding
 import com.example.kode_viewmodel.model.Person
@@ -17,15 +16,25 @@ import com.example.kode_viewmodel.viewmodel.AppViewModel
 import com.example.kode_viewmodel.wrappers.Resource
 import com.google.android.material.snackbar.Snackbar
 
-class ListFragment: Fragment(), RVAdapter.ItemClickListener {
+class ListFragment: Fragment() {
 
     private var binding: ListScreenBinding? = null
+
+    private lateinit var adapter: RVAdapter
 
     companion object {
         fun getIstance() = ListFragment()
     }
 
     val viewModel: AppViewModel by activityViewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        adapter = RVAdapter()
+        adapter.itemClickListener = {
+            showItem(it)
+        }
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -34,11 +43,6 @@ class ListFragment: Fragment(), RVAdapter.ItemClickListener {
         savedInstanceState: Bundle?): View? {
 
         binding = ListScreenBinding.inflate(inflater, container, false)
-
-        val llm = LinearLayoutManager(requireContext())
-        binding?.rv1?.layoutManager = llm
-
-        val adapter = RVAdapter(this)
         binding?.rv1?.adapter = adapter
 
         val typedValue = TypedValue()
@@ -69,17 +73,27 @@ class ListFragment: Fragment(), RVAdapter.ItemClickListener {
         snackbarError.setBackgroundTint(color)
         snackbarError.setTextColor(colorBackground)
 
+        setupObserver(snackbarLoading, snackbarError)
+
+        return binding?.root
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setupObserver(
+        snackbarLoading: Snackbar,
+        snackbarError: Snackbar
+    ) {
         viewModel.itemsLiveData.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Success -> {
-                    if(it.data?.isEmpty()!! && (it.search != "")) {
+                    if (it.data?.isEmpty()!! && (it.search != "")) {
                         activity?.supportFragmentManager?.beginTransaction()
                             ?.replace(R.id.container_list, NoFindFragment.getIstance())
                             ?.addToBackStack(null)
                             ?.commit()
                         snackbarLoading.dismiss()
-                    }else {
-                        adapter.refreshUsers(it.data)
+                    } else {
+                        adapter.submitList(it.data)
                         binding?.swipeRefreshLayout?.isRefreshing = false
                         snackbarLoading.dismiss()
                     }
@@ -101,11 +115,9 @@ class ListFragment: Fragment(), RVAdapter.ItemClickListener {
                 else -> return@observe
             }
         }
-
-        return binding?.root
     }
 
-    override fun onItemClick(item: Person.Items){
+    fun showItem(item: Person.Items){
 
         val bundle = Bundle()
         bundle.putString("path", item.avatarUrl)

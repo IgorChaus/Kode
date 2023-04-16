@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.kode_viewmodel.R
@@ -19,23 +20,12 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class RVAdapter(private val itemClickListener: ItemClickListener)
-    : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class RVAdapter : ListAdapter<IRow, RecyclerView.ViewHolder>(DiffCallBack()) {
 
-    interface ItemClickListener {
-        fun onItemClick(item: Person.Items)
-    }
-
-    private var  items: List<IRow> = listOf()
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun refreshUsers(items: List<IRow>) {
-        this.items = items
-        notifyDataSetChanged()
-    }
+    var itemClickListener: ((Person.Items) -> Unit)? = null
 
     override fun getItemViewType(position: Int): Int =
-        when (items[position]) {
+        when (getItem(position)) {
             is Birthday -> R.layout.item_birthday
             is ABC -> R.layout.item
             is Separator -> R.layout.separator
@@ -96,7 +86,7 @@ class RVAdapter(private val itemClickListener: ItemClickListener)
             if (holder.getAdapterPosition() == RecyclerView.NO_POSITION) {
                 return@setOnClickListener
             }
-            itemClickListener.onItemClick(item)
+            itemClickListener?.invoke(item)
         }
     }
 
@@ -120,7 +110,7 @@ class RVAdapter(private val itemClickListener: ItemClickListener)
             if (holder.getAdapterPosition() == RecyclerView.NO_POSITION) {
                 return@setOnClickListener
             }
-            itemClickListener.onItemClick(item)
+            itemClickListener?.invoke(item)
         }
     }
 
@@ -135,13 +125,11 @@ class RVAdapter(private val itemClickListener: ItemClickListener)
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) =
         when (holder.itemViewType) {
-            R.layout.item -> bindItem(holder,items[position] as ABC)
-            R.layout.item_birthday -> bindItemBirthday(holder,items[position] as Birthday)
-            R.layout.separator -> bindSeparator(holder,items[position] as Separator)
+            R.layout.item -> bindItem(holder,getItem(position) as ABC)
+            R.layout.item_birthday -> bindItemBirthday(holder,getItem(position) as Birthday)
+            R.layout.separator -> bindSeparator(holder,getItem(position) as Separator)
             R.layout.skeleton_item -> bindSkeleton()
             else -> throw IllegalArgumentException()
         }
-
-    override fun getItemCount() = items.count()
 }
 
