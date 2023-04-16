@@ -17,15 +17,25 @@ import com.example.kode_viewmodel.viewmodel.AppViewModel
 import com.example.kode_viewmodel.wrappers.Resource
 import com.google.android.material.snackbar.Snackbar
 
-class ListFragment: Fragment(), RVAdapter.ItemClickListener {
+class ListFragment: Fragment() {
 
     private var binding: ListScreenBinding? = null
+
+    private lateinit var adapter: RVAdapter
 
     companion object {
         fun getIstance() = ListFragment()
     }
 
     val viewModel: AppViewModel by activityViewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        adapter = RVAdapter()
+        adapter.itemClickListener = {
+            showItem(it)
+        }
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -38,7 +48,6 @@ class ListFragment: Fragment(), RVAdapter.ItemClickListener {
         val llm = LinearLayoutManager(requireContext())
         binding?.rv1?.layoutManager = llm
 
-        val adapter = RVAdapter(this)
         binding?.rv1?.adapter = adapter
 
         val typedValue = TypedValue()
@@ -105,7 +114,7 @@ class ListFragment: Fragment(), RVAdapter.ItemClickListener {
         return binding?.root
     }
 
-    override fun onItemClick(item: Person.Items){
+    fun showItem(item: Person.Items){
 
         val bundle = Bundle()
         bundle.putString("path", item.avatarUrl)

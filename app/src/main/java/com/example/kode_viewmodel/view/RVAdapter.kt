@@ -20,12 +20,9 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class RVAdapter(private val itemClickListener: ItemClickListener)
-    : ListAdapter<IRow, RecyclerView.ViewHolder>(DiffCallBack()) {
+class RVAdapter : ListAdapter<IRow, RecyclerView.ViewHolder>(DiffCallBack()) {
 
-    interface ItemClickListener {
-        fun onItemClick(item: Person.Items)
-    }
+    var itemClickListener: ((Person.Items) -> Unit)? = null
 
     override fun getItemViewType(position: Int): Int =
         when (getItem(position)) {
@@ -89,7 +86,7 @@ class RVAdapter(private val itemClickListener: ItemClickListener)
             if (holder.getAdapterPosition() == RecyclerView.NO_POSITION) {
                 return@setOnClickListener
             }
-            itemClickListener.onItemClick(item)
+            itemClickListener?.invoke(item)
         }
     }
 
@@ -113,7 +110,7 @@ class RVAdapter(private val itemClickListener: ItemClickListener)
             if (holder.getAdapterPosition() == RecyclerView.NO_POSITION) {
                 return@setOnClickListener
             }
-            itemClickListener.onItemClick(item)
+            itemClickListener?.invoke(item)
         }
     }
 
