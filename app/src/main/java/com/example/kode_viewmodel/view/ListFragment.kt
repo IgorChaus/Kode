@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.kode_viewmodel.R
 import com.example.kode_viewmodel.databinding.ListScreenBinding
 import com.example.kode_viewmodel.model.Person
@@ -44,10 +43,6 @@ class ListFragment: Fragment() {
         savedInstanceState: Bundle?): View? {
 
         binding = ListScreenBinding.inflate(inflater, container, false)
-
-        val llm = LinearLayoutManager(requireContext())
-        binding?.rv1?.layoutManager = llm
-
         binding?.rv1?.adapter = adapter
 
         val typedValue = TypedValue()
