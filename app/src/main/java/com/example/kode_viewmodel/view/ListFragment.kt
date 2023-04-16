@@ -73,16 +73,26 @@ class ListFragment: Fragment() {
         snackbarError.setBackgroundTint(color)
         snackbarError.setTextColor(colorBackground)
 
+        setupObserver(snackbarLoading, snackbarError)
+
+        return binding?.root
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setupObserver(
+        snackbarLoading: Snackbar,
+        snackbarError: Snackbar
+    ) {
         viewModel.itemsLiveData.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Success -> {
-                    if(it.data?.isEmpty()!! && (it.search != "")) {
+                    if (it.data?.isEmpty()!! && (it.search != "")) {
                         activity?.supportFragmentManager?.beginTransaction()
                             ?.replace(R.id.container_list, NoFindFragment.getIstance())
                             ?.addToBackStack(null)
                             ?.commit()
                         snackbarLoading.dismiss()
-                    }else {
+                    } else {
                         adapter.submitList(it.data)
                         binding?.swipeRefreshLayout?.isRefreshing = false
                         snackbarLoading.dismiss()
@@ -105,8 +115,6 @@ class ListFragment: Fragment() {
                 else -> return@observe
             }
         }
-
-        return binding?.root
     }
 
     fun showItem(item: Person.Items){
