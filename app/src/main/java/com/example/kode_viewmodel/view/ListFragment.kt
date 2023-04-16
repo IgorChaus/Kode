@@ -79,7 +79,7 @@ class ListFragment: Fragment(), RVAdapter.ItemClickListener {
                             ?.commit()
                         snackbarLoading.dismiss()
                     }else {
-                        adapter.refreshUsers(it.data)
+                        adapter.submitList(it.data)
                         binding?.swipeRefreshLayout?.isRefreshing = false
                         snackbarLoading.dismiss()
                     }
