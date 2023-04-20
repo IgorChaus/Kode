@@ -55,13 +55,19 @@ class MainScreen: Fragment() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?): View {
 
         val view = inflater.inflate(R.layout.main_screen, container, false)
+        return view
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         lateinit var sheetBehavior: BottomSheetBehavior<ConstraintLayout>
         var checkedButton: Int = R.id.radioButton1
 
@@ -193,8 +199,5 @@ class MainScreen: Fragment() {
             ?.replace(R.id.container_list, ListFragment.getIstance())
             ?.addToBackStack(null)
             ?.commit()
-
-        return view
     }
-
 }

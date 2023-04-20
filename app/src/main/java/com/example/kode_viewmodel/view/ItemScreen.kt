@@ -23,13 +23,18 @@ class ItemScreen : Fragment() {
         fun getIstance() = ItemScreen()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
 
         binding = ScreenItemBinding.inflate(inflater, container, false)
+        return binding?.root
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val typedValue = TypedValue()
         requireContext().theme.resolveAttribute(R.attr.appColorPrimaryVariant4,
@@ -55,9 +60,13 @@ class ItemScreen : Fragment() {
         binding?.age?.text = ageString(currentYear - birthdayYear)
 
         binding?.bButton?.setOnClickListener {
-                activity?.supportFragmentManager?.popBackStack()
+            activity?.supportFragmentManager?.popBackStack()
         }
-        return binding?.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 
     fun ageString(ageInt: Int): String{
@@ -76,8 +85,4 @@ class ItemScreen : Fragment() {
     }
 
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
-    }
 }
