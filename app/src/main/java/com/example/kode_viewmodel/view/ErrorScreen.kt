@@ -1,11 +1,9 @@
 package com.example.kode_viewmodel.view
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.example.kode_viewmodel.R
 import com.example.kode_viewmodel.databinding.ErrorScreenBinding
@@ -17,13 +15,17 @@ class ErrorScreen : Fragment() {
         fun getInstance() = ErrorScreen()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
 
         binding = ErrorScreenBinding.inflate(inflater, container, false)
+        return binding?.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding?.textView3?.setOnClickListener {
             activity?.supportFragmentManager?.beginTransaction()
@@ -31,7 +33,6 @@ class ErrorScreen : Fragment() {
                 ?.commit()
         }
 
-        return binding?.root
     }
 
     override fun onDestroyView() {

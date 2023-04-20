@@ -36,13 +36,18 @@ class ListFragment: Fragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
 
         binding = ListScreenBinding.inflate(inflater, container, false)
+        return binding?.root
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding?.rv1?.adapter = adapter
 
         val typedValue = TypedValue()
@@ -74,8 +79,11 @@ class ListFragment: Fragment() {
         snackbarError.setTextColor(colorBackground)
 
         setupObserver(snackbarLoading, snackbarError)
+    }
 
-        return binding?.root
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -137,8 +145,5 @@ class ListFragment: Fragment() {
 
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
-    }
+
 }
