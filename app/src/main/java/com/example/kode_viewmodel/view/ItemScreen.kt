@@ -17,7 +17,10 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 class ItemScreen : Fragment() {
-    private var binding: ScreenItemBinding? = null
+
+    private var _binding: ScreenItemBinding? = null
+    private val binding: ScreenItemBinding
+        get() = _binding ?: throw RuntimeException("ScreenItemBinding == null")
 
     companion object {
         fun getIstance() = ItemScreen()
@@ -26,10 +29,10 @@ class ItemScreen : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
+        savedInstanceState: Bundle?): View {
 
-        binding = ScreenItemBinding.inflate(inflater, container, false)
-        return binding?.root
+        _binding = ScreenItemBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -43,30 +46,31 @@ class ItemScreen : Fragment() {
         requireActivity().window.setStatusBarColor(color)
 
         val path = this.arguments?.getString("path")
-        Glide.with(this).load(path).circleCrop().into(binding!!.photo)
-        binding?.fullName?.text = this.arguments?.getString("personName")
-        binding?.tag?.text = this.arguments?.getString("tag")?.lowercase()
+
+        Glide.with(this).load(path).circleCrop().into(binding.photo)
+        binding.fullName.text = this.arguments?.getString("personName")
+        binding.tag.text = this.arguments?.getString("tag")?.lowercase()
         val depatStr = this.arguments?.getString("department")
-        binding?.department?.text = departments.filterValues { it == depatStr }.keys.first()
+        binding.department.text = departments.filterValues { it == depatStr }.keys.first()
         val birthdayStr = this.arguments?.getString("birthday")
-        binding?.birthday?.text = LocalDate.parse(birthdayStr).format(DateTimeFormatter
+        binding.birthday.text = LocalDate.parse(birthdayStr).format(DateTimeFormatter
             .ofPattern("dd MMMM yyyy", Locale("ru")))
 
-        binding?.telephone?.text = this.arguments?.getString("phone")
+        binding.telephone.text = this.arguments?.getString("phone")
 
         val formatYear: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy")
         val currentYear = LocalDate.now().format(formatYear).toInt()
         val birthdayYear = LocalDate.parse(birthdayStr).format(formatYear).toInt()
-        binding?.age?.text = ageString(currentYear - birthdayYear)
+        binding.age.text = ageString(currentYear - birthdayYear)
 
-        binding?.bButton?.setOnClickListener {
+        binding.bButton.setOnClickListener {
             activity?.supportFragmentManager?.popBackStack()
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding = null
+        _binding = null
     }
 
     fun ageString(ageInt: Int): String{

@@ -9,7 +9,10 @@ import com.example.kode_viewmodel.R
 import com.example.kode_viewmodel.databinding.ErrorScreenBinding
 
 class ErrorScreen : Fragment() {
-    private var binding: ErrorScreenBinding? = null
+
+    private var _binding: ErrorScreenBinding? = null
+    private val binding: ErrorScreenBinding
+        get() = _binding ?: throw RuntimeException("ErrorScreenBinding == null")
 
     companion object {
         fun getInstance() = ErrorScreen()
@@ -18,16 +21,16 @@ class ErrorScreen : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
+        savedInstanceState: Bundle?): View {
 
-        binding = ErrorScreenBinding.inflate(inflater, container, false)
-        return binding?.root
+        _binding = ErrorScreenBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding?.textView3?.setOnClickListener {
+        binding.textView3.setOnClickListener {
             activity?.supportFragmentManager?.beginTransaction()
                 ?.replace(R.id.container_activity, MainScreen.getInstance())
                 ?.commit()
@@ -37,7 +40,7 @@ class ErrorScreen : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding = null
+        _binding = null
     }
 
 }

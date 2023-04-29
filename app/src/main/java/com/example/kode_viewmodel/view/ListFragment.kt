@@ -18,7 +18,9 @@ import com.google.android.material.snackbar.Snackbar
 
 class ListFragment: Fragment() {
 
-    private var binding: ListScreenBinding? = null
+    private var _binding: ListScreenBinding? = null
+    private val binding: ListScreenBinding
+        get() = _binding ?: throw RuntimeException("ListScreenBinding == null")
 
     private lateinit var adapter: RVAdapter
 
@@ -39,24 +41,24 @@ class ListFragment: Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
+        savedInstanceState: Bundle?): View {
 
-        binding = ListScreenBinding.inflate(inflater, container, false)
-        return binding?.root
+        _binding = ListScreenBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding?.rv1?.adapter = adapter
+        binding.rv1.adapter = adapter
 
         val typedValue = TypedValue()
         requireContext().theme.resolveAttribute(R.attr.appBackground,
             typedValue, true)
         val colorBackground = requireContext().getColor(typedValue.resourceId)
 
-        binding?.swipeRefreshLayout?.setProgressBackgroundColorSchemeColor(colorBackground)
-        binding?.swipeRefreshLayout?.setOnRefreshListener {
+        binding.swipeRefreshLayout.setProgressBackgroundColorSchemeColor(colorBackground)
+        binding.swipeRefreshLayout.setOnRefreshListener {
             viewModel.fetchPersons()
         }
 
@@ -83,7 +85,7 @@ class ListFragment: Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding = null
+        _binding = null
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -102,7 +104,7 @@ class ListFragment: Fragment() {
                         snackbarLoading.dismiss()
                     } else {
                         adapter.submitList(it.data)
-                        binding?.swipeRefreshLayout?.isRefreshing = false
+                        binding.swipeRefreshLayout.isRefreshing = false
                         snackbarLoading.dismiss()
                     }
                 }
@@ -110,7 +112,7 @@ class ListFragment: Fragment() {
                 is Resource.Error -> {
                     if (it.message == "IOException") {
                         snackbarError.show()
-                        binding?.swipeRefreshLayout?.isRefreshing = false
+                        binding.swipeRefreshLayout.isRefreshing = false
                     } else {
                         activity?.supportFragmentManager?.beginTransaction()
                             ?.replace(R.id.container_buttons, ErrorScreen.getInstance())
