@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".view.ErrorScreen">
 
     <ImageView
         android:id="@+id/imageView2"
@@ -44,7 +45,7 @@
         tools:ignore="TextContrastCheck" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/tv_try_again"
         android:layout_width="wrap_content"
         android:layout_height="19dp"
         android:fontFamily="@font/inter_semibold"
