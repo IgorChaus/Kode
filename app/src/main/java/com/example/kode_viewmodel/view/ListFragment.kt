@@ -16,6 +16,7 @@ import com.example.kode_viewmodel.viewmodel.AppViewModel
 import com.example.kode_viewmodel.wrappers.Resource
 import com.google.android.material.snackbar.Snackbar
 
+@RequiresApi(Build.VERSION_CODES.O)
 class ListFragment: Fragment() {
 
     private var _binding: ListScreenBinding? = null
@@ -47,7 +48,6 @@ class ListFragment: Fragment() {
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.rv1.adapter = adapter
@@ -128,17 +128,7 @@ class ListFragment: Fragment() {
     }
 
     fun showItem(item: Person.Items){
-
-        val bundle = Bundle()
-        bundle.putString("path", item.avatarUrl)
-        bundle.putString("personName", item.firstName + " " + item.lastName)
-        bundle.putString("tag", item.userTag)
-        bundle.putString("department", item.department)
-        bundle.putString("birthday", item.birthday)
-        bundle.putString("phone", item.phone)
-
-        val itemFragment = ItemScreen.getIstance()
-        itemFragment.setArguments(bundle)
+        val itemFragment = ItemScreen.getIstance(item)
 
         activity?.supportFragmentManager?.beginTransaction()
             ?.replace(R.id.container_activity, itemFragment)

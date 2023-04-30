@@ -30,7 +30,7 @@ class ErrorScreen : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.textView3.setOnClickListener {
+        binding.tvTryAgain.setOnClickListener {
             activity?.supportFragmentManager?.beginTransaction()
                 ?.replace(R.id.container_activity, MainScreen.getInstance())
                 ?.commit()

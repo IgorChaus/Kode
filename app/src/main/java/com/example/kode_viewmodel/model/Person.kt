@@ -1,7 +1,12 @@
 package com.example.kode_viewmodel.model
 
-data class Person(val items: List<Items>) {
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
+data class Person(val items: List<Items>) : Parcelable {
+
+    @Parcelize
     open  class Items(
         val id: String,
         val avatarUrl: String,
@@ -12,7 +17,9 @@ data class Person(val items: List<Items>) {
         val position: String,
         val birthday: String,
         val phone: String
-    )
+    ) : Parcelable
+
+
 }
 
 
