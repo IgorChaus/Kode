@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/bottomSheet"
+    android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/rounded_dialog"
@@ -46,12 +46,12 @@
         tools:ignore="RtlSymmetry">
 
         <RadioButton
-            android:id="@+id/radioButton1"
+            android:id="@+id/alphabetSorting"
             android:text="@string/sortingABC"
             style="@style/radio_button" />
 
         <RadioButton
-            android:id="@+id/radioButton2"
+            android:id="@+id/birthdaySorting"
             android:text="@string/sortingBirthday"
             style="@style/radio_button" />
     </RadioGroup>

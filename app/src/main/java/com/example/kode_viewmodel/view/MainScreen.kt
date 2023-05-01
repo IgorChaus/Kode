@@ -13,18 +13,203 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.kode_viewmodel.R
+import com.example.kode_viewmodel.databinding.MainScreenBinding
 import com.example.kode_viewmodel.viewmodel.AppViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayout
 
+@RequiresApi(Build.VERSION_CODES.O)
 class MainScreen: Fragment() {
+
+    private lateinit var sheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    private lateinit var bottomSheet: ConstraintLayout
+    private lateinit var radioGroup: RadioGroup
+
+    private var _binding: MainScreenBinding? = null
+    private val binding: MainScreenBinding
+        get() = _binding ?: throw RuntimeException("MainScreenBinding == null")
+
+    val viewModel: AppViewModel by activityViewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.firstFetchPersons()
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?): View {
+
+        _binding = MainScreenBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        bindBottonSheet()
+        setStatusBarColor()
+        setToolBar()
+        setSortButtonListener()
+        setButtonCancelListener()
+        setEditTextListener()
+        setTabListener()
+        setBottomSheetListener()
+        setRadioGroupListener()
+        launchListFragment()
+   }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+
+    fun getColorBackground(): Int{
+        val typedValue = TypedValue()
+        requireContext().theme.resolveAttribute(R.attr.appBackground,
+            typedValue, true)
+        return requireContext().getColor(typedValue.resourceId)
+    }
+
+    fun setStatusBarColor(){
+        val mainActivity = activity as AppCompatActivity
+        mainActivity.window.setBackgroundDrawable(ColorDrawable(getColorBackground()))
+        requireActivity().window.statusBarColor = getColorBackground()
+    }
+
+    fun setToolBar() {
+        val mainActivity = activity as AppCompatActivity
+        mainActivity.setSupportActionBar(binding.toolbar)
+    }
+
+    fun setSortButtonListener() {
+        binding.sortButton.setOnClickListener {
+            when (sheetBehavior.state) {
+                BottomSheetBehavior.STATE_COLLAPSED ->
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
+                BottomSheetBehavior.STATE_EXPANDED ->
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
+                else -> return@setOnClickListener
+            }
+        }
+    }
+
+    fun setButtonCancelListener(){
+        binding.buttonCancel.setOnClickListener {
+            binding.etSearch.clearFocus()
+            binding.buttonCancel.visibility = View.GONE
+            binding.etSearch.setText("")
+
+            // Hide keyboard
+            val  imm = binding.etSearch.context.getSystemService(
+                Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
+
+            viewModel.filterSearch("")
+            binding.sortButton.visibility = View.VISIBLE
+
+            binding.etSearch.setCompoundDrawablesWithIntrinsicBounds(
+                ResourcesCompat.getDrawable(resources, R.drawable.icon_search, null),
+                null, null, null)
+        }
+    }
+
+    fun setEditTextListener(){
+        binding.etSearch.addTextChangedListener {
+                s ->  viewModel.filterSearch(s.toString())
+
+        }
+
+        binding.etSearch.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                binding.buttonCancel.visibility = View.VISIBLE
+                binding.sortButton.visibility = View.GONE
+                binding.etSearch.setCompoundDrawablesWithIntrinsicBounds(
+                    ResourcesCompat.getDrawable(resources, R.drawable.icon_search_black, null),
+                    null, null, null)
+            } else {
+                binding.buttonCancel.visibility = View.GONE
+                binding.sortButton.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    fun setTabListener(){
+        departments.forEach{
+            binding.tabLayout.addTab(binding.tabLayout.newTab().setText(it.key))
+        }
+
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                viewModel.filterTab(tab?.text.toString())
+            }
+        })
+    }
+
+    fun setBottomSheetListener(){
+        val mainActivity = activity as AppCompatActivity
+        sheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                val checkButton: RadioButton = binding.root.findViewById(viewModel.sorting)
+                checkButton.isChecked = true
+
+                when (newState) {
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+
+                        mainActivity.window.setBackgroundDrawable(ColorDrawable(Color.parseColor("#10000000")))
+                        requireActivity().window.statusBarColor = Color.parseColor("#10000000")
+
+                    }
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                        mainActivity.window.setBackgroundDrawable(ColorDrawable(getColorBackground()))
+                        requireActivity().window.statusBarColor = getColorBackground()
+                    }
+                    else -> return
+                }
+            }
+        })
+
+    }
+
+    fun setRadioGroupListener(){
+        radioGroup.clearCheck()
+        radioGroup.setOnCheckedChangeListener { _, checkedId ->
+            viewModel.sorting(checkedId)
+            if (checkedId == AppViewModel.BIRTHDAY_SORTING) {
+                binding.sortButton.setImageResource(R.drawable.icon_right_purple)
+            } else {
+                binding.sortButton.setImageResource(R.drawable.icon_right)
+            }
+            sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+    }
+
+    fun bindBottonSheet(){
+        bottomSheet = binding.root.findViewById(R.id.bottom_sheet)
+        radioGroup = binding.root.findViewById(R.id.radioGroup)
+        sheetBehavior = BottomSheetBehavior.from(bottomSheet)
+    }
+
+    fun launchListFragment(){
+        activity?.supportFragmentManager?.beginTransaction()
+            ?.replace(R.id.container_list, ListFragment.getIstance())
+            ?.addToBackStack(null)
+            ?.commit()
+    }
 
     companion object {
         fun getInstance() = MainScreen()
@@ -44,160 +229,5 @@ class MainScreen: Fragment() {
             "Техподдержка" to "support",
             "Аналитика" to "analytics"
         )
-    }
-
-    val viewModel: AppViewModel by activityViewModels()
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel.firstFetchPersons()
-    }
-
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?): View {
-
-        val view = inflater.inflate(R.layout.main_screen, container, false)
-        return view
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        lateinit var sheetBehavior: BottomSheetBehavior<ConstraintLayout>
-        var checkedButton: Int = R.id.radioButton1
-
-        val mainActivity = activity as AppCompatActivity
-
-        val typedValue = TypedValue()
-        requireContext().theme.resolveAttribute(R.attr.appBackground,
-            typedValue, true)
-        val colorBackground = requireContext().getColor(typedValue.resourceId)
-        mainActivity.window.setBackgroundDrawable(ColorDrawable(colorBackground))
-        requireActivity().window.statusBarColor = colorBackground
-
-
-        // --------------------- SEARCH ----------------------
-        val toolbar: Toolbar = view.findViewById(R.id.toolbar)
-        mainActivity.setSupportActionBar(toolbar)
-
-        val editText: EditText = view.findViewById(R.id.editText)
-
-        val sortButton: ImageButton = view.findViewById(R.id.imageButton)
-        sortButton.setOnClickListener {
-            when(sheetBehavior.state){
-                BottomSheetBehavior.STATE_COLLAPSED ->
-                    sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
-                BottomSheetBehavior.STATE_EXPANDED ->
-                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
-                else -> return@setOnClickListener
-            }
-        }
-
-        val buttonCancel: Button = view.findViewById(R.id.button)
-        buttonCancel.setOnClickListener {
-            editText.clearFocus()
-            buttonCancel.visibility = View.GONE
-            editText.setText("")
-
-            // Hide keyboard
-            val  imm = editText.context.getSystemService(
-                Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(editText.windowToken, 0)
-
-            viewModel.filterSearch("")
-            sortButton.visibility = View.VISIBLE
-
-            editText.setCompoundDrawablesWithIntrinsicBounds(
-                ResourcesCompat.getDrawable(resources, R.drawable.icon_search, null),
-                null, null, null)
-
-        }
-
-        editText.addTextChangedListener {
-                s ->  viewModel.filterSearch(s.toString())
-
-        }
-
-        editText.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                buttonCancel.visibility = View.VISIBLE
-                sortButton.visibility = View.GONE
-                editText.setCompoundDrawablesWithIntrinsicBounds(
-                    ResourcesCompat.getDrawable(resources, R.drawable.icon_search_black, null),
-                    null, null, null)
-            } else {
-                buttonCancel.visibility = View.GONE
-                sortButton.visibility = View.VISIBLE
-            }
-        }
-
-
-        // ---------------- TABS ---------------------------
-        val tabLayout: TabLayout = view.findViewById(R.id.tabLayout)
-        departments.forEach{
-            tabLayout.addTab(tabLayout.newTab().setText(it.key))
-        }
-
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabReselected(tab: TabLayout.Tab?) {}
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {}
-
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                viewModel.filterTab(tab?.text.toString())
-            }
-        })
-
-        // ----------------- BOTTOM SHEET --------------------------------
-        val bottomSheet: ConstraintLayout = view.findViewById(R.id.bottomSheet)
-        sheetBehavior = BottomSheetBehavior.from(bottomSheet)
-
-        sheetBehavior.addBottomSheetCallback(object :
-            BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
-
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-
-                val checkButton: RadioButton = view.findViewById(checkedButton)
-                checkButton.isChecked = true
-
-                when (newState) {
-                    BottomSheetBehavior.STATE_EXPANDED -> {
-
-                        mainActivity.window.setBackgroundDrawable(ColorDrawable(Color.parseColor("#10000000")))
-                        requireActivity().window.statusBarColor = Color.parseColor("#10000000")
-
-                    }
-                    BottomSheetBehavior.STATE_COLLAPSED -> {
-                        mainActivity.window.setBackgroundDrawable(ColorDrawable(colorBackground))
-                        requireActivity().window.statusBarColor = colorBackground
-                    }
-                    else -> return
-                }
-            }
-        })
-
-        val radioGroup: RadioGroup = view.findViewById(R.id.radioGroup)
-        radioGroup.clearCheck()
-        radioGroup.setOnCheckedChangeListener { _, checkedId ->
-            checkedButton = checkedId
-            viewModel.sorting(checkedButton)
-            if (checkedButton == R.id.radioButton2) {
-                sortButton.setImageResource(R.drawable.icon_right_purple)
-            } else {
-                sortButton.setImageResource(R.drawable.icon_right)
-            }
-            sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        }
-
-        activity?.supportFragmentManager?.beginTransaction()
-            ?.replace(R.id.container_list, ListFragment.getIstance())
-            ?.addToBackStack(null)
-            ?.commit()
     }
 }

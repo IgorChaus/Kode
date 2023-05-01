@@ -21,7 +21,7 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
 
     private var tabName: String = "Все"
     private var strSearch: String = ""
-    private var sorting: Int = R.id.radioButton1
+    var sorting: Int = ALPHABET_SORTING
     lateinit var  resourceItems: Resource<Person>
 
     init{
@@ -82,7 +82,7 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
     fun sortPerson(items:List<Person.Items>): Resource<List<IRow>> {
         val result: Resource<List<IRow>>
 
-        if (sorting == R.id.radioButton1) {
+        if (sorting == BIRTHDAY_SORTING) {
 
             val listItems: List<ABC> = items.map {
                 ABC(
@@ -160,6 +160,11 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
         }
 
         return itemsFilter
+    }
+
+    companion object{
+        const val ALPHABET_SORTING = R.id.alphabetSorting
+        const val BIRTHDAY_SORTING = R.id.birthdaySorting
     }
 }
 
