@@ -17,10 +17,13 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import com.example.kode_viewmodel.R
 import com.example.kode_viewmodel.databinding.MainScreenBinding
+import com.example.kode_viewmodel.source.DataRepository
+import com.example.kode_viewmodel.source.RetrofitInstance
 import com.example.kode_viewmodel.viewmodel.AppViewModel
+import com.example.kode_viewmodel.viewmodel.AppViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayout
 
@@ -37,7 +40,17 @@ class MainScreen: Fragment() {
     private val binding: MainScreenBinding
         get() = _binding ?: throw RuntimeException("MainScreenBinding == null")
 
-    val viewModel: AppViewModel by activityViewModels()
+    val dataRepository by lazy{
+        DataRepository(RetrofitInstance.service)
+    }
+
+    val factory by lazy{
+        AppViewModelFactory(dataRepository)
+    }
+
+    val viewModel: AppViewModel by lazy{
+        ViewModelProvider(requireActivity(), factory).get(AppViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
