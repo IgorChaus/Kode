@@ -3,7 +3,6 @@ package com.example.kode_viewmodel.viewmodel
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
-import com.example.kode_viewmodel.R
 import com.example.kode_viewmodel.model.*
 import com.example.kode_viewmodel.source.DataRepository
 import com.example.kode_viewmodel.view.MainScreen.Companion.departments
@@ -19,12 +18,15 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
     private val itemsDataEmitter: MutableLiveData<Resource<List<IRow>>> = MutableLiveData()
     val itemsLiveData: LiveData<Resource<List<IRow>>> = itemsDataEmitter
 
-    private var tabName: String = "Все"
-    private var strSearch: String = ""
-    private var sorting: Int = R.id.radioButton1
+    private val _sortingType: MutableLiveData<String> = MutableLiveData()
+    val sortingType: LiveData<String> = _sortingType
+
+    private var tabName: String = ALL
+    private var strSearch: String = EMPTY_STRING
     lateinit var  resourceItems: Resource<Person>
 
     init{
+        _sortingType.value = ALPHABET_SORTING
         val skelList = List(8){ Skeleton() }
         itemsDataEmitter.postValue(Resource.Success(skelList,strSearch))
     }
@@ -73,8 +75,8 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
         itemsDataEmitter.postValue(sortPerson(setFilter()))
     }
 
-    fun sorting(sorting: Int){
-        this.sorting = sorting
+    fun changeSortingType(sortingType: String){
+        _sortingType.value = sortingType
         itemsDataEmitter.postValue(sortPerson(setFilter()))
     }
 
@@ -82,7 +84,7 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
     fun sortPerson(items:List<Person.Items>): Resource<List<IRow>> {
         val result: Resource<List<IRow>>
 
-        if (sorting == R.id.radioButton1) {
+        if (sortingType.value == ALPHABET_SORTING) {
 
             val listItems: List<ABC> = items.map {
                 ABC(
@@ -160,6 +162,13 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
         }
 
         return itemsFilter
+    }
+
+    companion object{
+        const val ALPHABET_SORTING = "alphabet"
+        const val BIRTHDAY_SORTING = "birthday"
+        const val ALL = "Все"
+        const val EMPTY_STRING = ""
     }
 }
 
