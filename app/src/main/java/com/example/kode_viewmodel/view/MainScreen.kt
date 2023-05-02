@@ -30,6 +30,8 @@ class MainScreen: Fragment() {
     private lateinit var sheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var bottomSheet: ConstraintLayout
     private lateinit var radioGroup: RadioGroup
+    private lateinit var radioButtonAlphabet: RadioButton
+    private lateinit var radioButtonBirthday: RadioButton
 
     private var _binding: MainScreenBinding? = null
     private val binding: MainScreenBinding
@@ -54,9 +56,11 @@ class MainScreen: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bindBottonSheet()
+        initRadioButtons()
         setStatusBarColor()
         setToolBar()
         setSortButtonListener()
+        setObserverForSortButton()
         setButtonCancelListener()
         setEditTextListener()
         setTabListener()
@@ -78,18 +82,18 @@ class MainScreen: Fragment() {
         return requireContext().getColor(typedValue.resourceId)
     }
 
-    fun setStatusBarColor(){
+    private fun setStatusBarColor(){
         val mainActivity = activity as AppCompatActivity
         mainActivity.window.setBackgroundDrawable(ColorDrawable(getColorBackground()))
         requireActivity().window.statusBarColor = getColorBackground()
     }
 
-    fun setToolBar() {
+    private fun setToolBar() {
         val mainActivity = activity as AppCompatActivity
         mainActivity.setSupportActionBar(binding.toolbar)
     }
 
-    fun setSortButtonListener() {
+    private fun setSortButtonListener() {
         binding.sortButton.setOnClickListener {
             when (sheetBehavior.state) {
                 BottomSheetBehavior.STATE_COLLAPSED ->
@@ -101,7 +105,20 @@ class MainScreen: Fragment() {
         }
     }
 
-    fun setButtonCancelListener(){
+    private fun setObserverForSortButton() {
+        viewModel.sortingType.observe(viewLifecycleOwner) {
+            when (it) {
+                AppViewModel.ALPHABET_SORTING -> {
+                    binding.sortButton.setImageResource(R.drawable.icon_right)
+                }
+                AppViewModel.BIRTHDAY_SORTING ->
+                    binding.sortButton.setImageResource(R.drawable.icon_right_purple)
+                else -> throw RuntimeException("Illegal sortingType")
+            }
+        }
+    }
+
+    private fun setButtonCancelListener(){
         binding.buttonCancel.setOnClickListener {
             binding.etSearch.clearFocus()
             binding.buttonCancel.visibility = View.GONE
@@ -121,7 +138,7 @@ class MainScreen: Fragment() {
         }
     }
 
-    fun setEditTextListener(){
+    private fun setEditTextListener(){
         binding.etSearch.addTextChangedListener {
                 s ->  viewModel.filterSearch(s.toString())
 
@@ -141,7 +158,7 @@ class MainScreen: Fragment() {
         }
     }
 
-    fun setTabListener(){
+    private fun setTabListener(){
         departments.forEach{
             binding.tabLayout.addTab(binding.tabLayout.newTab().setText(it.key))
         }
@@ -157,22 +174,18 @@ class MainScreen: Fragment() {
         })
     }
 
-    fun setBottomSheetListener(){
+    private fun setBottomSheetListener(){
         val mainActivity = activity as AppCompatActivity
         sheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                val checkButton: RadioButton = binding.root.findViewById(viewModel.sorting)
-                checkButton.isChecked = true
 
                 when (newState) {
                     BottomSheetBehavior.STATE_EXPANDED -> {
-
                         mainActivity.window.setBackgroundDrawable(ColorDrawable(Color.parseColor("#10000000")))
                         requireActivity().window.statusBarColor = Color.parseColor("#10000000")
-
                     }
                     BottomSheetBehavior.STATE_COLLAPSED -> {
                         mainActivity.window.setBackgroundDrawable(ColorDrawable(getColorBackground()))
@@ -185,26 +198,41 @@ class MainScreen: Fragment() {
 
     }
 
-    fun setRadioGroupListener(){
-        radioGroup.clearCheck()
+    private fun setRadioGroupListener(){
         radioGroup.setOnCheckedChangeListener { _, checkedId ->
-            viewModel.sorting(checkedId)
-            if (checkedId == AppViewModel.BIRTHDAY_SORTING) {
-                binding.sortButton.setImageResource(R.drawable.icon_right_purple)
-            } else {
-                binding.sortButton.setImageResource(R.drawable.icon_right)
+
+            when(checkedId){
+                R.id.alphabetSorting ->
+                    viewModel.changeSortingType(AppViewModel.ALPHABET_SORTING)
+
+                R.id.birthdaySorting ->
+                    viewModel.changeSortingType(AppViewModel.BIRTHDAY_SORTING)
+
+                else -> throw RuntimeException("Illegal checkedId in Radiobuttons")
             }
             sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
     }
 
-    fun bindBottonSheet(){
+    private fun bindBottonSheet(){
         bottomSheet = binding.root.findViewById(R.id.bottom_sheet)
         radioGroup = binding.root.findViewById(R.id.radioGroup)
+        radioButtonAlphabet = binding.root.findViewById(R.id.alphabetSorting)
+        radioButtonBirthday = binding.root.findViewById(R.id.birthdaySorting)
         sheetBehavior = BottomSheetBehavior.from(bottomSheet)
     }
 
-    fun launchListFragment(){
+    private fun initRadioButtons(){
+        when(viewModel.sortingType.value){
+            AppViewModel.BIRTHDAY_SORTING -> radioButtonBirthday.isChecked = true
+            AppViewModel.ALPHABET_SORTING ->  radioButtonAlphabet.isChecked = true
+            else -> throw RuntimeException("Illegal viewModel.sortingType")
+        }
+    }
+
+
+
+    private fun launchListFragment(){
         activity?.supportFragmentManager?.beginTransaction()
             ?.replace(R.id.container_list, ListFragment.getIstance())
             ?.addToBackStack(null)
