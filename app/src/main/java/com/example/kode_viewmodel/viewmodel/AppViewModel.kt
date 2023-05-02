@@ -31,13 +31,6 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
         itemsDataEmitter.postValue(Resource.Success(skelList,strSearch))
     }
 
-    class Factory(private val dataRepository: DataRepository) : ViewModelProvider.Factory {
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return AppViewModel(dataRepository) as T
-        }
-    }
-
     suspend fun getPersonsFromRepository(){
         val _resourceItems = dataRepository.getPersons()
         if(_resourceItems is Resource.Success) {
@@ -48,7 +41,6 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
                 Resource
                     .Error(_resourceItems.message ?:"Error json API"))
     }
-
 
     fun fetchPersons(){
         viewModelScope.launch {

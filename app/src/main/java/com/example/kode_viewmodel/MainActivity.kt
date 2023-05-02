@@ -10,6 +10,7 @@ import com.example.kode_viewmodel.model.*
 import com.example.kode_viewmodel.source.DataRepository
 import com.example.kode_viewmodel.source.RetrofitInstance
 import com.example.kode_viewmodel.viewmodel.AppViewModel
+import com.example.kode_viewmodel.viewmodel.AppViewModelFactory
 
 @RequiresApi(Build.VERSION_CODES.O)
 class MainActivity : AppCompatActivity(){
@@ -19,7 +20,7 @@ class MainActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
 
         val dataRepository = DataRepository(RetrofitInstance.service)
-        val factory = AppViewModel.Factory(dataRepository)
+        val factory = AppViewModelFactory(dataRepository)
         //Создаем экземпляр viewModel в хранилище Activity
         ViewModelProvider(this, factory).get(AppViewModel::class.java)
 
