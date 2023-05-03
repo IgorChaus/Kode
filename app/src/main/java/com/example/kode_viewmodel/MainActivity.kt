@@ -10,7 +10,6 @@ import com.example.kode_viewmodel.model.*
 @RequiresApi(Build.VERSION_CODES.O)
 class MainActivity : AppCompatActivity(){
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

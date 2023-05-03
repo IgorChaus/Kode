@@ -25,11 +25,7 @@ class ListFragment: Fragment() {
 
     private lateinit var adapter: RVAdapter
 
-    companion object {
-        fun getIstance() = ListFragment()
-    }
-
-    val viewModel: AppViewModel by activityViewModels()
+    private val viewModel: AppViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,36 +47,8 @@ class ListFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.rv1.adapter = adapter
-
-        val typedValue = TypedValue()
-        requireContext().theme.resolveAttribute(R.attr.appBackground,
-            typedValue, true)
-        val colorBackground = requireContext().getColor(typedValue.resourceId)
-
-        binding.swipeRefreshLayout.setProgressBackgroundColorSchemeColor(colorBackground)
-        binding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.fetchPersons()
-        }
-
-        val lview: View = requireActivity().findViewById(android.R.id.content)
-
-        val snackbarLoading: Snackbar = Snackbar.make(lview,getString(R.string.loading), Snackbar
-            .LENGTH_INDEFINITE)
-        requireContext().theme.resolveAttribute(R.attr.appColorSeconary,
-            typedValue, true)
-        var color = requireContext().getColor(typedValue.resourceId)
-        snackbarLoading.setBackgroundTint(color)
-        snackbarLoading.setTextColor(colorBackground)
-
-        val snackbarError: Snackbar = Snackbar.make(lview,getString(R.string.cant_update_data),
-            Snackbar.LENGTH_LONG)
-        requireContext().theme.resolveAttribute(R.attr.appColorSeconaryVariant,
-            typedValue, true)
-        color = requireContext().getColor(typedValue.resourceId)
-        snackbarError.setBackgroundTint(color)
-        snackbarError.setTextColor(colorBackground)
-
-        setupObserver(snackbarLoading, snackbarError)
+        setupSwipeRefreshLayout()
+        setupObserver(getSnackBarLoading(), getSnackBarError())
     }
 
     override fun onDestroyView() {
@@ -88,30 +56,29 @@ class ListFragment: Fragment() {
         _binding = null
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun setupObserver(
-        snackbarLoading: Snackbar,
-        snackbarError: Snackbar
+        snackBarLoading: Snackbar,
+        snackBarError: Snackbar
     ) {
         viewModel.itemList.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Success -> {
-                    if (it.data?.isEmpty()!! && (it.search != "")) {
+                    if (it.data?.isEmpty()!! && (it.search != EMPTY_STRING)) {
                         activity?.supportFragmentManager?.beginTransaction()
                             ?.replace(R.id.container_list, NoFindFragment.getIstance())
                             ?.addToBackStack(null)
                             ?.commit()
-                        snackbarLoading.dismiss()
+                        snackBarLoading.dismiss()
                     } else {
                         adapter.submitList(it.data)
                         binding.swipeRefreshLayout.isRefreshing = false
-                        snackbarLoading.dismiss()
+                        snackBarLoading.dismiss()
                     }
                 }
 
                 is Resource.Error -> {
                     if (it.message == "IOException") {
-                        snackbarError.show()
+                        snackBarError.show()
                         binding.swipeRefreshLayout.isRefreshing = false
                     } else {
                         activity?.supportFragmentManager?.beginTransaction()
@@ -120,14 +87,14 @@ class ListFragment: Fragment() {
                     }
                 }
 
-                is Resource.Loading -> snackbarLoading.show()
+                is Resource.Loading -> snackBarLoading.show()
 
                 else -> return@observe
             }
         }
     }
 
-    fun showItem(item: Person.Items){
+    private fun showItem(item: Person.Items){
         val itemFragment = ItemScreen.getIstance(item)
 
         activity?.supportFragmentManager?.beginTransaction()
@@ -137,5 +104,61 @@ class ListFragment: Fragment() {
 
     }
 
+    private fun getSnackBarLoading(): Snackbar {
+        val view: View = requireActivity().findViewById(android.R.id.content)
+        val snackBarLoading: Snackbar = Snackbar.make(
+            view, getString(R.string.loading), Snackbar
+                .LENGTH_INDEFINITE
+        )
+        val typedValue = TypedValue()
+        requireContext().theme.resolveAttribute(R.attr.appBackground,
+            typedValue, true)
+        val colorText = requireContext().getColor(typedValue.resourceId)
+        snackBarLoading.setTextColor(colorText)
 
+        requireContext().theme.resolveAttribute(R.attr.appColorSeconary,
+            typedValue, true)
+        val colorBackGround = requireContext().getColor(typedValue.resourceId)
+        snackBarLoading.setBackgroundTint(colorBackGround)
+
+        return snackBarLoading
+    }
+
+    private fun getSnackBarError(): Snackbar{
+        val view: View = requireActivity().findViewById(android.R.id.content)
+        val snackbarError: Snackbar = Snackbar.make(view,
+            getString(R.string.cant_update_data),
+            Snackbar.LENGTH_LONG
+        )
+        val typedValue = TypedValue()
+
+        requireContext().theme.resolveAttribute(R.attr.appBackground,
+            typedValue, true)
+        val colorText = requireContext().getColor(typedValue.resourceId)
+        snackbarError.setTextColor(colorText)
+
+        requireContext().theme.resolveAttribute(R.attr.appColorSeconaryVariant,
+            typedValue, true)
+        val colorBackGround = requireContext().getColor(typedValue.resourceId)
+        snackbarError.setBackgroundTint(colorBackGround)
+
+        return snackbarError
+    }
+
+    private fun setupSwipeRefreshLayout(){
+        val typedValue = TypedValue()
+        requireContext().theme.resolveAttribute(R.attr.appBackground,
+            typedValue, true)
+        val colorBackground = requireContext().getColor(typedValue.resourceId)
+
+        binding.swipeRefreshLayout.setProgressBackgroundColorSchemeColor(colorBackground)
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.fetchPersons()
+        }
+    }
+
+    companion object {
+        fun getIstance() = ListFragment()
+        private const val EMPTY_STRING = ""
+    }
 }
