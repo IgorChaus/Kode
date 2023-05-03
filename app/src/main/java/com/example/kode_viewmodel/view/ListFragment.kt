@@ -93,7 +93,7 @@ class ListFragment: Fragment() {
         snackbarLoading: Snackbar,
         snackbarError: Snackbar
     ) {
-        viewModel.itemsLiveData.observe(viewLifecycleOwner) {
+        viewModel.itemList.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Success -> {
                     if (it.data?.isEmpty()!! && (it.search != "")) {

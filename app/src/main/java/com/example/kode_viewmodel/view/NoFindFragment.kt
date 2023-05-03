@@ -31,7 +31,7 @@ class NoFindFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.itemsLiveData.observe(viewLifecycleOwner) {
+        viewModel.itemList.observe(viewLifecycleOwner) {
             if(it.search == "")
                 activity?.supportFragmentManager?.popBackStack()
         }

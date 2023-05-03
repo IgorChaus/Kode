@@ -15,11 +15,13 @@ import java.time.format.DateTimeFormatter
 class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
 
     // Object must be observable but with a private setter, so we separate LiveData's objects
-    private val itemsDataEmitter: MutableLiveData<Resource<List<IRow>>> = MutableLiveData()
-    val itemsLiveData: LiveData<Resource<List<IRow>>> = itemsDataEmitter
+    private val _itemList: MutableLiveData<Resource<List<IRow>>> = MutableLiveData()
+    val itemList: LiveData<Resource<List<IRow>>>
+        get() = _itemList
 
     private val _sortingType: MutableLiveData<String> = MutableLiveData()
-    val sortingType: LiveData<String> = _sortingType
+    val sortingType: LiveData<String>
+        get() = _sortingType
 
     private var tabName: String = ALL
     private var strSearch: String = EMPTY_STRING
@@ -28,23 +30,23 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
     init{
         _sortingType.value = ALPHABET_SORTING
         val skelList = List(8){ Skeleton() }
-        itemsDataEmitter.postValue(Resource.Success(skelList,strSearch))
+        _itemList.postValue(Resource.Success(skelList,strSearch))
     }
 
     suspend fun getPersonsFromRepository(){
         val _resourceItems = dataRepository.getPersons()
         if(_resourceItems is Resource.Success) {
             resourceItems = _resourceItems
-            itemsDataEmitter.postValue(sortPerson(setFilter()))
+            _itemList.postValue(sortPerson(setFilter()))
         }else
-            itemsDataEmitter.postValue(
+            _itemList.postValue(
                 Resource
                     .Error(_resourceItems.message ?:"Error json API"))
     }
 
     fun fetchPersons(){
         viewModelScope.launch {
-            itemsDataEmitter.postValue(Resource.Loading())
+            _itemList.postValue(Resource.Loading())
             getPersonsFromRepository()
         }
     }
@@ -57,19 +59,19 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
         }
     }
 
-    fun filterTab(tabName: String){
+    fun setFilterTab(tabName: String){
         this.tabName = tabName
-        itemsDataEmitter.postValue(sortPerson(setFilter()))
+        _itemList.postValue(sortPerson(setFilter()))
     }
 
-    fun filterSearch(strSearch: String){
+    fun setFilterSearch(strSearch: String){
         this.strSearch = strSearch
-        itemsDataEmitter.postValue(sortPerson(setFilter()))
+        _itemList.postValue(sortPerson(setFilter()))
     }
 
     fun changeSortingType(sortingType: String){
         _sortingType.value = sortingType
-        itemsDataEmitter.postValue(sortPerson(setFilter()))
+        _itemList.postValue(sortPerson(setFilter()))
     }
 
 
@@ -134,7 +136,7 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
 
     fun setFilter(): List<Person.Items> {
 
-         val filterTab: List<Person.Items> = if (tabName == "Все") {
+         val filterTab: List<Person.Items> = if (tabName == ALL) {
              resourceItems.data!!.items
               } else {
                   resourceItems.data!!.items.filter { it.department == departments[tabName] }

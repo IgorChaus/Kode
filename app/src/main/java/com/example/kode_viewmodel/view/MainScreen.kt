@@ -142,7 +142,7 @@ class MainScreen: Fragment() {
                 Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
 
-            viewModel.filterSearch("")
+            viewModel.setFilterSearch("")
             binding.sortButton.visibility = View.VISIBLE
 
             binding.etSearch.setCompoundDrawablesWithIntrinsicBounds(
@@ -153,7 +153,7 @@ class MainScreen: Fragment() {
 
     private fun setEditTextListener(){
         binding.etSearch.addTextChangedListener {
-                s ->  viewModel.filterSearch(s.toString())
+                s ->  viewModel.setFilterSearch(s.toString())
 
         }
 
@@ -182,7 +182,7 @@ class MainScreen: Fragment() {
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                viewModel.filterTab(tab?.text.toString())
+                viewModel.setFilterTab(tab?.text.toString())
             }
         })
     }
