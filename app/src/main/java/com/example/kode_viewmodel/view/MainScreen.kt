@@ -40,17 +40,10 @@ class MainScreen: Fragment() {
     private val binding: MainScreenBinding
         get() = _binding ?: throw RuntimeException("MainScreenBinding == null")
 
-    val dataRepository by lazy{
-        DataRepository(RetrofitInstance.service)
-    }
-
-    val factory by lazy{
-        AppViewModelFactory(dataRepository)
-    }
-
-    val viewModel: AppViewModel by lazy{
-        ViewModelProvider(requireActivity(), factory).get(AppViewModel::class.java)
-    }
+    private val dataRepository = DataRepository(RetrofitInstance.service)
+    private val factory = AppViewModelFactory(dataRepository)
+    private val viewModel: AppViewModel = ViewModelProvider(requireActivity(), factory)
+        .get(AppViewModel::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
