@@ -42,8 +42,10 @@ class MainScreen: Fragment() {
 
     private val dataRepository = DataRepository(RetrofitInstance.service)
     private val factory = AppViewModelFactory(dataRepository)
-    private val viewModel: AppViewModel = ViewModelProvider(requireActivity(), factory)
-        .get(AppViewModel::class.java)
+    private val viewModel: AppViewModel by lazy {
+        ViewModelProvider(requireActivity(), factory)[AppViewModel::class.java]
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +63,7 @@ class MainScreen: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        bindBottonSheet()
+        bindBottomSheet()
         initRadioButtons()
         setStatusBarColor()
         setToolBar()
@@ -214,13 +216,13 @@ class MainScreen: Fragment() {
                 R.id.birthdaySorting ->
                     viewModel.changeSortingType(AppViewModel.BIRTHDAY_SORTING)
 
-                else -> throw RuntimeException("Illegal checkedId in Radiobuttons")
+                else -> throw RuntimeException("Illegal checkedId in Radio Buttons")
             }
             sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
     }
 
-    private fun bindBottonSheet(){
+    private fun bindBottomSheet(){
         bottomSheet = binding.root.findViewById(R.id.bottom_sheet)
         radioGroup = binding.root.findViewById(R.id.radioGroup)
         radioButtonAlphabet = binding.root.findViewById(R.id.alphabetSorting)
@@ -240,7 +242,7 @@ class MainScreen: Fragment() {
 
     private fun launchListFragment(){
         activity?.supportFragmentManager?.beginTransaction()
-            ?.replace(R.id.container_list, ListFragment.getIstance())
+            ?.replace(R.id.container_list, ListFragment.getInstance())
             ?.addToBackStack(null)
             ?.commit()
     }

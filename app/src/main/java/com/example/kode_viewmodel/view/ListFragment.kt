@@ -65,7 +65,7 @@ class ListFragment: Fragment() {
                 is Resource.Success -> {
                     if (it.data?.isEmpty()!! && (it.search != EMPTY_STRING)) {
                         activity?.supportFragmentManager?.beginTransaction()
-                            ?.replace(R.id.container_list, NoFindFragment.getIstance())
+                            ?.replace(R.id.container_list, NoFindFragment.getInstance())
                             ?.addToBackStack(null)
                             ?.commit()
                         snackBarLoading.dismiss()
@@ -126,7 +126,7 @@ class ListFragment: Fragment() {
 
     private fun getSnackBarError(): Snackbar{
         val view: View = requireActivity().findViewById(android.R.id.content)
-        val snackbarError: Snackbar = Snackbar.make(view,
+        val snackBarError: Snackbar = Snackbar.make(view,
             getString(R.string.cant_update_data),
             Snackbar.LENGTH_LONG
         )
@@ -135,14 +135,14 @@ class ListFragment: Fragment() {
         requireContext().theme.resolveAttribute(R.attr.appBackground,
             typedValue, true)
         val colorText = requireContext().getColor(typedValue.resourceId)
-        snackbarError.setTextColor(colorText)
+        snackBarError.setTextColor(colorText)
 
         requireContext().theme.resolveAttribute(R.attr.appColorSeconaryVariant,
             typedValue, true)
         val colorBackGround = requireContext().getColor(typedValue.resourceId)
-        snackbarError.setBackgroundTint(colorBackGround)
+        snackBarError.setBackgroundTint(colorBackGround)
 
-        return snackbarError
+        return snackBarError
     }
 
     private fun setupSwipeRefreshLayout(){
@@ -158,7 +158,7 @@ class ListFragment: Fragment() {
     }
 
     companion object {
-        fun getIstance() = ListFragment()
+        fun getInstance() = ListFragment()
         private const val EMPTY_STRING = ""
     }
 }

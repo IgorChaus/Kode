@@ -29,10 +29,10 @@ class ItemScreen : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        pursArgs()
+        parsArgs()
     }
 
-    private fun pursArgs(){
+    private fun parsArgs(){
         requireArguments().getParcelable<Person.Items>(KEY_ITEM)?.let {
             item = it
         }

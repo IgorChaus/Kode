@@ -14,10 +14,10 @@ import com.example.kode_viewmodel.viewmodel.AppViewModel
 class NoFindFragment : Fragment() {
 
     companion object {
-        fun getIstance() = NoFindFragment()
+        fun getInstance() = NoFindFragment()
     }
 
-    val viewModel: AppViewModel by activityViewModels()
+    private val viewModel: AppViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
