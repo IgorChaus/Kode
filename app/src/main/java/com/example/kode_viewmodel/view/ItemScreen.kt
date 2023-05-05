@@ -32,7 +32,7 @@ class ItemScreen : Fragment() {
         pursArgs()
     }
 
-    fun pursArgs(){
+    private fun pursArgs(){
         requireArguments().getParcelable<Person.Items>(KEY_ITEM)?.let {
             item = it
         }
@@ -70,7 +70,7 @@ class ItemScreen : Fragment() {
         }
     }
 
-    fun getColorForStatusBar(): Int{
+    private fun getColorForStatusBar(): Int{
         val typedValue = TypedValue()
         requireContext().theme.resolveAttribute(R.attr.appColorPrimaryVariant4,
             typedValue, true)
@@ -82,7 +82,7 @@ class ItemScreen : Fragment() {
         _binding = null
     }
 
-    fun getAge(birthday: String): String{
+    private fun getAge(birthday: String): String{
         val formatYear: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy")
         val currentYear = LocalDate.now().format(formatYear).toInt()
         val birthdayYear = LocalDate.parse(birthday).format(formatYear).toInt()
