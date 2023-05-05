@@ -95,7 +95,7 @@ class ListFragment: Fragment() {
     }
 
     private fun showItem(item: Person.Items){
-        val itemFragment = ItemScreen.getIstance(item)
+        val itemFragment = ItemScreen.getInstance(item)
 
         activity?.supportFragmentManager?.beginTransaction()
             ?.replace(R.id.container_activity, itemFragment)

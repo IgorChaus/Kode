@@ -103,7 +103,7 @@ class ItemScreen : Fragment() {
     }
 
     companion object {
-        fun getIstance(item: Person.Items): Fragment{
+        fun getInstance(item: Person.Items): Fragment{
             return ItemScreen().apply {
                 arguments = Bundle().apply {
                     putParcelable(KEY_ITEM,item)
