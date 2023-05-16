@@ -1,12 +1,9 @@
-package com.example.kode_viewmodel.view
+package com.example.kode_viewmodel.viewadapter
 
 import android.annotation.SuppressLint
 import android.os.Build
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -21,7 +18,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
-class RVAdapter : ListAdapter<IRow, RecyclerView.ViewHolder>(DiffCallBack()) {
+class ItemListAdapter : ListAdapter<IRow, RecyclerView.ViewHolder>(DiffCallBack()) {
 
     var itemClickListener: ((Person.Items) -> Unit)? = null
 
@@ -37,40 +34,29 @@ class RVAdapter : ListAdapter<IRow, RecyclerView.ViewHolder>(DiffCallBack()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = when (viewType) {
 
         R.layout.item -> ItemViewHolder(
-            ItemBinding.inflate(LayoutInflater
-                .from(parent.context), parent, false))
-      R.layout.item_birthday -> ItemBirthdayViewHolder(
-          ItemBirthdayBinding.inflate(LayoutInflater
-              .from(parent.context), parent, false))
-      R.layout.separator -> SeparatorHolder(
-          SeparatorBinding.inflate(LayoutInflater
-              .from(parent.context), parent, false))
-      R.layout.skeleton_item -> SkeletonHolder(
-          LayoutInflater.from(parent.context)
-              .inflate(R.layout.skeleton_item, parent, false))
-      else -> throw IllegalArgumentException()
+            ItemBinding.inflate(
+                LayoutInflater
+                    .from(parent.context), parent, false
+            )
+        )
+        R.layout.item_birthday -> ItemBirthdayViewHolder(
+            ItemBirthdayBinding.inflate(
+                LayoutInflater
+                    .from(parent.context), parent, false
+            )
+        )
+        R.layout.separator -> SeparatorViewHolder(
+            SeparatorBinding.inflate(
+                LayoutInflater
+                    .from(parent.context), parent, false
+            )
+        )
+        R.layout.skeleton_item -> SkeletonViewHolder(
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.skeleton_item, parent, false)
+        )
+        else -> throw IllegalArgumentException()
     }
-
-    class ItemViewHolder(binding: ItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        val personPhoto: ImageView = binding.imageView
-        val personName: TextView = binding.personName
-        val personTag: TextView = binding.personTag
-        val personDepartment: TextView = binding.personDepartment
-    }
-
-    class ItemBirthdayViewHolder(binding: ItemBirthdayBinding) : RecyclerView.ViewHolder(binding.root) {
-        val personPhoto: ImageView = binding.imageView
-        val personName: TextView = binding.personName
-        val personTag: TextView = binding.personTag
-        val personDepartment: TextView = binding.personDepartment
-        val birthday: TextView = binding.personBirthday
-    }
-
-    class SeparatorHolder(binding: SeparatorBinding) : RecyclerView.ViewHolder(binding.root) {
-        val separetor: TextView = binding.year
-    }
-
-    class SkeletonHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     @SuppressLint("SetTextI18n")
     private fun bindItem(holder: RecyclerView.ViewHolder, item: ABC) {
@@ -115,16 +101,15 @@ class RVAdapter : ListAdapter<IRow, RecyclerView.ViewHolder>(DiffCallBack()) {
 
 
     private fun bindSeparator(holder: RecyclerView.ViewHolder, separator: Separator) {
-        (holder as SeparatorHolder).separetor.text = separator.year
+        (holder as SeparatorViewHolder).separetor.text = separator.year
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) =
         when (holder.itemViewType) {
-            R.layout.item -> bindItem(holder,getItem(position) as ABC)
-            R.layout.item_birthday -> bindItemBirthday(holder,getItem(position) as Birthday)
-            R.layout.separator -> bindSeparator(holder,getItem(position) as Separator)
+            R.layout.item -> bindItem(holder, getItem(position) as ABC)
+            R.layout.item_birthday -> bindItemBirthday(holder, getItem(position) as Birthday)
+            R.layout.separator -> bindSeparator(holder, getItem(position) as Separator)
             R.layout.skeleton_item -> Unit
             else -> throw RuntimeException("Illegal item type")
         }
 }
-

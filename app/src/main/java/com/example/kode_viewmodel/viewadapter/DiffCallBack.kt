@@ -1,4 +1,4 @@
-package com.example.kode_viewmodel.view
+package com.example.kode_viewmodel.viewadapter
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.kode_viewmodel.model.*

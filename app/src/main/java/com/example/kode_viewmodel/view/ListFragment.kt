@@ -12,6 +12,7 @@ import androidx.fragment.app.activityViewModels
 import com.example.kode_viewmodel.R
 import com.example.kode_viewmodel.databinding.ListScreenBinding
 import com.example.kode_viewmodel.model.Person
+import com.example.kode_viewmodel.viewadapter.ItemListAdapter
 import com.example.kode_viewmodel.viewmodel.AppViewModel
 import com.example.kode_viewmodel.wrappers.Resource
 import com.google.android.material.snackbar.Snackbar
@@ -23,13 +24,13 @@ class ListFragment: Fragment() {
     private val binding: ListScreenBinding
         get() = _binding ?: throw RuntimeException("ListScreenBinding == null")
 
-    private lateinit var adapter: RVAdapter
+    private lateinit var adapter: ItemListAdapter
 
     private val viewModel: AppViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        adapter = RVAdapter()
+        adapter = ItemListAdapter()
         adapter.itemClickListener = {
             showItem(it)
         }
