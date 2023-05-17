@@ -24,38 +24,38 @@ class ItemListAdapter : ListAdapter<IRow, RecyclerView.ViewHolder>(DiffCallBack(
 
     override fun getItemViewType(position: Int): Int =
         when (getItem(position)) {
-            is Birthday -> R.layout.item_birthday
-            is ABC -> R.layout.item
-            is Separator -> R.layout.separator
-            is Skeleton -> R.layout.skeleton_item
+            is ABC -> ITEM_ORDINARY
+            is Birthday -> ITEM_BIRHDAY
+            is Separator -> ITEM_SEPARATOR
+            is Skeleton -> ITEM_SKELETON
             else -> throw RuntimeException("Illegal item type")
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = when (viewType) {
 
-        R.layout.item -> ItemViewHolder(
+        ITEM_ORDINARY -> ItemViewHolder(
             ItemBinding.inflate(
                 LayoutInflater
                     .from(parent.context), parent, false
             )
         )
-        R.layout.item_birthday -> ItemBirthdayViewHolder(
+        ITEM_BIRHDAY -> ItemBirthdayViewHolder(
             ItemBirthdayBinding.inflate(
                 LayoutInflater
                     .from(parent.context), parent, false
             )
         )
-        R.layout.separator -> SeparatorViewHolder(
+        ITEM_SEPARATOR -> SeparatorViewHolder(
             SeparatorBinding.inflate(
                 LayoutInflater
                     .from(parent.context), parent, false
             )
         )
-        R.layout.skeleton_item -> SkeletonViewHolder(
+        ITEM_SKELETON -> SkeletonViewHolder(
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.skeleton_item, parent, false)
         )
-        else -> throw IllegalArgumentException()
+        else -> throw throw RuntimeException("Illegal item type")
     }
 
     @SuppressLint("SetTextI18n")
@@ -99,17 +99,23 @@ class ItemListAdapter : ListAdapter<IRow, RecyclerView.ViewHolder>(DiffCallBack(
         }
     }
 
-
     private fun bindSeparator(holder: RecyclerView.ViewHolder, separator: Separator) {
         (holder as SeparatorViewHolder).separetor.text = separator.year
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) =
         when (holder.itemViewType) {
-            R.layout.item -> bindItem(holder, getItem(position) as ABC)
-            R.layout.item_birthday -> bindItemBirthday(holder, getItem(position) as Birthday)
-            R.layout.separator -> bindSeparator(holder, getItem(position) as Separator)
-            R.layout.skeleton_item -> Unit
+            ITEM_ORDINARY -> bindItem(holder, getItem(position) as ABC)
+            ITEM_BIRHDAY -> bindItemBirthday(holder, getItem(position) as Birthday)
+            ITEM_SEPARATOR -> bindSeparator(holder, getItem(position) as Separator)
+            ITEM_SKELETON -> Unit
             else -> throw RuntimeException("Illegal item type")
         }
+
+    companion object {
+        private const val ITEM_ORDINARY = 1
+        private const val ITEM_BIRHDAY = 2
+        private const val ITEM_SEPARATOR = 3
+        private const val ITEM_SKELETON = 4
+    }
 }
