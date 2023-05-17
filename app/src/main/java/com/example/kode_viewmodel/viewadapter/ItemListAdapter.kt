@@ -24,7 +24,7 @@ class ItemListAdapter : ListAdapter<IRow, RecyclerView.ViewHolder>(DiffCallBack(
 
     override fun getItemViewType(position: Int): Int =
         when (getItem(position)) {
-            is ABC -> ITEM_ORDINARY
+            is Ordinary -> ITEM_ORDINARY
             is Birthday -> ITEM_BIRHDAY
             is Separator -> ITEM_SEPARATOR
             is Skeleton -> ITEM_SKELETON
@@ -59,7 +59,7 @@ class ItemListAdapter : ListAdapter<IRow, RecyclerView.ViewHolder>(DiffCallBack(
     }
 
     @SuppressLint("SetTextI18n")
-    private fun bindItem(holder: RecyclerView.ViewHolder, item: ABC) {
+    private fun bindItem(holder: RecyclerView.ViewHolder, item: Ordinary) {
         val itemViewHolder = holder as ItemViewHolder
         val path: String = item.avatarUrl
         Glide.with(itemViewHolder.itemView.context).load(path).circleCrop()
@@ -105,7 +105,7 @@ class ItemListAdapter : ListAdapter<IRow, RecyclerView.ViewHolder>(DiffCallBack(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) =
         when (holder.itemViewType) {
-            ITEM_ORDINARY -> bindItem(holder, getItem(position) as ABC)
+            ITEM_ORDINARY -> bindItem(holder, getItem(position) as Ordinary)
             ITEM_BIRHDAY -> bindItemBirthday(holder, getItem(position) as Birthday)
             ITEM_SEPARATOR -> bindSeparator(holder, getItem(position) as Separator)
             ITEM_SKELETON -> Unit

@@ -2,7 +2,7 @@ package com.example.kode_viewmodel.model
 
 interface IRow
 
-class ABC(id: String,
+class Ordinary(id: String,
                avatarUrl: String,
                firstName: String,
                lastName: String,

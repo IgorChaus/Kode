@@ -6,7 +6,7 @@ import com.example.kode_viewmodel.model.*
 class DiffCallBack: DiffUtil.ItemCallback<IRow>() {
     override fun areItemsTheSame(oldItem: IRow, newItem: IRow): Boolean {
         return when{
-            oldItem is ABC && newItem is ABC -> {
+            oldItem is Ordinary && newItem is Ordinary -> {
                 oldItem.id == newItem.id
             }
             oldItem is Birthday && newItem is Birthday -> {
@@ -24,7 +24,7 @@ class DiffCallBack: DiffUtil.ItemCallback<IRow>() {
 
     override fun areContentsTheSame(oldItem: IRow, newItem: IRow): Boolean {
         return when{
-            oldItem is ABC && newItem is ABC -> {
+            oldItem is Ordinary && newItem is Ordinary -> {
                 oldItem.equals(newItem)
             }
             oldItem is Birthday && newItem is Birthday -> {
