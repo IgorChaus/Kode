@@ -80,8 +80,8 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
 
         if (sortingType.value == ALPHABET_SORTING) {
 
-            val listItems: List<ABC> = items.map {
-                ABC(
+            val listItems: List<Ordinary> = items.map {
+                Ordinary(
                     it.id, it.avatarUrl, it.firstName,
                     it.lastName, it.userTag, it.department, it.position, it.birthday, it.phone
                 )
