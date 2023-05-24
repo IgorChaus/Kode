@@ -75,15 +75,22 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
     }
 
 
-    fun sortPerson(items:List<Person.Items>): Resource<List<IRow>> {
+    private fun sortPerson(items:List<Person.Items>): Resource<List<IRow>> {
         val result: Resource<List<IRow>>
 
         if (sortingType.value == ALPHABET_SORTING) {
 
             val listItems: List<Ordinary> = items.map {
                 Ordinary(
-                    it.id, it.avatarUrl, it.firstName,
-                    it.lastName, it.userTag, it.department, it.position, it.birthday, it.phone
+                    id = it.id,
+                    avatarUrl = it.avatarUrl,
+                    firstName = it.firstName,
+                    lastName = it.lastName,
+                    userTag = it.userTag,
+                    department = it.department,
+                    position = it.position,
+                    birthday = it.birthday,
+                    phone = it.phone
                 )
             }
 
@@ -98,8 +105,15 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
         } else {
             val listItems: List<Birthday> = items.map {
                 Birthday(
-                    it.id, it.avatarUrl, it.firstName,
-                    it.lastName, it.userTag, it.department, it.position, it.birthday, it.phone
+                    id = it.id,
+                    avatarUrl = it.avatarUrl,
+                    firstName = it.firstName,
+                    lastName = it.lastName,
+                    userTag = it.userTag,
+                    department = it.department,
+                    position = it.position,
+                    birthday = it.birthday,
+                    phone = it.phone
                 )
             }
 
@@ -134,7 +148,7 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
     }
 
 
-    fun setFilter(): List<Person.Items> {
+    private fun setFilter(): List<Person.Items> {
 
          val filterTab: List<Person.Items> = if (tabName == ALL) {
              resourceItems.data!!.items
