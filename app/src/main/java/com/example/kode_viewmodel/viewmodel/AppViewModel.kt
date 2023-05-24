@@ -94,13 +94,13 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
                 )
             }
 
-            val arraylistItems = ArrayList(listItems)
+            val arrayListItems = ArrayList(listItems)
 
-            arraylistItems.sortWith(
+            arrayListItems.sortWith(
                 compareBy({ it.firstName }, { it.lastName })
             )
 
-            result = Resource.Success(arraylistItems, strSearch)
+            result = Resource.Success(arrayListItems, strSearch)
 
         } else {
             val listItems: List<Birthday> = items.map {
@@ -117,17 +117,17 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
                 )
             }
 
-            val arraylistItems = ArrayList(listItems)
+            val arrayListItems = ArrayList(listItems)
 
             val formatMMDD: DateTimeFormatter = DateTimeFormatter.ofPattern("MMdd")
             val currentDate = LocalDate.now()
 
-            arraylistItems.sortWith(
+            arrayListItems.sortWith(
                 compareBy { LocalDate.parse(it.birthday).format(formatMMDD) }
             )
 
-            val sepItems: ArrayList<IRow> = arrayListOf()
-            sepItems.addAll(arraylistItems.filter
+            val separatedListItems: ArrayList<IRow> = arrayListOf()
+            separatedListItems.addAll(arrayListItems.filter
             { LocalDate.parse(it.birthday).format(formatMMDD)  >= currentDate.format(formatMMDD)})
 
             val baseYear = LocalDate.of(currentDate.year, currentDate.month, currentDate.dayOfMonth)
@@ -135,12 +135,12 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
             val formatYear: DateTimeFormatter = DateTimeFormatter.ofPattern("YYYY")
 
             if(items.isNotEmpty())
-                sepItems.add(Separator(nextYear.format(formatYear)))
+                separatedListItems.add(Separator(nextYear.format(formatYear)))
 
-            sepItems.addAll(arraylistItems.filter
+            separatedListItems.addAll(arrayListItems.filter
             { LocalDate.parse(it.birthday).format(formatMMDD)  < currentDate.format(formatMMDD)})
 
-            result = Resource.Success(sepItems, strSearch)
+            result = Resource.Success(separatedListItems, strSearch)
 
         }
 
