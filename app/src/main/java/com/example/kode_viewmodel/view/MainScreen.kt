@@ -180,6 +180,7 @@ class MainScreen: Fragment() {
                 viewModel.setFilterTab(tab?.text.toString())
             }
         })
+
     }
 
     private fun setBottomSheetListener(){
