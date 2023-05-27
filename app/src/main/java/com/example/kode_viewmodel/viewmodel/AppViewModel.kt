@@ -25,12 +25,13 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
 
     private var tabName: String = ALL
     private var strSearch: String = EMPTY_STRING
-    lateinit var  resourceItems: Resource<Person>
+    private var resourceItems: Resource<Person>? = null
 
     init{
         _sortingType.value = ALPHABET_SORTING
-        val skelList = List(8){ Skeleton() }
-        _itemList.postValue(Resource.Success(skelList,strSearch))
+        val skeletonList = List(8){ Skeleton() }
+        _itemList.value = Resource.Success(skeletonList,strSearch)
+        fetchPersons()
     }
 
     suspend fun getPersonsFromRepository(){
@@ -50,14 +51,6 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
         viewModelScope.launch {
             _itemList.postValue(Resource.Loading())
             getPersonsFromRepository()
-        }
-    }
-
-    fun firstFetchPersons(){
-        if (!this::resourceItems.isInitialized) {
-            viewModelScope.launch {
-                getPersonsFromRepository()
-            }
         }
     }
 
@@ -159,9 +152,9 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
     private fun setFilter(): List<Person.Items>? {
 
          val listFilterTab = if (tabName == ALL) {
-             resourceItems.data?.items
+             resourceItems?.data?.items
          } else {
-             resourceItems.data?.items?.filter { it.department == departments[tabName] }
+             resourceItems?.data?.items?.filter { it.department == departments[tabName] }
          }
 
         val listFilterSearch = if (strSearch.length > 1) {
