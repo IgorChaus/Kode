@@ -38,7 +38,7 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
         if(_resourceItems is Resource.Success) {
             resourceItems = _resourceItems
             setFilter()?.let{
-                _itemList.postValue(sortPerson(it))
+                _itemList.value = sortPerson(it)
             }
         }else
             _itemList.postValue(
@@ -56,21 +56,21 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
     fun setFilterTab(tabName: String){
         this.tabName = tabName
         setFilter()?.let{
-            _itemList.postValue(sortPerson(it))
+            _itemList.value = sortPerson(it)
         }
     }
 
     fun setFilterSearch(strSearch: String){
         this.strSearch = strSearch
         setFilter()?.let{
-            _itemList.postValue(sortPerson(it))
+            _itemList.value = sortPerson(it)
         }
     }
 
     fun changeSortingType(sortingType: String){
         _sortingType.value = sortingType
         setFilter()?.let{
-            _itemList.postValue(sortPerson(it))
+            _itemList.value = sortPerson(it)
         }
     }
 
