@@ -46,12 +46,6 @@ class MainScreen: Fragment() {
         ViewModelProvider(requireActivity(), factory)[AppViewModel::class.java]
     }
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel.firstFetchPersons()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -180,6 +174,7 @@ class MainScreen: Fragment() {
                 viewModel.setFilterTab(tab?.text.toString())
             }
         })
+
     }
 
     private fun setBottomSheetListener(){

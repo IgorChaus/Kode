@@ -25,19 +25,22 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
 
     private var tabName: String = ALL
     private var strSearch: String = EMPTY_STRING
-    lateinit var  resourceItems: Resource<Person>
+    private var resourceItems: Resource<Person>? = null
 
     init{
         _sortingType.value = ALPHABET_SORTING
-        val skelList = List(8){ Skeleton() }
-        _itemList.postValue(Resource.Success(skelList,strSearch))
+        val skeletonList = List(8){ Skeleton() }
+        _itemList.value = Resource.Success(skeletonList,strSearch)
+        fetchPersons()
     }
 
     suspend fun getPersonsFromRepository(){
         val _resourceItems = dataRepository.getPersons()
         if(_resourceItems is Resource.Success) {
             resourceItems = _resourceItems
-            _itemList.postValue(sortPerson(setFilter()))
+            setFilter()?.let{
+                _itemList.postValue(sortPerson(it))
+            }
         }else
             _itemList.postValue(
                 Resource
@@ -51,27 +54,25 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
         }
     }
 
-    fun firstFetchPersons(){
-        if (!this::resourceItems.isInitialized) {
-            viewModelScope.launch {
-                getPersonsFromRepository()
-            }
-        }
-    }
-
     fun setFilterTab(tabName: String){
         this.tabName = tabName
-        _itemList.postValue(sortPerson(setFilter()))
+        setFilter()?.let{
+            _itemList.postValue(sortPerson(it))
+        }
     }
 
     fun setFilterSearch(strSearch: String){
         this.strSearch = strSearch
-        _itemList.postValue(sortPerson(setFilter()))
+        setFilter()?.let{
+            _itemList.postValue(sortPerson(it))
+        }
     }
 
     fun changeSortingType(sortingType: String){
         _sortingType.value = sortingType
-        _itemList.postValue(sortPerson(setFilter()))
+        setFilter()?.let{
+            _itemList.postValue(sortPerson(it))
+        }
     }
 
 
@@ -148,28 +149,28 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
     }
 
 
-    private fun setFilter(): List<Person.Items> {
+    private fun setFilter(): List<Person.Items>? {
 
-         val filterTab: List<Person.Items> = if (tabName == ALL) {
-             resourceItems.data!!.items
-              } else {
-                  resourceItems.data!!.items.filter { it.department == departments[tabName] }
-              }
+         val listFilterTab = if (tabName == ALL) {
+             resourceItems?.data?.items
+         } else {
+             resourceItems?.data?.items?.filter { it.department == departments[tabName] }
+         }
 
-        val itemsFilter: List<Person.Items> = if (strSearch.length > 1) {
-            filterTab.filter {
+        val listFilterSearch = if (strSearch.length > 1) {
+            listFilterTab?.filter {
                 it.firstName.contains(strSearch, ignoreCase = true) ||
                         it.lastName.contains(strSearch, ignoreCase = true) ||
                         it.userTag.contains(strSearch, ignoreCase = true)
             }
         }else{
-            filterTab.filter {
+            listFilterTab?.filter {
                 it.firstName.contains(strSearch, ignoreCase = true) ||
                         it.lastName.contains(strSearch, ignoreCase = true)
             }
         }
 
-        return itemsFilter
+        return listFilterSearch
     }
 
     companion object{
