@@ -14,7 +14,6 @@ import java.time.format.DateTimeFormatter
 @RequiresApi(Build.VERSION_CODES.O)
 class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
 
-    // Object must be observable but with a private setter, so we separate LiveData's objects
     private val _itemList: MutableLiveData<Resource<List<IRow>>> = MutableLiveData()
     val itemList: LiveData<Resource<List<IRow>>>
         get() = _itemList
