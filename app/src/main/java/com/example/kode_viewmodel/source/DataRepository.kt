@@ -7,8 +7,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.IOException
+import javax.inject.Inject
 
-class DataRepository(val service: PersonApi) {
+class DataRepository @Inject constructor(val service: PersonApi) {
     suspend fun getPersons(): Resource<Person> {
         return withContext(Dispatchers.IO) {
             try {

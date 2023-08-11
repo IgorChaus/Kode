@@ -5,10 +5,11 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.kode_viewmodel.source.DataRepository
+import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Suppress("UNCHECKED_CAST")
-class AppViewModelFactory(private val dataRepository: DataRepository) : ViewModelProvider.Factory {
+class AppViewModelFactory @Inject constructor(private val dataRepository: DataRepository) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AppViewModel::class.java))
