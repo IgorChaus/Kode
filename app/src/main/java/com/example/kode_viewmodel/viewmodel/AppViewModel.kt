@@ -10,9 +10,10 @@ import com.example.kode_viewmodel.wrappers.Resource
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
-class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
+class AppViewModel @Inject constructor(private val dataRepository: DataRepository): ViewModel() {
 
     private val _itemList: MutableLiveData<Resource<List<IRow>>> = MutableLiveData()
     val itemList: LiveData<Resource<List<IRow>>>

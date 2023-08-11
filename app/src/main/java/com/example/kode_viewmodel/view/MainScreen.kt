@@ -18,14 +18,14 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.kode_viewmodel.KodeApp
 import com.example.kode_viewmodel.R
 import com.example.kode_viewmodel.databinding.MainScreenBinding
-import com.example.kode_viewmodel.source.DataRepository
-import com.example.kode_viewmodel.source.RetrofitInstance
 import com.example.kode_viewmodel.viewmodel.AppViewModel
 import com.example.kode_viewmodel.viewmodel.AppViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayout
+import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
 class MainScreen: Fragment() {
@@ -40,10 +40,20 @@ class MainScreen: Fragment() {
     private val binding: MainScreenBinding
         get() = _binding ?: throw RuntimeException("MainScreenBinding == null")
 
-    private val dataRepository = DataRepository(RetrofitInstance.service)
-    private val factory = AppViewModelFactory(dataRepository)
+    @Inject
+    lateinit var factory: AppViewModelFactory
+
+    val component by lazy{
+        (requireActivity().application as KodeApp).component
+    }
+
     private val viewModel: AppViewModel by lazy {
         ViewModelProvider(requireActivity(), factory)[AppViewModel::class.java]
+    }
+
+    override fun onAttach(context: Context) {
+        component.inject(this)
+        super.onAttach(context)
     }
 
     override fun onCreateView(
