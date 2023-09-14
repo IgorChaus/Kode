@@ -6,78 +6,85 @@ import androidx.lifecycle.*
 import com.example.kode_viewmodel.model.*
 import com.example.kode_viewmodel.source.DataRepository
 import com.example.kode_viewmodel.view.MainScreen.Companion.departments
-import com.example.kode_viewmodel.wrappers.Resource
+import com.example.kode_viewmodel.wrappers.Response
+import com.example.kode_viewmodel.wrappers.State
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
-class AppViewModel @Inject constructor(private val dataRepository: DataRepository): ViewModel() {
+class AppViewModel @Inject constructor(private val dataRepository: DataRepository) : ViewModel() {
 
-    private val _itemList: MutableLiveData<Resource<List<IRow>>> = MutableLiveData()
-    val itemList: LiveData<Resource<List<IRow>>>
-        get() = _itemList
+    private val _state: MutableLiveData<State> = MutableLiveData()
+    val state: LiveData<State>
+        get() = _state
 
     private val _sortingType: MutableLiveData<String> = MutableLiveData()
     val sortingType: LiveData<String>
         get() = _sortingType
 
-    private var tabName: String = ALL
-    private var strSearch: String = EMPTY_STRING
-    private var resourceItems: Resource<Person>? = null
+    private var strSearch = EMPTY_STRING
 
-    init{
+    private var tabName: String = ALL
+
+    private var listPersons: List<Person.Items>? = null
+
+    init {
         _sortingType.value = ALPHABET_SORTING
-        val skeletonList = List(8){ Skeleton() }
-        _itemList.value = Resource.Success(skeletonList,strSearch)
+        val skeletonList = List(8) { Skeleton() }
+        _state.value = State.Content(skeletonList)
         fetchPersons()
     }
 
-    suspend fun getPersonsFromRepository(){
-        val _resourceItems = dataRepository.getPersons()
-        if(_resourceItems is Resource.Success) {
-            resourceItems = _resourceItems
-            setFilter()?.let{
-                _itemList.value = sortPerson(it)
+    private suspend fun getPersonsFromRepository() {
+        val responce = dataRepository.getPersons()
+        when (responce) {
+            is Response.Success -> {
+                listPersons = responce.data.items
+                setScreenContent()
             }
-        }else
-            _itemList.postValue(
-                Resource
-                    .Error(_resourceItems.message ?:"Error json API"))
+            is Response.Error -> {
+                _state.postValue(State.Error(responce.errorMessage))
+            }
+        }
     }
 
-    fun fetchPersons(){
+    fun fetchPersons() {
         viewModelScope.launch {
-            _itemList.postValue(Resource.Loading())
+            _state.postValue(State.Loading)
             getPersonsFromRepository()
         }
     }
 
-    fun setFilterTab(tabName: String){
+    fun setFilterTab(tabName: String) {
         this.tabName = tabName
-        setFilter()?.let{
-            _itemList.value = sortPerson(it)
-        }
+        setScreenContent()
     }
 
-    fun setFilterSearch(strSearch: String){
+    fun setFilterSearch(strSearch: String) {
         this.strSearch = strSearch
-        setFilter()?.let{
-            _itemList.value = sortPerson(it)
-        }
+        setScreenContent()
     }
 
-    fun changeSortingType(sortingType: String){
+    fun changeSortingType(sortingType: String) {
         _sortingType.value = sortingType
-        setFilter()?.let{
-            _itemList.value = sortPerson(it)
+        setScreenContent()
+    }
+
+    fun setScreenContent(){
+        if (setFilter()?.isEmpty() == true && strSearch != "") {
+            _state.value = State.NothingFound
+        } else {
+            setFilter()?.let {
+                _state.value = sortPerson(it)
+            }
         }
     }
 
 
-    private fun sortPerson(items:List<Person.Items>): Resource<List<IRow>> {
-        val result: Resource<List<IRow>>
+    private fun sortPerson(items: List<Person.Items>): State {
+        val result: State
 
         if (sortingType.value == ALPHABET_SORTING) {
 
@@ -101,7 +108,7 @@ class AppViewModel @Inject constructor(private val dataRepository: DataRepositor
                 compareBy({ it.firstName }, { it.lastName })
             )
 
-            result = Resource.Success(arrayListItems, strSearch)
+            result = State.Content(arrayListItems)
 
         } else {
             val listItems: List<Birthday> = items.map {
@@ -127,21 +134,25 @@ class AppViewModel @Inject constructor(private val dataRepository: DataRepositor
                 compareBy { LocalDate.parse(it.birthday).format(formatMMDD) }
             )
 
-            val separatedListItems: ArrayList<IRow> = arrayListOf()
+            val separatedListItems: ArrayList<AdapterItems> = arrayListOf()
             separatedListItems.addAll(arrayListItems.filter
-            { LocalDate.parse(it.birthday).format(formatMMDD)  >= currentDate.format(formatMMDD)})
+            {
+                LocalDate.parse(it.birthday).format(formatMMDD) >= currentDate.format(formatMMDD)
+            })
 
             val baseYear = LocalDate.of(currentDate.year, currentDate.month, currentDate.dayOfMonth)
             val nextYear = LocalDate.from(baseYear).plusYears(1)
             val formatYear: DateTimeFormatter = DateTimeFormatter.ofPattern("YYYY")
 
-            if(items.isNotEmpty())
+            if (items.isNotEmpty())
                 separatedListItems.add(Separator(nextYear.format(formatYear)))
 
             separatedListItems.addAll(arrayListItems.filter
-            { LocalDate.parse(it.birthday).format(formatMMDD)  < currentDate.format(formatMMDD)})
+            {
+                LocalDate.parse(it.birthday).format(formatMMDD) < currentDate.format(formatMMDD)
+            })
 
-            result = Resource.Success(separatedListItems, strSearch)
+            result = State.Content(separatedListItems)
 
         }
 
@@ -151,11 +162,11 @@ class AppViewModel @Inject constructor(private val dataRepository: DataRepositor
 
     private fun setFilter(): List<Person.Items>? {
 
-         val listFilterTab = if (tabName == ALL) {
-             resourceItems?.data?.items
-         } else {
-             resourceItems?.data?.items?.filter { it.department == departments[tabName] }
-         }
+        val listFilterTab = if (tabName == ALL) {
+            listPersons
+        } else {
+            listPersons?.filter { it.department == departments[tabName] }
+        }
 
         val listFilterSearch = if (strSearch.length > 1) {
             listFilterTab?.filter {
@@ -163,7 +174,7 @@ class AppViewModel @Inject constructor(private val dataRepository: DataRepositor
                         it.lastName.contains(strSearch, ignoreCase = true) ||
                         it.userTag.contains(strSearch, ignoreCase = true)
             }
-        }else{
+        } else {
             listFilterTab?.filter {
                 it.firstName.contains(strSearch, ignoreCase = true) ||
                         it.lastName.contains(strSearch, ignoreCase = true)
@@ -173,7 +184,7 @@ class AppViewModel @Inject constructor(private val dataRepository: DataRepositor
         return listFilterSearch
     }
 
-    companion object{
+    companion object {
         const val ALPHABET_SORTING = "alphabet"
         const val BIRTHDAY_SORTING = "birthday"
         const val ALL = "Все"

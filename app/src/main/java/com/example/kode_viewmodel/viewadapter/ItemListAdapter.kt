@@ -18,7 +18,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
-class ItemListAdapter : ListAdapter<IRow, RecyclerView.ViewHolder>(DiffCallBack()) {
+class ItemListAdapter : ListAdapter<AdapterItems, RecyclerView.ViewHolder>(DiffCallBack()) {
 
     var itemClickListener: ((Person.Items) -> Unit)? = null
 

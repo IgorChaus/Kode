@@ -14,7 +14,7 @@ import com.example.kode_viewmodel.databinding.ListScreenBinding
 import com.example.kode_viewmodel.model.Person
 import com.example.kode_viewmodel.viewadapter.ItemListAdapter
 import com.example.kode_viewmodel.viewmodel.AppViewModel
-import com.example.kode_viewmodel.wrappers.Resource
+import com.example.kode_viewmodel.wrappers.State
 import com.google.android.material.snackbar.Snackbar
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -61,24 +61,16 @@ class ListFragment: Fragment() {
         snackBarLoading: Snackbar,
         snackBarError: Snackbar
     ) {
-        viewModel.itemList.observe(viewLifecycleOwner) {
+        viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
-                is Resource.Success -> {
-                    if (it.data?.isEmpty()!! && (it.search != EMPTY_STRING)) {
-                        activity?.supportFragmentManager?.beginTransaction()
-                            ?.replace(R.id.container_list, NoFindFragment.getInstance())
-                            ?.addToBackStack(null)
-                            ?.commit()
-                        snackBarLoading.dismiss()
-                    } else {
-                        adapter.submitList(it.data)
-                        binding.swipeRefreshLayout.isRefreshing = false
-                        snackBarLoading.dismiss()
-                    }
+                is State.Content -> {
+                    adapter.submitList(it.data)
+                    binding.swipeRefreshLayout.isRefreshing = false
+                    snackBarLoading.dismiss()
                 }
 
-                is Resource.Error -> {
-                    if (it.message == "IOException") {
+                is State.Error -> {
+                    if (it.errorMessage == "IOException") {
                         snackBarError.show()
                         binding.swipeRefreshLayout.isRefreshing = false
                     } else {
@@ -88,9 +80,15 @@ class ListFragment: Fragment() {
                     }
                 }
 
-                is Resource.Loading -> snackBarLoading.show()
+                is State.Loading -> snackBarLoading.show()
 
-                else -> return@observe
+                is State.NothingFound -> {
+                    activity?.supportFragmentManager?.beginTransaction()
+                        ?.replace(R.id.container_list, NoFindFragment.getInstance())
+                        ?.addToBackStack(null)
+                        ?.commit()
+                    snackBarLoading.dismiss()
+                }
             }
         }
     }
@@ -160,6 +158,13 @@ class ListFragment: Fragment() {
 
     companion object {
         fun getInstance() = ListFragment()
-        private const val EMPTY_STRING = ""
     }
 }
+
+//                    if (it.data?.isEmpty()!! && (it.search != EMPTY_STRING)) {
+//                        activity?.supportFragmentManager?.beginTransaction()
+//                            ?.replace(R.id.container_list, NoFindFragment.getInstance())
+//                            ?.addToBackStack(null)
+//                            ?.commit()
+//                        snackBarLoading.dismiss()
+//                    } else {

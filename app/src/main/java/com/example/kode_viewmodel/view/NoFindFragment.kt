@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.kode_viewmodel.R
 import com.example.kode_viewmodel.viewmodel.AppViewModel
+import com.example.kode_viewmodel.wrappers.State
 
 class NoFindFragment : Fragment() {
 
@@ -31,9 +32,10 @@ class NoFindFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.itemList.observe(viewLifecycleOwner) {
-            if(it.search == "")
+        viewModel.state.observe(viewLifecycleOwner) {
+            if(it is State.Content && !it.data.isEmpty())
                 activity?.supportFragmentManager?.popBackStack()
         }
     }
+
 }
