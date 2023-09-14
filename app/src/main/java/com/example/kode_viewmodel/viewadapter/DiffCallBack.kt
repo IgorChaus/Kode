@@ -3,8 +3,8 @@ package com.example.kode_viewmodel.viewadapter
 import androidx.recyclerview.widget.DiffUtil
 import com.example.kode_viewmodel.model.*
 
-class DiffCallBack: DiffUtil.ItemCallback<IRow>() {
-    override fun areItemsTheSame(oldItem: IRow, newItem: IRow): Boolean {
+class DiffCallBack: DiffUtil.ItemCallback<AdapterItems>() {
+    override fun areItemsTheSame(oldItem: AdapterItems, newItem: AdapterItems): Boolean {
         return when{
             oldItem is Ordinary && newItem is Ordinary -> {
                 oldItem.id == newItem.id
@@ -22,7 +22,7 @@ class DiffCallBack: DiffUtil.ItemCallback<IRow>() {
         }
     }
 
-    override fun areContentsTheSame(oldItem: IRow, newItem: IRow): Boolean {
+    override fun areContentsTheSame(oldItem: AdapterItems, newItem: AdapterItems): Boolean {
         return when{
             oldItem is Ordinary && newItem is Ordinary -> {
                 oldItem.equals(newItem)

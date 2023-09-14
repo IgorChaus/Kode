@@ -134,7 +134,7 @@ class AppViewModel @Inject constructor(private val dataRepository: DataRepositor
                 compareBy { LocalDate.parse(it.birthday).format(formatMMDD) }
             )
 
-            val separatedListItems: ArrayList<IRow> = arrayListOf()
+            val separatedListItems: ArrayList<AdapterItems> = arrayListOf()
             separatedListItems.addAll(arrayListItems.filter
             {
                 LocalDate.parse(it.birthday).format(formatMMDD) >= currentDate.format(formatMMDD)

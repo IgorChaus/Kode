@@ -1,6 +1,6 @@
 package com.example.kode_viewmodel.model
 
-interface IRow
+interface AdapterItems
 
 class Ordinary(id: String,
                avatarUrl: String,
@@ -12,7 +12,7 @@ class Ordinary(id: String,
                birthday: String,
                phone: String
 ) : Person.Items(id, avatarUrl, firstName, lastName, userTag, department, position, birthday, phone),
-    IRow
+    AdapterItems
 
 
 class Birthday(id: String,
@@ -25,8 +25,8 @@ class Birthday(id: String,
                birthday: String,
                phone: String
 ) : Person.Items(id, avatarUrl, firstName, lastName, userTag, department, position, birthday, phone),
-    IRow
+    AdapterItems
 
-class Separator(val year: String) : IRow
+class Separator(val year: String) : AdapterItems
 
-class Skeleton: IRow
+class Skeleton: AdapterItems
