@@ -1,8 +1,7 @@
 package com.example.kode_viewmodel.source
 
 import com.example.kode_viewmodel.api.PersonApi
-import com.example.kode_viewmodel.model.Person
-import com.example.kode_viewmodel.wrappers.Resource
+import com.example.kode_viewmodel.wrappers.Response
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
@@ -10,21 +9,21 @@ import java.io.IOException
 import javax.inject.Inject
 
 class DataRepository @Inject constructor(val service: PersonApi) {
-    suspend fun getPersons(): Resource<Person> {
+    suspend fun getPersons(): Response {
         return withContext(Dispatchers.IO) {
             try {
                 val response = service.getPersons()
                 if (response.isSuccessful) {
-                    Resource.Success(data = response.body()!!,"")
+                    Response.Success(data = response.body()!!)
                 } else {
-                    Resource.Error(response.code().toString())
+                    Response.Error(response.code().toString())
                 }
             } catch (e: HttpException) {
-                Resource.Error(e.message ?: "HttpException")
+                Response.Error(e.message ?: "HttpException")
             } catch (e: IOException) {
-                Resource.Error("IOException")
+                Response.Error("IOException")
             } catch (e: Exception) {
-                Resource.Error(e.message ?: "Exception")
+                Response.Error(e.message ?: "Exception")
             }
         }
     }
