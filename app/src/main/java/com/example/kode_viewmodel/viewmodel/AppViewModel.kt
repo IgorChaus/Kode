@@ -38,16 +38,18 @@ class AppViewModel @Inject constructor(private val dataRepository: DataRepositor
     }
 
     private suspend fun getPersonsFromRepository() {
-        val responce = dataRepository.getPersons()
-        when (responce) {
-            is Response.Success -> {
-                listPersons = responce.data.items
-                setScreenContent()
-            }
-            is Response.Error -> {
-                _state.postValue(State.Error(responce.errorMessage))
+        dataRepository.getPersons().collect(){
+            when (it) {
+                is Response.Success -> {
+                    listPersons = it.data.items
+                    setScreenContent()
+                }
+                is Response.Error -> {
+                    _state.postValue(State.Error(it.errorMessage))
+                }
             }
         }
+
     }
 
     fun fetchPersons() {

@@ -160,11 +160,3 @@ class ListFragment: Fragment() {
         fun getInstance() = ListFragment()
     }
 }
-
-//                    if (it.data?.isEmpty()!! && (it.search != EMPTY_STRING)) {
-//                        activity?.supportFragmentManager?.beginTransaction()
-//                            ?.replace(R.id.container_list, NoFindFragment.getInstance())
-//                            ?.addToBackStack(null)
-//                            ?.commit()
-//                        snackBarLoading.dismiss()
-//                    } else {
