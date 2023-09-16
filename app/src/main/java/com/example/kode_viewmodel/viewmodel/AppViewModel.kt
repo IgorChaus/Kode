@@ -88,7 +88,7 @@ class AppViewModel @Inject constructor(private val dataRepository: DataRepositor
 
         if (sortingType.value == ALPHABET_SORTING) {
 
-            val listItems: List<Ordinary> = items.map {
+            val listItems = items.map {
                 Ordinary(
                     id = it.id,
                     avatarUrl = it.avatarUrl,
@@ -111,7 +111,7 @@ class AppViewModel @Inject constructor(private val dataRepository: DataRepositor
             result = State.Content(arrayListItems)
 
         } else {
-            val listItems: List<Birthday> = items.map {
+            val listItems  = items.map {
                 Birthday(
                     id = it.id,
                     avatarUrl = it.avatarUrl,
