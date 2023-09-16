@@ -2,6 +2,7 @@ package com.example.kode_viewmodel.view
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,10 @@ import com.example.kode_viewmodel.viewadapter.ItemListAdapter
 import com.example.kode_viewmodel.viewmodel.AppViewModel
 import com.example.kode_viewmodel.wrappers.State
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
 class ListFragment: Fragment() {
@@ -27,6 +32,9 @@ class ListFragment: Fragment() {
     private lateinit var adapter: ItemListAdapter
 
     private val viewModel: AppViewModel by activityViewModels()
+
+    private var job: Job? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,19 +57,24 @@ class ListFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.rv1.adapter = adapter
         setupSwipeRefreshLayout()
-        setupObserver(getSnackBarLoading(), getSnackBarError())
+        job = CoroutineScope(Dispatchers.Main).launch{
+            setupObserver(getSnackBarLoading(), getSnackBarError())
+        }
+
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        job?.cancel()
     }
 
-    private fun setupObserver(
+    private suspend fun setupObserver(
         snackBarLoading: Snackbar,
         snackBarError: Snackbar
     ) {
-        viewModel.state.observe(viewLifecycleOwner) {
+        viewModel.state.collect(){
+            Log.d("MyTag", "State ${it.toString()}")
             when (it) {
                 is State.Content -> {
                     adapter.submitList(it.data)

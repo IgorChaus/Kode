@@ -8,6 +8,8 @@ import com.example.kode_viewmodel.source.DataRepository
 import com.example.kode_viewmodel.view.MainScreen.Companion.departments
 import com.example.kode_viewmodel.wrappers.Response
 import com.example.kode_viewmodel.wrappers.State
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -16,9 +18,12 @@ import javax.inject.Inject
 @RequiresApi(Build.VERSION_CODES.O)
 class AppViewModel @Inject constructor(private val dataRepository: DataRepository) : ViewModel() {
 
-    private val _state: MutableLiveData<State> = MutableLiveData()
-    val state: LiveData<State>
-        get() = _state
+    private val _state = MutableStateFlow<State>(
+        State.Content(
+            List(8) { Skeleton() }
+        )
+    )
+    val state = _state.asStateFlow()
 
     private val _sortingType: MutableLiveData<String> = MutableLiveData()
     val sortingType: LiveData<String>
@@ -45,7 +50,7 @@ class AppViewModel @Inject constructor(private val dataRepository: DataRepositor
                     setScreenContent()
                 }
                 is Response.Error -> {
-                    _state.postValue(State.Error(it.errorMessage))
+                    _state.value = State.Error(it.errorMessage)
                 }
             }
         }
@@ -54,7 +59,7 @@ class AppViewModel @Inject constructor(private val dataRepository: DataRepositor
 
     fun fetchPersons() {
         viewModelScope.launch {
-            _state.postValue(State.Loading)
+            _state.value = State.Loading
             getPersonsFromRepository()
         }
     }

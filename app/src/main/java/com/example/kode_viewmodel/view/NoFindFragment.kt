@@ -11,6 +11,10 @@ import androidx.fragment.app.activityViewModels
 import com.example.kode_viewmodel.R
 import com.example.kode_viewmodel.viewmodel.AppViewModel
 import com.example.kode_viewmodel.wrappers.State
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class NoFindFragment : Fragment() {
 
@@ -19,6 +23,8 @@ class NoFindFragment : Fragment() {
     }
 
     private val viewModel: AppViewModel by activityViewModels()
+
+    private var job: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,10 +38,17 @@ class NoFindFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.state.observe(viewLifecycleOwner) {
-            if(it is State.Content && !it.data.isEmpty())
-                activity?.supportFragmentManager?.popBackStack()
+        job = CoroutineScope(Dispatchers.Main).launch {
+            viewModel.state.collect(){
+                if(it is State.Content && !it.data.isEmpty())
+                    activity?.supportFragmentManager?.popBackStack()
+            }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        job?.cancel()
     }
 
 }
