@@ -18,6 +18,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.kode_viewmodel.KodeApp
 import com.example.kode_viewmodel.R
 import com.example.kode_viewmodel.databinding.MainScreenBinding
@@ -25,10 +26,11 @@ import com.example.kode_viewmodel.viewmodel.AppViewModel
 import com.example.kode_viewmodel.viewmodel.AppViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayout
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
-class MainScreen: Fragment() {
+class MainScreen : Fragment() {
 
     private lateinit var sheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var bottomSheet: ConstraintLayout
@@ -43,7 +45,7 @@ class MainScreen: Fragment() {
     @Inject
     lateinit var factory: AppViewModelFactory
 
-    val component by lazy{
+    val component by lazy {
         (requireActivity().application as KodeApp).component
     }
 
@@ -59,7 +61,8 @@ class MainScreen: Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?): View {
+        savedInstanceState: Bundle?
+    ): View {
 
         _binding = MainScreenBinding.inflate(inflater, container, false)
         return binding.root
@@ -79,7 +82,7 @@ class MainScreen: Fragment() {
         setBottomSheetListener()
         setRadioGroupListener()
         launchListFragment()
-   }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -87,14 +90,16 @@ class MainScreen: Fragment() {
     }
 
 
-    fun getColorBackground(): Int{
+    fun getColorBackground(): Int {
         val typedValue = TypedValue()
-        requireContext().theme.resolveAttribute(R.attr.appBackground,
-            typedValue, true)
+        requireContext().theme.resolveAttribute(
+            R.attr.appBackground,
+            typedValue, true
+        )
         return requireContext().getColor(typedValue.resourceId)
     }
 
-    private fun setStatusBarColor(){
+    private fun setStatusBarColor() {
         val mainActivity = activity as AppCompatActivity
         mainActivity.window.setBackgroundDrawable(ColorDrawable(getColorBackground()))
         requireActivity().window.statusBarColor = getColorBackground()
@@ -118,27 +123,31 @@ class MainScreen: Fragment() {
     }
 
     private fun setObserverForSortButton() {
-        viewModel.sortingType.observe(viewLifecycleOwner) {
-            when (it) {
-                AppViewModel.ALPHABET_SORTING -> {
-                    binding.sortButton.setImageResource(R.drawable.icon_right)
+        lifecycleScope.launch {
+            viewModel.sortingType.collect() {
+                when (it) {
+                    AppViewModel.ALPHABET_SORTING -> {
+                        binding.sortButton.setImageResource(R.drawable.icon_right)
+                    }
+                    AppViewModel.BIRTHDAY_SORTING ->
+                        binding.sortButton.setImageResource(R.drawable.icon_right_purple)
+                    else -> throw RuntimeException("Illegal sortingType")
                 }
-                AppViewModel.BIRTHDAY_SORTING ->
-                    binding.sortButton.setImageResource(R.drawable.icon_right_purple)
-                else -> throw RuntimeException("Illegal sortingType")
             }
         }
+
     }
 
-    private fun setButtonCancelListener(){
+    private fun setButtonCancelListener() {
         binding.buttonCancel.setOnClickListener {
             binding.etSearch.clearFocus()
             binding.buttonCancel.visibility = View.GONE
             binding.etSearch.setText("")
 
             // Hide keyboard
-            val  imm = binding.etSearch.context.getSystemService(
-                Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val imm = binding.etSearch.context.getSystemService(
+                Context.INPUT_METHOD_SERVICE
+            ) as InputMethodManager
             imm.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
 
             viewModel.setFilterSearch("")
@@ -146,13 +155,14 @@ class MainScreen: Fragment() {
 
             binding.etSearch.setCompoundDrawablesWithIntrinsicBounds(
                 ResourcesCompat.getDrawable(resources, R.drawable.icon_search, null),
-                null, null, null)
+                null, null, null
+            )
         }
     }
 
-    private fun setEditTextListener(){
-        binding.etSearch.addTextChangedListener {
-                s ->  viewModel.setFilterSearch(s.toString())
+    private fun setEditTextListener() {
+        binding.etSearch.addTextChangedListener { s ->
+            viewModel.setFilterSearch(s.toString())
 
         }
 
@@ -162,7 +172,8 @@ class MainScreen: Fragment() {
                 binding.sortButton.visibility = View.GONE
                 binding.etSearch.setCompoundDrawablesWithIntrinsicBounds(
                     ResourcesCompat.getDrawable(resources, R.drawable.icon_search_black, null),
-                    null, null, null)
+                    null, null, null
+                )
             } else {
                 binding.buttonCancel.visibility = View.GONE
                 binding.sortButton.visibility = View.VISIBLE
@@ -170,8 +181,8 @@ class MainScreen: Fragment() {
         }
     }
 
-    private fun setTabListener(){
-        departments.forEach{
+    private fun setTabListener() {
+        departments.forEach {
             binding.tabLayout.addTab(binding.tabLayout.newTab().setText(it.key))
         }
 
@@ -187,7 +198,7 @@ class MainScreen: Fragment() {
 
     }
 
-    private fun setBottomSheetListener(){
+    private fun setBottomSheetListener() {
         val mainActivity = activity as AppCompatActivity
         sheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
@@ -211,10 +222,10 @@ class MainScreen: Fragment() {
 
     }
 
-    private fun setRadioGroupListener(){
+    private fun setRadioGroupListener() {
         radioGroup.setOnCheckedChangeListener { _, checkedId ->
 
-            when(checkedId){
+            when (checkedId) {
                 R.id.alphabetSorting ->
                     viewModel.changeSortingType(AppViewModel.ALPHABET_SORTING)
 
@@ -227,7 +238,7 @@ class MainScreen: Fragment() {
         }
     }
 
-    private fun bindBottomSheet(){
+    private fun bindBottomSheet() {
         bottomSheet = binding.root.findViewById(R.id.bottom_sheet)
         radioGroup = binding.root.findViewById(R.id.radioGroup)
         radioButtonAlphabet = binding.root.findViewById(R.id.alphabetSorting)
@@ -235,17 +246,16 @@ class MainScreen: Fragment() {
         sheetBehavior = BottomSheetBehavior.from(bottomSheet)
     }
 
-    private fun initRadioButtons(){
-        when(viewModel.sortingType.value){
+    private fun initRadioButtons() {
+        when (viewModel.sortingType.value) {
             AppViewModel.BIRTHDAY_SORTING -> radioButtonBirthday.isChecked = true
-            AppViewModel.ALPHABET_SORTING ->  radioButtonAlphabet.isChecked = true
+            AppViewModel.ALPHABET_SORTING -> radioButtonAlphabet.isChecked = true
             else -> throw RuntimeException("Illegal viewModel.sortingType")
         }
     }
 
 
-
-    private fun launchListFragment(){
+    private fun launchListFragment() {
         activity?.supportFragmentManager?.beginTransaction()
             ?.replace(R.id.container_list, ListFragment.getInstance())
             ?.addToBackStack(null)

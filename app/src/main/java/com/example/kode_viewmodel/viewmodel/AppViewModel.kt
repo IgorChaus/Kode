@@ -24,14 +24,13 @@ class AppViewModel @Inject constructor(private val dataRepository: DataRepositor
     )
     val state = _state.asStateFlow()
 
-    private val _sortingType: MutableLiveData<String> = MutableLiveData()
-    val sortingType: LiveData<String>
-        get() = _sortingType
-
     private val skeletonFlow: Flow<State> = flow{
         val skeletonList = List(8) { Skeleton() }
         emit(State.Content(skeletonList))
     }
+
+    private val _sortingType = MutableStateFlow(ALPHABET_SORTING)
+    val sortingType = _sortingType.asStateFlow()
 
     val stateFlow: Flow<State> = merge(skeletonFlow, state)
 
@@ -42,7 +41,7 @@ class AppViewModel @Inject constructor(private val dataRepository: DataRepositor
     private var listPersons: List<Person.Items>? = null
 
     init {
-        _sortingType.value = ALPHABET_SORTING
+ //       _sortingType.value = ALPHABET_SORTING
         fetchPersons()
     }
 
