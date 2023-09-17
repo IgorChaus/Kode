@@ -2,7 +2,6 @@ package com.example.kode_viewmodel.view
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +9,8 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import com.example.kode_viewmodel.R
 import com.example.kode_viewmodel.databinding.ListScreenBinding
 import com.example.kode_viewmodel.model.Person
@@ -73,8 +74,9 @@ class ListFragment: Fragment() {
         snackBarLoading: Snackbar,
         snackBarError: Snackbar
     ) {
-        viewModel.state.collect(){
-            Log.d("MyTag", "State ${it.toString()}")
+        viewModel.stateFlow
+            .flowWithLifecycle(lifecycle, Lifecycle.State.RESUMED)
+            .collect(){
             when (it) {
                 is State.Content -> {
                     adapter.submitList(it.data)

@@ -8,8 +8,7 @@ import com.example.kode_viewmodel.source.DataRepository
 import com.example.kode_viewmodel.view.MainScreen.Companion.departments
 import com.example.kode_viewmodel.wrappers.Response
 import com.example.kode_viewmodel.wrappers.State
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -29,6 +28,13 @@ class AppViewModel @Inject constructor(private val dataRepository: DataRepositor
     val sortingType: LiveData<String>
         get() = _sortingType
 
+    private val skeletonFlow: Flow<State> = flow{
+        val skeletonList = List(8) { Skeleton() }
+        emit(State.Content(skeletonList))
+    }
+
+    val stateFlow: Flow<State> = merge(skeletonFlow, state)
+
     private var strSearch = EMPTY_STRING
 
     private var tabName: String = ALL
@@ -37,8 +43,6 @@ class AppViewModel @Inject constructor(private val dataRepository: DataRepositor
 
     init {
         _sortingType.value = ALPHABET_SORTING
-        val skeletonList = List(8) { Skeleton() }
-        _state.value = State.Content(skeletonList)
         fetchPersons()
     }
 
