@@ -32,11 +32,21 @@ class ItemScreen : Fragment() {
         parsArgs()
     }
 
-    private fun parsArgs(){
-        requireArguments().getParcelable<Person.Items>(KEY_ITEM)?.let {
-            item = it
+
+    private fun parsArgs() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requireArguments().getParcelable(KEY_ITEM, Person.Items::class.java)?.let {
+                item = it
+            }
+        } else {
+            @Suppress("DEPRECATION")
+            requireArguments().getParcelable<Person.Items>(KEY_ITEM)?.let {
+                item = it
+            }
         }
+
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,

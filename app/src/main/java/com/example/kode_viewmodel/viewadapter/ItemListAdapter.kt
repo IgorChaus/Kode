@@ -63,11 +63,11 @@ class ItemListAdapter : ListAdapter<AdapterItems, RecyclerView.ViewHolder>(DiffC
         val itemViewHolder = holder as ItemViewHolder
         val path: String = item.avatarUrl
         Glide.with(itemViewHolder.itemView.context).load(path).circleCrop()
-            .into(itemViewHolder.personPhoto)
-        itemViewHolder.personName.text = item.firstName + " " +
+            .into(itemViewHolder.binding.imageView)
+        itemViewHolder.binding.personName.text = item.firstName + " " +
                 item.lastName
-        itemViewHolder.personTag.text = " " + item.userTag.lowercase()
-        itemViewHolder.personDepartment.text = item.department
+        itemViewHolder.binding.personTag.text = " " + item.userTag.lowercase()
+        itemViewHolder.binding.personDepartment.text = item.department
         holder.itemView.setOnClickListener {
             if (holder.getAdapterPosition() == RecyclerView.NO_POSITION) {
                 return@setOnClickListener
@@ -81,16 +81,16 @@ class ItemListAdapter : ListAdapter<AdapterItems, RecyclerView.ViewHolder>(DiffC
         val itemViewHolder = holder as ItemBirthdayViewHolder
         val path: String = item.avatarUrl
         Glide.with(itemViewHolder.itemView.context).load(path).circleCrop()
-            .into(itemViewHolder.personPhoto)
-        itemViewHolder.personName.text = item.firstName + " " +
+            .into(itemViewHolder.binding.imageView)
+        itemViewHolder.binding.personName.text = item.firstName + " " +
                 item.lastName
-        itemViewHolder.personTag.text = " " + item.userTag.lowercase()
-        itemViewHolder.personDepartment.text = item.department
+        itemViewHolder.binding.personTag.text = " " + item.userTag.lowercase()
+        itemViewHolder.binding.personDepartment.text = item.department
 
         val date = LocalDate.parse(item.birthday)
         val formatter: DateTimeFormatter =
             DateTimeFormatter.ofPattern("dd MMM", Locale("ru"))
-        itemViewHolder.birthday.text = date.format(formatter)
+        itemViewHolder.binding.personBirthday.text = date.format(formatter)
         holder.itemView.setOnClickListener {
             if (holder.getAdapterPosition() == RecyclerView.NO_POSITION) {
                 return@setOnClickListener
@@ -100,7 +100,7 @@ class ItemListAdapter : ListAdapter<AdapterItems, RecyclerView.ViewHolder>(DiffC
     }
 
     private fun bindSeparator(holder: RecyclerView.ViewHolder, separator: Separator) {
-        (holder as SeparatorViewHolder).separetor.text = separator.year
+        (holder as SeparatorViewHolder).binding.year.text = separator.year
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) =
