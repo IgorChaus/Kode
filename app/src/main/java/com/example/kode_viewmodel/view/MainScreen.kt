@@ -243,13 +243,16 @@ class MainScreen: Fragment() {
         }
     }
 
-
-
     private fun launchListFragment(){
-        activity?.supportFragmentManager?.beginTransaction()
-            ?.replace(R.id.container_list, ListFragment.getInstance())
-            ?.addToBackStack(null)
-            ?.commit()
+        if (childFragmentManager.findFragmentByTag("ListFragment") == null) {
+            childFragmentManager.beginTransaction()
+                .add(R.id.container_list, ListFragment.getInstance(), "ListFragment")
+                .commit()
+        }else {
+            childFragmentManager.beginTransaction()
+                .show(ListFragment.getInstance())
+                .commit()
+        }
     }
 
     companion object {
